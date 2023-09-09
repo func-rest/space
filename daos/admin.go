@@ -3,10 +3,10 @@ package daos
 import (
 	"errors"
 
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/security"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/security"
 )
 
 // AdminQuery returns a new Admin select query.

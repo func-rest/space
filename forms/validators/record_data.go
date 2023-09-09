@@ -6,15 +6,15 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/types"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/types"
 )
 
 var requiredErr = validation.NewError("validation_required", "Missing required value")

@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/fatih/color"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/models"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/models"
 	"github.com/spf13/cobra"
 )
 

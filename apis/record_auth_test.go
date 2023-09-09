@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/subscriptions"
+	"github.com/func-rest/space/tools/types"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/subscriptions"
-	"github.com/pocketbase/pocketbase/tools/types"
 )
 
 func TestRecordAuthMethodsList(t *testing.T) {

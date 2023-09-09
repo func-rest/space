@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/func-rest/space/apis"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tests"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tests"
 )
 
 func TestRequestInfo(t *testing.T) {

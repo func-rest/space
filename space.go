@@ -1,4 +1,4 @@
-package pocketbase
+package space
 
 import (
 	"os"
@@ -8,15 +8,15 @@ import (
 	"syscall"
 
 	"github.com/fatih/color"
-	"github.com/pocketbase/pocketbase/cmd"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tools/list"
+	"github.com/func-rest/space/cmd"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/tools/list"
 	"github.com/spf13/cobra"
 )
 
-var _ core.App = (*PocketBase)(nil)
+var _ core.App = (*Space)(nil)
 
-// Version of PocketBase
+// Version of Space
 var Version = "(untracked)"
 
 // appWrapper serves as a private core.App instance wrapper.
@@ -24,11 +24,11 @@ type appWrapper struct {
 	core.App
 }
 
-// PocketBase defines a PocketBase app launcher.
+// Space defines a Space app launcher.
 //
 // It implements [core.App] via embedding and all of the app interface methods
-// could be accessed directly through the instance (eg. PocketBase.DataDir()).
-type PocketBase struct {
+// could be accessed directly through the instance (eg. Space.DataDir()).
+type Space struct {
 	*appWrapper
 
 	debugFlag         bool
@@ -40,7 +40,7 @@ type PocketBase struct {
 	RootCmd *cobra.Command
 }
 
-// Config is the PocketBase initialization config struct.
+// Config is the Space initialization config struct.
 type Config struct {
 	// optional default values for the console flags
 	DefaultDebug         bool
@@ -57,7 +57,7 @@ type Config struct {
 	LogsMaxIdleConns int // default to core.DefaultLogsMaxIdleConns
 }
 
-// New creates a new PocketBase instance with the default configuration.
+// New creates a new Space instance with the default configuration.
 // Use [NewWithConfig()] if you want to provide a custom configuration.
 //
 // Note that the application will not be initialized/bootstrapped yet,
@@ -65,7 +65,7 @@ type Config struct {
 // Everything will be initialized when [Start()] is executed.
 // If you want to initialize the application before calling [Start()],
 // then you'll have to manually call [Bootstrap()].
-func New() *PocketBase {
+func New() *Space {
 	_, isUsingGoRun := inspectRuntime()
 
 	return NewWithConfig(Config{
@@ -73,24 +73,24 @@ func New() *PocketBase {
 	})
 }
 
-// NewWithConfig creates a new PocketBase instance with the provided config.
+// NewWithConfig creates a new Space instance with the provided config.
 //
 // Note that the application will not be initialized/bootstrapped yet,
 // aka. DB connections, migrations, app settings, etc. will not be accessible.
 // Everything will be initialized when [Start()] is executed.
 // If you want to initialize the application before calling [Start()],
 // then you'll have to manually call [Bootstrap()].
-func NewWithConfig(config Config) *PocketBase {
+func NewWithConfig(config Config) *Space {
 	// initialize a default data directory based on the executable baseDir
 	if config.DefaultDataDir == "" {
 		baseDir, _ := inspectRuntime()
 		config.DefaultDataDir = filepath.Join(baseDir, "pb_data")
 	}
 
-	pb := &PocketBase{
+	pb := &Space{
 		RootCmd: &cobra.Command{
 			Use:     filepath.Base(os.Args[0]),
-			Short:   "PocketBase CLI",
+			Short:   "Space CLI",
 			Version: Version,
 			FParseErrWhitelist: cobra.FParseErrWhitelist{
 				UnknownFlags: true,
@@ -129,7 +129,7 @@ func NewWithConfig(config Config) *PocketBase {
 
 // Start starts the application, aka. registers the default system
 // commands (serve, migrate, version) and executes pb.RootCmd.
-func (pb *PocketBase) Start() error {
+func (pb *Space) Start() error {
 	// register system commands
 	pb.RootCmd.AddCommand(cmd.NewAdminCommand(pb))
 	pb.RootCmd.AddCommand(cmd.NewServeCommand(pb, !pb.hideStartBanner))
@@ -142,7 +142,7 @@ func (pb *PocketBase) Start() error {
 //
 // This method differs from pb.Start() by not registering the default
 // system commands!
-func (pb *PocketBase) Execute() error {
+func (pb *Space) Execute() error {
 	if !pb.skipBootstrap() {
 		if err := pb.Bootstrap(); err != nil {
 			return err
@@ -180,13 +180,13 @@ func (pb *PocketBase) Execute() error {
 }
 
 // eagerParseFlags parses the global app flags before calling pb.RootCmd.Execute().
-// so we can have all PocketBase flags ready for use on initialization.
-func (pb *PocketBase) eagerParseFlags(config *Config) error {
+// so we can have all Space flags ready for use on initialization.
+func (pb *Space) eagerParseFlags(config *Config) error {
 	pb.RootCmd.PersistentFlags().StringVar(
 		&pb.dataDirFlag,
 		"dir",
 		config.DefaultDataDir,
-		"the PocketBase data directory",
+		"the Space data directory",
 	)
 
 	pb.RootCmd.PersistentFlags().StringVar(
@@ -212,9 +212,9 @@ func (pb *PocketBase) eagerParseFlags(config *Config) error {
 // - is the default help command
 // - is the default version command
 //
-// https://github.com/pocketbase/pocketbase/issues/404
-// https://github.com/pocketbase/pocketbase/discussions/1267
-func (pb *PocketBase) skipBootstrap() bool {
+// https://github.com/space/space/issues/404
+// https://github.com/space/space/discussions/1267
+func (pb *Space) skipBootstrap() bool {
 	flags := []string{
 		"-h",
 		"--help",

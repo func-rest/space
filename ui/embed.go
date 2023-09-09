@@ -1,4 +1,4 @@
-// Package ui handles the PocketBase Admin frontend embedding.
+// Package ui handles the Space Admin frontend embedding.
 package ui
 
 import (

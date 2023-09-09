@@ -1,4 +1,4 @@
-// Package tests provides common helpers and mocks used in PocketBase application tests.
+// Package tests provides common helpers and mocks used in Space application tests.
 package tests
 
 import (
@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tools/mailer"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/tools/mailer"
 )
 
 // TestApp is a wrapper app instance used for testing.

@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/list"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/list"
 )
 
 func TestExpandRecords(t *testing.T) {

@@ -9,6 +9,7 @@
 package jsvm
 
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -17,25 +18,83 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dop251/goja"
 	"github.com/dop251/goja_nodejs/console"
+	"github.com/dop251/goja_nodejs/eventloop"
 	"github.com/dop251/goja_nodejs/process"
 	"github.com/dop251/goja_nodejs/require"
+	"github.com/evanw/esbuild/pkg/api"
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
 	"github.com/labstack/echo/v5"
+
+	"github.com/func-rest/space/core"
+	m "github.com/func-rest/space/migrations"
+	"github.com/func-rest/space/plugins/jsvm/builder/cdn"
+	"github.com/func-rest/space/plugins/jsvm/internal/types/generated"
+	"github.com/func-rest/space/tools/template"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/core"
-	m "github.com/pocketbase/pocketbase/migrations"
-	"github.com/pocketbase/pocketbase/plugins/jsvm/internal/types/generated"
-	"github.com/pocketbase/pocketbase/tools/template"
 )
 
 const (
 	typesFileName = "types.d.ts"
 )
+
+//go:embed all:emb/**.ts
+var WorkspaceTypes string
+
+//go:embed all:types.d.ts
+var EmbedServer embed.FS
+
+type SharedDynObjectState struct {
+	sync.RWMutex
+	m map[string]goja.Value
+}
+
+func (t *SharedDynObjectState) Get(key string) goja.Value {
+	t.RLock()
+	val := t.m[key]
+	t.RUnlock()
+	return val
+}
+
+func (t *SharedDynObjectState) Set(key string, val goja.Value) bool {
+	t.Lock()
+	t.m[key] = val
+	t.Unlock()
+	return true
+}
+
+func (t *SharedDynObjectState) Has(key string) bool {
+	t.RLock()
+	_, exists := t.m[key]
+	t.RUnlock()
+	return exists
+}
+
+func (t *SharedDynObjectState) Delete(key string) bool {
+	t.Lock()
+	delete(t.m, key)
+	t.Unlock()
+	return true
+}
+
+func (t *SharedDynObjectState) Keys() []string {
+	t.RLock()
+	keys := make([]string, 0, len(t.m))
+	for k := range t.m {
+		keys = append(keys, k)
+	}
+	t.RUnlock()
+	return keys
+}
+
+var requireRegistry *require.Registry   // = new(require.Registry)
+var templateRegistry *template.Registry // = template.NewRegistry()
+var shared *SharedDynObjectState
 
 // Config defines the config options of the jsvm plugin.
 type Config struct {
@@ -47,7 +106,7 @@ type Config struct {
 
 	// HooksDir specifies the JS app hooks directory.
 	//
-	// If not set it fallbacks to a relative "pb_data/../pb_hooks" directory.
+	// If not set it fallbacks to a relative ".data/../.hooks" directory.
 	HooksDir string
 
 	// HooksFilesPattern specifies a regular expression pattern that
@@ -66,7 +125,7 @@ type Config struct {
 
 	// MigrationsDir specifies the JS migrations directory.
 	//
-	// If not set it fallbacks to a relative "pb_data/../pb_migrations" directory.
+	// If not set it fallbacks to a relative ".data/../pb_migrations" directory.
 	MigrationsDir string
 
 	// If not set it fallbacks to `^.*(\.js|\.ts)$`, aka. any MigrationDir file
@@ -76,8 +135,10 @@ type Config struct {
 	// TypesDir specifies the directory where to store the embedded
 	// TypeScript declarations file.
 	//
-	// If not set it fallbacks to "pb_data".
+	// If not set it fallbacks to ".data".
 	TypesDir string
+
+	ServersDir string
 }
 
 // MustRegister registers the jsvm plugin in the provided app instance
@@ -97,7 +158,7 @@ func Register(app core.App, config Config) error {
 	p := &plugin{app: app, config: config}
 
 	if p.config.HooksDir == "" {
-		p.config.HooksDir = filepath.Join(app.DataDir(), "../pb_hooks")
+		p.config.HooksDir = filepath.Join(app.DataDir(), "../.hooks")
 	}
 
 	if p.config.MigrationsDir == "" {
@@ -105,7 +166,7 @@ func Register(app core.App, config Config) error {
 	}
 
 	if p.config.HooksFilesPattern == "" {
-		p.config.HooksFilesPattern = `^.*(\.pb\.js|\.pb\.ts)$`
+		p.config.HooksFilesPattern = `^.*(\.cubby\.js|\.cubby\.ts)$`
 	}
 
 	if p.config.MigrationsFilesPattern == "" {
@@ -114,6 +175,14 @@ func Register(app core.App, config Config) error {
 
 	if p.config.TypesDir == "" {
 		p.config.TypesDir = app.DataDir()
+	}
+
+	if p.config.ServersDir == "" {
+		p.config.ServersDir = filepath.Join(app.DataDir(), "../.servers")
+	}
+
+	if !filepath.IsAbs(p.config.ServersDir) {
+		filepath.Abs(p.config.ServersDir)
 	}
 
 	p.app.OnAfterBootstrap().Add(func(e *core.BootstrapEvent) error {
@@ -126,6 +195,10 @@ func Register(app core.App, config Config) error {
 		return nil
 	})
 
+	requireRegistry = new(require.Registry)
+	templateRegistry = template.NewRegistry()
+	shared = &SharedDynObjectState{m: map[string]goja.Value{}}
+
 	if err := p.registerMigrations(); err != nil {
 		return fmt.Errorf("registerMigrations: %w", err)
 	}
@@ -134,12 +207,286 @@ func Register(app core.App, config Config) error {
 		return fmt.Errorf("registerHooks: %w", err)
 	}
 
+	if err := p.registerServers(); err != nil {
+		return fmt.Errorf("registerServers: %w", err)
+	}
+
 	return nil
 }
 
 type plugin struct {
-	app    core.App
-	config Config
+	app        core.App
+	serverCode api.BuildResult
+	loops      *loopPool
+	config     Config
+}
+
+type Request struct {
+	goja.Object
+}
+
+func RequestFromEcho(c echo.Context, vm *goja.Runtime) goja.Object {
+	v := vm.NewObject()
+	v.Set("url", c.Request().URL)
+	// v.Set("respond", responder)
+	v.Set("json", func(call goja.FunctionCall) goja.Value {
+		c.JSON(200, call.Arguments[0].Export())
+		return nil
+	})
+	v.Set("html", func(call goja.FunctionCall) goja.Value {
+		c.HTML(200, call.Arguments[0].String())
+		return nil
+	})
+	return *v
+}
+
+type GojaFn = func(call goja.FunctionCall) goja.Value
+
+func (p *plugin) registerServers() error {
+
+	absServersDir := p.config.ServersDir
+
+	p.serverCode = api.Build(api.BuildOptions{
+		// EntryPoints: []string{
+		// 	"./",
+		// },
+		Stdin: &api.StdinOptions{
+			Contents: `
+			import { config } from './index.cubby.ts';
+			
+			config()
+				.then(res => $configure(res))
+				.catch(err => {
+					console.log("Here is error", err)
+				})
+`,
+			ResolveDir: absServersDir,
+			Sourcefile: "init.ts",
+			Loader:     api.LoaderTSX,
+		},
+		// EntryPointsAdvanced: ent,
+		Plugins: []api.Plugin{
+			cdn.CDNPlugin,
+		},
+
+		AbsWorkingDir: absServersDir,
+		Format:        api.FormatIIFE,
+		Target:        api.ES2017,
+		Engines: []api.Engine{
+			{Name: api.EngineNode, Version: "12"},
+		},
+		Bundle:            true,
+		MinifyWhitespace:  false,
+		MinifyIdentifiers: false,
+		TsconfigRaw: `{
+			"compilerOptions": {
+				"module": "esnext",
+				"moduleResolution": "node",
+				"target": "es2017",
+				"resolveJsonModule": true,
+				"skipLibCheck": true
+			},	
+		}`,
+		// TsconfigRaw: `{
+		// 	"compilerOptions": {
+		// 		"target": "es2017",
+		// 		"allowJs": true,
+		// 		"checkJs": true,
+		// 		"preserveValueImports": false,
+		// 		"esModuleInterop": true,
+		// 		"forceConsistentCasingInFileNames": true,
+		// 		"resolveJsonModule": true,
+		// 		"skipLibCheck": true,
+		// 		"sourceMap": true,
+		// 		"strict": true
+		// 	}
+		// }`,
+		MinifySyntax: false,
+		LogLevel:     api.LogLevelInfo,
+		Outdir:       filepath.Join(filepath.Dir(absServersDir), "/.server_build"),
+		Write:        true,
+	})
+
+	sharedDyn := goja.NewSharedDynamicObject(shared)
+	var runnerV *goja.Runtime = goja.New()
+
+	var bindRunner = func(vm *goja.Runtime) {
+
+		requireRegistry.Enable(vm)
+		console.Enable(vm)
+		process.Enable(vm)
+		baseBinds(vm)
+		dbxBinds(vm)
+		filesystemBinds(vm)
+		tokensBinds(vm)
+		securityBinds(vm)
+		osBinds(vm)
+		filepathBinds(vm)
+		httpClientBinds(vm)
+		formsBinds(vm)
+		apisBinds(vm)
+		vm.Set("$app", p.app)
+		vm.Set("$template", templateRegistry)
+		vm.Set("__servers", absServersDir)
+		vm.Set("$shared", sharedDyn)
+		vm.Set("$configure", func(conf goja.FunctionCall) goja.Value {
+
+			vval := conf.Arguments[0].Export().(map[string]interface{})
+			fmt.Println("Configure", vval)
+			mountP, found := vval["mountAt"]
+			if !found || mountP == nil {
+				return nil
+			}
+			endp, found := vval["endpoints"]
+
+			fmt.Println("configure", vval)
+
+			if found && mountP.(string) != "" && endp != nil {
+				p.app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+
+					handler := func(c echo.Context) error {
+						var sk string = strings.Split(c.PathParams().Get("*", "default"), "/")[0]
+						var v, fnd = endp.(map[string]interface{})[sk]
+						if !fnd {
+							c.JSON(404, map[string]interface{}{"errror": "nothing here", "key": sk, "details": c.PathParams()})
+							return nil
+						}
+						var req goja.Object = RequestFromEcho(c, vm)
+						var fn GojaFn = v.(GojaFn)
+						res := fn(goja.FunctionCall{
+							This: vm.NewObject(),
+							Arguments: []goja.Value{
+								vm.ToValue(req),
+							},
+						})
+						totalResult := res.Export().(*goja.Promise)
+						if totalResult.State() == goja.PromiseStateRejected {
+							totalErr := totalResult.Result().Export()
+							return c.JSON(500, totalErr)
+						} else {
+							if totalResult.State() == goja.PromiseStateFulfilled {
+								totalSucc := totalResult.Result().Export()
+								return c.JSON(200, totalSucc)
+							} else {
+								// totalError := totalResult
+								return c.JSON(500, map[string]interface{}{"error": totalResult})
+							}
+						}
+					}
+					e.Router.Any(mountP.(string)+"*", handler)
+					e.Router.Any(mountP.(string)+"/", handler)
+					e.Router.Any(mountP.(string)+"*/", handler)
+
+					return nil
+				})
+				return nil
+			}
+			return nil
+		})
+
+		_, err := vm.RunString(string(p.serverCode.OutputFiles[0].Contents))
+		if err != nil {
+			fmt.Println("Error on init", err)
+		}
+
+	}
+	// ww.Add(1)
+	bindRunner(runnerV)
+	// runnerV.
+	// ww.Wait()
+	fmt.Println("Done init")
+
+	// loop := eventloop.NewEventLoop(eventloop.WithRegistry(requireRegistry), eventloop.EnableConsole(true))
+	// loop.Start()
+	// defer loop.Stop()
+
+	// sigs := make(chan (goja.Value), 1)
+	// var w sync.WaitGroup
+	// loop.RunOnLoop(func(vm *goja.Runtime) {
+	// 	w.Add(1)
+	// 	p, resolve, _ := vm.NewPromise()
+	// 	vm.Set("p", p)
+	// 	go func() {
+	// 		// time.Sleep(500 * time.Millisecond)   // or perform any other blocking operation
+	// 		loop.RunOnLoop(func(*goja.Runtime) { // resolve() must be called on the loop, cannot call it here
+	// 			// resolve(result)
+	// 			<-sigs
+	// 		})
+	// 	}()
+	// })
+
+	// w.Wait()
+	var w sync.WaitGroup
+	p.loops = newLoopPool(100, func() *eventloop.EventLoop {
+		n := eventloop.NewEventLoop()
+		n.Start()
+		defer n.Stop()
+		w.Add(1)
+		n.RunOnLoop(func(vm *goja.Runtime) {
+			requireRegistry.Enable(vm)
+			console.Enable(vm)
+			process.Enable(vm)
+			baseBinds(vm)
+			dbxBinds(vm)
+			filesystemBinds(vm)
+			tokensBinds(vm)
+			securityBinds(vm)
+			osBinds(vm)
+			filepathBinds(vm)
+			httpClientBinds(vm)
+			formsBinds(vm)
+			apisBinds(vm)
+			vm.Set("$server", p.serverCode)
+			vm.Set("$app", p.app)
+			vm.Set("$template", templateRegistry)
+			vm.Set("__servers", absServersDir)
+			vm.Set("$shared", sharedDyn)
+			// vm.Set("$configure", func(conf goja.Value) {
+			// 	// fmt.Println("Done@", conf.Export())
+
+			// 	vval := conf.Export().(map[string]interface{})
+			// 	// fmt.Println(vval)
+			// 	for k, v := range vval {
+			// 		fmt.Println(k, v)
+			// 	}
+
+			// 	w.Done()
+			// })
+
+			// _, err := vm.RunString(string(p.serverCode.OutputFiles[0].Contents))
+			// if err != nil {
+			// 	fmt.Println("Error on init", err)
+			// }
+			// pr := res.Export().(goja.Promise)
+			// fmt.Println("Result", pr.Result())
+			// fmt.Println()
+			w.Done()
+
+		})
+
+		return n
+	})
+	w.Wait()
+	fmt.Println("Done init")
+	// p.loops.run(func(vm *goja.Runtime) error {
+	// 	fmt.Println("Begiiin")
+	// 	res, err := vm.RunString(`console.log("__serververs")`)
+	// 	fmt.Println("done!", res)
+	// 	return err
+	// })
+	fmt.Println("doint")
+	// p.loops.run(func(vm *goja.Runtime) error {
+	// 	vm.RunOnLoop(func(r *goja.Runtime) {
+	// 		res, err := r.RunString(`console.log(__serververs)`)
+	// 		if err != nil {
+	// 			fmt.Println("Error on init", err)
+	// 		}
+	// 		fmt.Println(res)
+	// 	})
+	// 	return nil
+	// })
+
+	return nil
 }
 
 // registerMigrations registers the JS migrations loader.
@@ -150,20 +497,23 @@ func (p *plugin) registerMigrations() error {
 		return err
 	}
 
-	registry := new(require.Registry) // this can be shared by multiple runtimes
+	requireRegistry := new(require.Registry) // this can be shared by multiple runtimes
 
 	for file, content := range files {
 		vm := goja.New()
-		registry.Enable(vm)
+		requireRegistry.Enable(vm)
 		console.Enable(vm)
 		process.Enable(vm)
 		baseBinds(vm)
 		dbxBinds(vm)
 		tokensBinds(vm)
 		securityBinds(vm)
-		osBinds(vm)
-		filepathBinds(vm)
-		httpClientBinds(vm)
+		// note: disallow for now and give the authors of custom SaaS offerings
+		// 		 some time to adjust their code to avoid eventual security issues
+		//
+		// osBinds(vm)
+		// filepathBinds(vm)
+		// httpClientBinds(vm)
 
 		vm.Set("migrate", func(up, down func(db dbx.Builder) error) {
 			m.AppMigrations.Register(up, down, file)
@@ -226,14 +576,11 @@ func (p *plugin) registerHooks() error {
 	})
 
 	// safe to be shared across multiple vms
-	requireRegistry := new(require.Registry)
-	templateRegistry := template.NewRegistry()
 
 	sharedBinds := func(vm *goja.Runtime) {
 		requireRegistry.Enable(vm)
 		console.Enable(vm)
 		process.Enable(vm)
-
 		baseBinds(vm)
 		dbxBinds(vm)
 		filesystemBinds(vm)
@@ -244,8 +591,6 @@ func (p *plugin) registerHooks() error {
 		httpClientBinds(vm)
 		formsBinds(vm)
 		apisBinds(vm)
-		mailsBinds(vm)
-
 		vm.Set("$app", p.app)
 		vm.Set("$template", templateRegistry)
 		vm.Set("__hooks", absHooksDir)
@@ -265,11 +610,11 @@ func (p *plugin) registerHooks() error {
 	cronBinds(p.app, loader, executors)
 	routerBinds(p.app, loader, executors)
 
-	for file, content := range files {
+	for file, _ := range files {
 		func() {
 			defer func() {
 				if err := recover(); err != nil {
-					fmtErr := fmt.Errorf("Failed to execute %s:\n - %v", file, err)
+					fmtErr := fmt.Errorf("failed to execute %s:\n - %v", file, err)
 
 					if p.config.HooksWatch {
 						color.Red("%v", fmtErr)
@@ -279,9 +624,53 @@ func (p *plugin) registerHooks() error {
 				}
 			}()
 
-			_, err := loader.RunString(string(content))
-			if err != nil {
-				panic(err)
+			lastResult := api.Build(api.BuildOptions{
+				EntryPoints: []string{
+					"./" + file,
+				},
+				Plugins: []api.Plugin{
+					cdn.CDNPlugin,
+				},
+
+				AbsWorkingDir:     absHooksDir,
+				Format:            api.FormatIIFE,
+				Target:            api.ES2015,
+				Bundle:            true,
+				MinifyWhitespace:  false,
+				MinifyIdentifiers: false,
+				TsconfigRaw: `{
+					"compilerOptions": {
+						"target": "es2017",
+						"allowJs": true,
+						"checkJs": true,
+						"preserveValueImports": false,
+						"esModuleInterop": true,
+						"forceConsistentCasingInFileNames": true,
+						"resolveJsonModule": true,
+						"skipLibCheck": true,
+						"sourceMap": true,
+						"strict": true
+					}
+				}`,
+				MinifySyntax: false,
+				LogLevel:     api.LogLevelInfo,
+				Outdir:       filepath.Join(filepath.Dir(absHooksDir), "/.hook_build"),
+				Write:        false,
+			})
+
+			// fmt.Println(lastResult)
+
+			// _, err := loader.RunString(string(content))
+			if len(lastResult.OutputFiles) > 0 {
+				r, err := loader.RunString(string(lastResult.OutputFiles[0].Contents))
+				fmt.Println(r)
+				if err != nil {
+					// fmt.Println(err)
+					panic(err)
+					// return err
+				}
+			} else {
+				fmt.Println("Error while building")
 			}
 		}()
 	}
@@ -389,13 +778,25 @@ func (p *plugin) watchHooks() error {
 	// @todo replace once recursive watcher is added (https://github.com/fsnotify/fsnotify/issues/18)
 	dirsErr := filepath.Walk(p.config.HooksDir, func(path string, info fs.FileInfo, err error) error {
 		// ignore hidden directories and node_modules
-		if !info.IsDir() || info.Name() == "node_modules" || strings.HasPrefix(info.Name(), ".") {
+		if !info.IsDir() || info.Name() == "node_modules" {
 			return nil
 		}
 
 		return watcher.Add(path)
 	})
+	dirsSecondErr := filepath.Walk(p.config.ServersDir, func(path string, info fs.FileInfo, err error) error {
+		// ignore hidden directories and node_modules
+		if !info.IsDir() || info.Name() == "node_modules" {
+			return nil
+		}
+
+		return watcher.Add(path)
+	})
+
 	if dirsErr != nil {
+		watcher.Close()
+	}
+	if dirsSecondErr != nil {
 		watcher.Close()
 	}
 

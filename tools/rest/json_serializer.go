@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"strings"
 
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/search"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/search"
 )
 
 // Serializer represents custom REST JSON serializer based on echo.DefaultJSONSerializer,

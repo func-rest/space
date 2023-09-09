@@ -1,17 +1,17 @@
-// Package migrations contains the system PocketBase DB migrations.
+// Package migrations contains the system Space DB migrations.
 package migrations
 
 import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/models/settings"
+	"github.com/func-rest/space/tools/migrate"
+	"github.com/func-rest/space/tools/types"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/models/settings"
-	"github.com/pocketbase/pocketbase/tools/migrate"
-	"github.com/pocketbase/pocketbase/tools/types"
 )
 
 var AppMigrations migrate.MigrationsList

@@ -5,11 +5,11 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/func-rest/space/forms"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/security"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/pocketbase/pocketbase/forms"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/security"
 )
 
 func TestRecordPasswordResetConfirmValidateAndSubmit(t *testing.T) {

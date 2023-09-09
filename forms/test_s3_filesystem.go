@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/models/settings"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/security"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/models/settings"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/security"
 )
 
 const (

@@ -1,4 +1,4 @@
-// Package migratecmd adds a new "migrate" command support to a PocketBase instance.
+// Package migratecmd adds a new "migrate" command support to a Space instance.
 //
 // It also comes with automigrations support and templates generation
 // (both for JS and GO migration files).
@@ -23,11 +23,11 @@ import (
 	"time"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/migrations"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tools/inflector"
-	"github.com/pocketbase/pocketbase/tools/migrate"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/migrations"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tools/inflector"
+	"github.com/func-rest/space/tools/migrate"
 	"github.com/spf13/cobra"
 )
 

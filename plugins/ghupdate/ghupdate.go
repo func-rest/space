@@ -1,5 +1,5 @@
 // Package ghupdate implements a new command to selfupdate the current
-// PocketBase executable with the latest GitHub release.
+// Space executable with the latest GitHub release.
 //
 // Example usage:
 //
@@ -22,8 +22,8 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tools/archive"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/tools/archive"
 	"github.com/spf13/cobra"
 )
 
@@ -36,14 +36,14 @@ type HttpClient interface {
 //
 // NB! This plugin is considered experimental and its config options may change in the future.
 type Config struct {
-	// Owner specifies the account owner of the repository (default to "pocketbase").
+	// Owner specifies the account owner of the repository (default to "space").
 	Owner string
 
-	// Repo specifies the name of the repository (default to "pocketbase").
+	// Repo specifies the name of the repository (default to "space").
 	Repo string
 
 	// ArchiveExecutable specifies the name of the executable file in the release archive
-	// (default to "pocketbase"; an additional ".exe" check is also performed as a fallback).
+	// (default to "space"; an additional ".exe" check is also performed as a fallback).
 	ArchiveExecutable string
 
 	// Optional context to use when fetching and downloading the latest release.
@@ -71,15 +71,15 @@ func Register(app core.App, rootCmd *cobra.Command, config Config) error {
 	}
 
 	if p.config.Owner == "" {
-		p.config.Owner = "pocketbase"
+		p.config.Owner = "space"
 	}
 
 	if p.config.Repo == "" {
-		p.config.Repo = "pocketbase"
+		p.config.Repo = "space"
 	}
 
 	if p.config.ArchiveExecutable == "" {
-		p.config.ArchiveExecutable = "pocketbase"
+		p.config.ArchiveExecutable = "space"
 	}
 
 	if p.config.HttpClient == nil {
@@ -106,7 +106,7 @@ func (p *plugin) updateCmd() *cobra.Command {
 
 	command := &cobra.Command{
 		Use:   "update",
-		Short: "Automatically updates the current PocketBase executable with the latest available version",
+		Short: "Automatically updates the current Space executable with the latest available version",
 		// @todo remove after logs generalization
 		// prevents printing the error log twice
 		SilenceErrors: true,
@@ -163,7 +163,7 @@ func (p *plugin) update(withBackup bool) error {
 	}
 
 	if compareVersions(strings.TrimPrefix(p.currentVersion, "v"), strings.TrimPrefix(latest.Tag, "v")) <= 0 {
-		color.Green("You already have the latest PocketBase %s.", p.currentVersion)
+		color.Green("You already have the latest Space %s.", p.currentVersion)
 		return nil
 	}
 

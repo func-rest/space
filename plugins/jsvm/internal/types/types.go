@@ -8,9 +8,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/plugins/jsvm"
-	"github.com/pocketbase/pocketbase/tools/list"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/plugins/jsvm"
+	"github.com/func-rest/space/tools/list"
 	"github.com/pocketbase/tygoja"
 )
 
@@ -29,12 +29,12 @@ const heading = `
  *
  * ` + "```" + `js
  * // prints "Hello world!" on every 30 minutes
- * cronAdd("hello", "*\/30 * * * *", () => {
+ * cronAdd("hello", "*\/30 * * * *", (c) => {
  *     console.log("Hello world!")
  * })
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -53,7 +53,7 @@ declare function cronAdd(
  * cronRemove("hello")
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -74,7 +74,7 @@ declare function cronRemove(jobId: string): void;
  * }, $apis.requireAdminOrRecordAuth())
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -100,7 +100,7 @@ declare function routerAdd(
  * })
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -127,7 +127,7 @@ declare function routerUse(...middlewares: Array<string|echo.MiddlewareFunc>): v
  * })
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -138,7 +138,7 @@ declare function routerPre(...middlewares: Array<string|echo.MiddlewareFunc>): v
 // -------------------------------------------------------------------
 
 /**
- * Global helper variable that contains the absolute path to the app pb_hooks directory.
+ * Global helper variable that contains the absolute path to the app .hooks directory.
  *
  * @group PocketBase
  */
@@ -151,7 +151,7 @@ type appWithoutHooks = Omit<pocketbase.PocketBase, ` + "`on${string}`" + `>
  * ` + "`$app`" + ` is the current running PocketBase instance that is globally
  * available in each .pb.js file.
  *
- * _Note that this variable is available only in pb_hooks context._
+ * _Note that this variable is available only in .hooks context._
  *
  * @namespace
  * @group PocketBase
@@ -173,7 +173,7 @@ declare var $app: appWithoutHooks
  * ).render({"name": "John"})
  * ` + "```" + `
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @namespace
  * @group PocketBase

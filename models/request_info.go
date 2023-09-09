@@ -3,7 +3,7 @@ package models
 import (
 	"strings"
 
-	"github.com/pocketbase/pocketbase/models/schema"
+	"github.com/func-rest/space/models/schema"
 )
 
 // RequestInfo defines a HTTP request data struct, usually used

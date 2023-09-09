@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/archive"
-	"github.com/pocketbase/pocketbase/tools/list"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/archive"
+	"github.com/func-rest/space/tools/list"
 )
 
 func TestCreateBackup(t *testing.T) {

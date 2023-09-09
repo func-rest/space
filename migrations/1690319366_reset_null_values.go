@@ -3,10 +3,10 @@ package migrations
 import (
 	"fmt"
 
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
 )
 
 // Reset all previously inserted NULL values to the fields zero-default.

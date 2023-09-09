@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/resolvers"
+	"github.com/func-rest/space/tools/inflector"
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/search"
+	"github.com/func-rest/space/tools/security"
+	"github.com/func-rest/space/tools/types"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/resolvers"
-	"github.com/pocketbase/pocketbase/tools/inflector"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/search"
-	"github.com/pocketbase/pocketbase/tools/security"
-	"github.com/pocketbase/pocketbase/tools/types"
 	"github.com/spf13/cast"
 )
 

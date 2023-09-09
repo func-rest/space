@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tools/auth"
+	"github.com/func-rest/space/tools/security"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tools/auth"
-	"github.com/pocketbase/pocketbase/tools/security"
 	"golang.org/x/oauth2"
 )
 

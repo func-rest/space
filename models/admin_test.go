@@ -3,8 +3,8 @@ package models_test
 import (
 	"testing"
 
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tools/types"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tools/types"
 )
 
 func TestAdminTableName(t *testing.T) {

@@ -1,22 +1,22 @@
-// Package core is the backbone of PocketBase.
+// Package core is the backbone of Space.
 //
-// It defines the main PocketBase App interface and its base implementation.
+// It defines the main Space App interface and its base implementation.
 package core
 
 import (
 	"context"
 
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models/settings"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/hook"
+	"github.com/func-rest/space/tools/mailer"
+	"github.com/func-rest/space/tools/store"
+	"github.com/func-rest/space/tools/subscriptions"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models/settings"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/hook"
-	"github.com/pocketbase/pocketbase/tools/mailer"
-	"github.com/pocketbase/pocketbase/tools/store"
-	"github.com/pocketbase/pocketbase/tools/subscriptions"
 )
 
-// App defines the main PocketBase app interface.
+// App defines the main Space app interface.
 type App interface {
 	// Deprecated:
 	// This method may get removed in the near future.

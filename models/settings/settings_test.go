@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/func-rest/space/models/settings"
+	"github.com/func-rest/space/tools/auth"
+	"github.com/func-rest/space/tools/mailer"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/pocketbase/pocketbase/models/settings"
-	"github.com/pocketbase/pocketbase/tools/auth"
-	"github.com/pocketbase/pocketbase/tools/mailer"
 )
 
 func TestSettingsValidate(t *testing.T) {

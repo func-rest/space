@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/mail"
 
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/mails/templates"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tokens"
-	"github.com/pocketbase/pocketbase/tools/mailer"
-	"github.com/pocketbase/pocketbase/tools/rest"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/mails/templates"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tokens"
+	"github.com/func-rest/space/tools/mailer"
+	"github.com/func-rest/space/tools/rest"
 )
 
 // SendAdminPasswordReset sends a password reset request email to the specified admin.

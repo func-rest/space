@@ -7,15 +7,15 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/forms/validators"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/rest"
+	"github.com/func-rest/space/tools/types"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/forms/validators"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/rest"
-	"github.com/pocketbase/pocketbase/tools/types"
 )
 
 type testDataFieldScenario struct {

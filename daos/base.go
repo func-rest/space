@@ -1,4 +1,4 @@
-// Package daos handles common PocketBase DB model manipulations.
+// Package daos handles common Space DB model manipulations.
 //
 // Think of daos as DB repository and service layer in one.
 package daos
@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/func-rest/space/models"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/models"
 )
 
 // New creates a new Dao instance with the provided db builder

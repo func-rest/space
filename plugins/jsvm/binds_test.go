@@ -13,17 +13,17 @@ import (
 	"time"
 
 	"github.com/dop251/goja"
+	"github.com/func-rest/space/apis"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/mailer"
+	"github.com/func-rest/space/tools/security"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/mailer"
-	"github.com/pocketbase/pocketbase/tools/security"
 )
 
 func testBindsCount(vm *goja.Runtime, namespace string, count int, t *testing.T) {
@@ -484,60 +484,6 @@ func TestDbxBinds(t *testing.T) {
 	}
 }
 
-func TestMailsBindsCount(t *testing.T) {
-	vm := goja.New()
-	mailsBinds(vm)
-
-	testBindsCount(vm, "$mails", 4, t)
-}
-
-func TestMailsBinds(t *testing.T) {
-	app, _ := tests.NewTestApp()
-	defer app.Cleanup()
-
-	admin, err := app.Dao().FindAdminByEmail("test@example.com")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	record, err := app.Dao().FindAuthRecordByEmail("users", "test@example.com")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	vm := goja.New()
-	baseBinds(vm)
-	mailsBinds(vm)
-	vm.Set("$app", app)
-	vm.Set("admin", admin)
-	vm.Set("record", record)
-
-	_, vmErr := vm.RunString(`
-		$mails.sendAdminPasswordReset($app, admin);
-		if (!$app.testMailer.lastMessage.html.includes("/_/#/confirm-password-reset/")) {
-			throw new Error("Expected admin password reset email")
-		}
-
-		$mails.sendRecordPasswordReset($app, record);
-		if (!$app.testMailer.lastMessage.html.includes("/_/#/auth/confirm-password-reset/")) {
-			throw new Error("Expected record password reset email")
-		}
-
-		$mails.sendRecordVerification($app, record);
-		if (!$app.testMailer.lastMessage.html.includes("/_/#/auth/confirm-verification/")) {
-			throw new Error("Expected record verification email")
-		}
-
-		$mails.sendRecordChangeEmail($app, record, "new@example.com");
-		if (!$app.testMailer.lastMessage.html.includes("/_/#/auth/confirm-email-change/")) {
-			throw new Error("Expected record email change email")
-		}
-	`)
-	if vmErr != nil {
-		t.Fatal(vmErr)
-	}
-}
-
 func TestTokensBindsCount(t *testing.T) {
 	vm := goja.New()
 	tokensBinds(vm)
@@ -560,11 +506,11 @@ func TestTokensBinds(t *testing.T) {
 	}
 
 	vm := goja.New()
-	baseBinds(vm)
-	tokensBinds(vm)
 	vm.Set("$app", app)
 	vm.Set("admin", admin)
 	vm.Set("record", record)
+	baseBinds(vm)
+	tokensBinds(vm)
 
 	sceneraios := []struct {
 		js  string
@@ -622,40 +568,7 @@ func TestSecurityBindsCount(t *testing.T) {
 	vm := goja.New()
 	securityBinds(vm)
 
-	testBindsCount(vm, "$security", 12, t)
-}
-
-func TestSecurityCryptoBinds(t *testing.T) {
-	app, _ := tests.NewTestApp()
-	defer app.Cleanup()
-
-	vm := goja.New()
-	baseBinds(vm)
-	securityBinds(vm)
-
-	sceneraios := []struct {
-		js       string
-		expected string
-	}{
-		{`$security.md5("123")`, "202cb962ac59075b964b07152d234b70"},
-		{`$security.sha256("123")`, "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"},
-		{`$security.sha512("123")`, "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2"},
-	}
-
-	for _, s := range sceneraios {
-		t.Run(s.js, func(t *testing.T) {
-			result, err := vm.RunString(s.js)
-			if err != nil {
-				t.Fatalf("Failed to execute js script, got %v", err)
-			}
-
-			v, _ := result.Export().(string)
-
-			if v != s.expected {
-				t.Fatalf("Expected %v \ngot \n%v", s.expected, v)
-			}
-		})
-	}
+	testBindsCount(vm, "$security", 9, t)
 }
 
 func TestSecurityRandomStringBinds(t *testing.T) {
@@ -677,18 +590,16 @@ func TestSecurityRandomStringBinds(t *testing.T) {
 	}
 
 	for _, s := range sceneraios {
-		t.Run(s.js, func(t *testing.T) {
-			result, err := vm.RunString(s.js)
-			if err != nil {
-				t.Fatalf("Failed to execute js script, got %v", err)
-			}
+		result, err := vm.RunString(s.js)
+		if err != nil {
+			t.Fatalf("[%s] Failed to execute js script, got %v", s.js, err)
+		}
 
-			v, _ := result.Export().(string)
+		v, _ := result.Export().(string)
 
-			if len(v) != s.length {
-				t.Fatalf("Expected %d length string, \ngot \n%v", s.length, v)
-			}
-		})
+		if len(v) != s.length {
+			t.Fatalf("[%s] Expected %d length string, \ngot \n%v", s.js, s.length, v)
+		}
 	}
 }
 
@@ -719,18 +630,16 @@ func TestSecurityJWTBinds(t *testing.T) {
 	}
 
 	for _, s := range sceneraios {
-		t.Run(s.js, func(t *testing.T) {
-			result, err := vm.RunString(s.js)
-			if err != nil {
-				t.Fatalf("Failed to execute js script, got %v", err)
-			}
+		result, err := vm.RunString(s.js)
+		if err != nil {
+			t.Fatalf("[%s] Failed to execute js script, got %v", s.js, err)
+		}
 
-			raw, _ := json.Marshal(result.Export())
+		raw, _ := json.Marshal(result.Export())
 
-			if string(raw) != s.expected {
-				t.Fatalf("Expected \n%s, \ngot \n%s", s.expected, raw)
-			}
-		})
+		if string(raw) != s.expected {
+			t.Fatalf("[%s] Expected \n%s, \ngot \n%s", s.js, s.expected, raw)
+		}
 	}
 }
 

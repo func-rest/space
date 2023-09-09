@@ -8,11 +8,11 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/types"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/types"
 )
 
 func TestFileToken(t *testing.T) {

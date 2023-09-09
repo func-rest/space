@@ -1,4 +1,4 @@
-// Package apis implements the default PocketBase api services and middlewares.
+// Package apis implements the default Space api services and middlewares.
 package apis
 
 import (
@@ -12,11 +12,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/tools/rest"
+	"github.com/func-rest/space/ui"
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/tools/rest"
-	"github.com/pocketbase/pocketbase/ui"
 	"github.com/spf13/cast"
 )
 

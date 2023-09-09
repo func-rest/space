@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/resolvers"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/search"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/resolvers"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/search"
 )
 
 func TestRecordFieldResolverUpdateQuery(t *testing.T) {

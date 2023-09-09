@@ -1,9 +1,9 @@
-// Package models implements all PocketBase DB models and DTOs.
+// Package models implements all Space DB models and DTOs.
 package models
 
 import (
-	"github.com/pocketbase/pocketbase/tools/security"
-	"github.com/pocketbase/pocketbase/tools/types"
+	"github.com/func-rest/space/tools/security"
+	"github.com/func-rest/space/tools/types"
 )
 
 const (

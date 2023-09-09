@@ -12,16 +12,16 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/settings"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/hook"
+	"github.com/func-rest/space/tools/mailer"
+	"github.com/func-rest/space/tools/routine"
+	"github.com/func-rest/space/tools/store"
+	"github.com/func-rest/space/tools/subscriptions"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/settings"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/hook"
-	"github.com/pocketbase/pocketbase/tools/mailer"
-	"github.com/pocketbase/pocketbase/tools/routine"
-	"github.com/pocketbase/pocketbase/tools/store"
-	"github.com/pocketbase/pocketbase/tools/subscriptions"
 )
 
 const (
@@ -37,7 +37,7 @@ const (
 
 var _ App = (*BaseApp)(nil)
 
-// BaseApp implements core.App and defines the base PocketBase app structure.
+// BaseApp implements core.App and defines the base Space app structure.
 type BaseApp struct {
 	// configurable parameters
 	isDebug          bool

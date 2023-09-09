@@ -3,9 +3,9 @@ package core_test
 import (
 	"testing"
 
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tools/list"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tools/list"
 )
 
 func TestBaseCollectionEventTags(t *testing.T) {

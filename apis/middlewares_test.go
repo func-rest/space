@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/func-rest/space/apis"
+	"github.com/func-rest/space/tests"
 	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/tests"
 )
 
 func TestRequireGuestOnly(t *testing.T) {

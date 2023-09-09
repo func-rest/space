@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -16,25 +15,24 @@ import (
 	"time"
 
 	"github.com/dop251/goja"
+	"github.com/func-rest/space/apis"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/forms"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/models/schema"
+	"github.com/func-rest/space/tokens"
+	"github.com/func-rest/space/tools/cron"
+	"github.com/func-rest/space/tools/filesystem"
+	"github.com/func-rest/space/tools/hook"
+	"github.com/func-rest/space/tools/inflector"
+	"github.com/func-rest/space/tools/list"
+	"github.com/func-rest/space/tools/mailer"
+	"github.com/func-rest/space/tools/security"
+	"github.com/func-rest/space/tools/types"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/forms"
-	"github.com/pocketbase/pocketbase/mails"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/models/schema"
-	"github.com/pocketbase/pocketbase/tokens"
-	"github.com/pocketbase/pocketbase/tools/cron"
-	"github.com/pocketbase/pocketbase/tools/filesystem"
-	"github.com/pocketbase/pocketbase/tools/hook"
-	"github.com/pocketbase/pocketbase/tools/inflector"
-	"github.com/pocketbase/pocketbase/tools/list"
-	"github.com/pocketbase/pocketbase/tools/mailer"
-	"github.com/pocketbase/pocketbase/tools/security"
-	"github.com/pocketbase/pocketbase/tools/types"
 	"github.com/spf13/cobra"
 )
 
@@ -113,14 +111,10 @@ func cronBinds(app core.App, loader *goja.Runtime, executors *vmsPool) {
 		pr := goja.MustCompile("", "{("+handler+").apply(undefined)}", true)
 
 		err := scheduler.Add(jobId, cronExpr, func() {
-			err := executors.run(func(executor *goja.Runtime) error {
+			executors.run(func(executor *goja.Runtime) error {
 				_, err := executor.RunProgram(pr)
 				return err
 			})
-
-			if err != nil && app.IsDebug() {
-				fmt.Println("[cronAdd] failed to execute cron job " + jobId + ": " + err.Error())
-			}
 		})
 		if err != nil {
 			panic("[cronAdd] failed to register cron job " + jobId + ": " + err.Error())
@@ -421,19 +415,6 @@ func dbxBinds(vm *goja.Runtime) {
 	obj.Set("notBetween", dbx.NotBetween)
 }
 
-func mailsBinds(vm *goja.Runtime) {
-	obj := vm.NewObject()
-	vm.Set("$mails", obj)
-
-	// admin
-	obj.Set("sendAdminPasswordReset", mails.SendAdminPasswordReset)
-
-	// record
-	obj.Set("sendRecordPasswordReset", mails.SendRecordPasswordReset)
-	obj.Set("sendRecordVerification", mails.SendRecordVerification)
-	obj.Set("sendRecordChangeEmail", mails.SendRecordChangeEmail)
-}
-
 func tokensBinds(vm *goja.Runtime) {
 	obj := vm.NewObject()
 	vm.Set("$tokens", obj)
@@ -454,11 +435,6 @@ func tokensBinds(vm *goja.Runtime) {
 func securityBinds(vm *goja.Runtime) {
 	obj := vm.NewObject()
 	vm.Set("$security", obj)
-
-	// crypto
-	obj.Set("md5", security.MD5)
-	obj.Set("sha256", security.SHA256)
-	obj.Set("sha512", security.SHA512)
 
 	// random
 	obj.Set("randomString", security.RandomString)

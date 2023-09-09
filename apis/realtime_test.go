@@ -6,15 +6,15 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/func-rest/space/apis"
+	"github.com/func-rest/space/core"
+	"github.com/func-rest/space/daos"
+	"github.com/func-rest/space/models"
+	"github.com/func-rest/space/tests"
+	"github.com/func-rest/space/tools/hook"
+	"github.com/func-rest/space/tools/subscriptions"
 	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
-	"github.com/pocketbase/pocketbase/tests"
-	"github.com/pocketbase/pocketbase/tools/hook"
-	"github.com/pocketbase/pocketbase/tools/subscriptions"
 )
 
 func TestRealtimeConnect(t *testing.T) {

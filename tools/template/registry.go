@@ -6,19 +6,19 @@
 //
 // Example:
 //
-// 	registry := template.NewRegistry()
+//	registry := template.NewRegistry()
 //
-// 	html1, err := registry.LoadFiles(
-// 		// the files set wil be parsed only once and then cached
-// 		"layout.html",
-// 		"content.html",
-// 	).Render(map[string]any{"name": "John"})
+//	html1, err := registry.LoadFiles(
+//		// the files set wil be parsed only once and then cached
+//		"layout.html",
+//		"content.html",
+//	).Render(map[string]any{"name": "John"})
 //
-// 	html2, err := registry.LoadFiles(
-// 		// reuse the already parsed and cached files set
-// 		"layout.html",
-// 		"content.html",
-// 	).Render(map[string]any{"name": "Jane"})
+//	html2, err := registry.LoadFiles(
+//		// reuse the already parsed and cached files set
+//		"layout.html",
+//		"content.html",
+//	).Render(map[string]any{"name": "Jane"})
 package template
 
 import (
@@ -27,7 +27,7 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/pocketbase/pocketbase/tools/store"
+	"github.com/func-rest/space/tools/store"
 )
 
 // NewRegistry creates and initializes a new blank templates registry.

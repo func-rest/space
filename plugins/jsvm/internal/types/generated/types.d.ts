@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+type _TygojaDict = { [key:string | number | symbol]: any; }
+type _TygojaAny = any
 
 // -------------------------------------------------------------------
 // cronBinds
@@ -14,12 +16,12 @@
  *
  * ```js
  * // prints "Hello world!" on every 30 minutes
- * cronAdd("hello", "*\/30 * * * *", () => {
+ * cronAdd("hello", "*\/30 * * * *", (c) => {
  *     console.log("Hello world!")
  * })
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -38,7 +40,7 @@ declare function cronAdd(
  * cronRemove("hello")
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -59,7 +61,7 @@ declare function cronRemove(jobId: string): void;
  * }, $apis.requireAdminOrRecordAuth())
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -85,7 +87,7 @@ declare function routerAdd(
  * })
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -112,7 +114,7 @@ declare function routerUse(...middlewares: Array<string|echo.MiddlewareFunc>): v
  * })
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @group PocketBase
  */
@@ -123,7 +125,7 @@ declare function routerPre(...middlewares: Array<string|echo.MiddlewareFunc>): v
 // -------------------------------------------------------------------
 
 /**
- * Global helper variable that contains the absolute path to the app pb_hooks directory.
+ * Global helper variable that contains the absolute path to the app .hooks directory.
  *
  * @group PocketBase
  */
@@ -136,7 +138,7 @@ type appWithoutHooks = Omit<pocketbase.PocketBase, `on${string}`>
  * `$app` is the current running PocketBase instance that is globally
  * available in each .pb.js file.
  *
- * _Note that this variable is available only in pb_hooks context._
+ * _Note that this variable is available only in .hooks context._
  *
  * @namespace
  * @group PocketBase
@@ -158,7 +160,7 @@ declare var $app: appWithoutHooks
  * ).render({"name": "John"})
  * ```
  *
- * _Note that this method is available only in pb_hooks context._
+ * _Note that this method is available only in .hooks context._
  *
  * @namespace
  * @group PocketBase
@@ -966,8 +968,6 @@ declare function migrate(
 /** @group PocketBase */declare function onSettingsBeforeUpdateRequest(handler: (e: core.SettingsUpdateEvent) => void): void
 /** @group PocketBase */declare function onSettingsListRequest(handler: (e: core.SettingsListEvent) => void): void
 /** @group PocketBase */declare function onTerminate(handler: (e: core.TerminateEvent) => void): void
-type _TygojaDict = { [key:string | number | symbol]: any; }
-type _TygojaAny = any
 
 /**
  * Package os provides a platform-independent interface to operating system
@@ -1056,10 +1056,6 @@ namespace os {
    */
   readdirnames(n: number): Array<string>
  }
- /**
-  * A DirEntry is an entry read from a directory
-  * (using the ReadDir function or a File's ReadDir method).
-  */
  interface DirEntry extends fs.DirEntry{}
  interface File {
   /**
@@ -1076,90 +1072,63 @@ namespace os {
    */
   readDir(n: number): Array<DirEntry>
  }
- interface readDir {
-  /**
-   * ReadDir reads the named directory,
-   * returning all its directory entries sorted by filename.
-   * If an error occurs reading the directory,
-   * ReadDir returns the entries it was able to read before the error,
-   * along with the error.
-   */
-  (name: string): Array<DirEntry>
- }
  /**
-  * Auxiliary information if the File describes a directory
+  * ReadDir reads the named directory,
+  * returning all its directory entries sorted by filename.
+  * If an error occurs reading the directory,
+  * ReadDir returns the entries it was able to read before the error,
+  * along with the error.
   */
+ interface readDir {(name: string): Array<DirEntry>}
  interface dirInfo {
  }
- interface expand {
-  /**
-   * Expand replaces ${var} or $var in the string based on the mapping function.
-   * For example, os.ExpandEnv(s) is equivalent to os.Expand(s, os.Getenv).
-   */
-  (s: string, mapping: (_arg0: string) => string): string
- }
- interface expandEnv {
-  /**
-   * ExpandEnv replaces ${var} or $var in the string according to the values
-   * of the current environment variables. References to undefined
-   * variables are replaced by the empty string.
-   */
-  (s: string): string
- }
- interface getenv {
-  /**
-   * Getenv retrieves the value of the environment variable named by the key.
-   * It returns the value, which will be empty if the variable is not present.
-   * To distinguish between an empty value and an unset value, use LookupEnv.
-   */
-  (key: string): string
- }
- interface lookupEnv {
-  /**
-   * LookupEnv retrieves the value of the environment variable named
-   * by the key. If the variable is present in the environment the
-   * value (which may be empty) is returned and the boolean is true.
-   * Otherwise the returned value will be empty and the boolean will
-   * be false.
-   */
-  (key: string): [string, boolean]
- }
- interface setenv {
-  /**
-   * Setenv sets the value of the environment variable named by the key.
-   * It returns an error, if any.
-   */
-  (key: string): void
- }
- interface unsetenv {
-  /**
-   * Unsetenv unsets a single environment variable.
-   */
-  (key: string): void
- }
- interface clearenv {
-  /**
-   * Clearenv deletes all environment variables.
-   */
-  (): void
- }
- interface environ {
-  /**
-   * Environ returns a copy of strings representing the environment,
-   * in the form "key=value".
-   */
-  (): Array<string>
- }
+ /**
+  * Expand replaces ${var} or $var in the string based on the mapping function.
+  * For example, os.ExpandEnv(s) is equivalent to os.Expand(s, os.Getenv).
+  */
+ interface expand {(s: string, mapping: (_arg0: string) => string): string}
+ /**
+  * ExpandEnv replaces ${var} or $var in the string according to the values
+  * of the current environment variables. References to undefined
+  * variables are replaced by the empty string.
+  */
+ interface expandEnv {(s: string): string}
+ /**
+  * Getenv retrieves the value of the environment variable named by the key.
+  * It returns the value, which will be empty if the variable is not present.
+  * To distinguish between an empty value and an unset value, use LookupEnv.
+  */
+ interface getenv {(key: string): string}
+ /**
+  * LookupEnv retrieves the value of the environment variable named
+  * by the key. If the variable is present in the environment the
+  * value (which may be empty) is returned and the boolean is true.
+  * Otherwise the returned value will be empty and the boolean will
+  * be false.
+  */
+ interface lookupEnv {(key: string): [string, boolean]}
+ /**
+  * Setenv sets the value of the environment variable named by the key.
+  * It returns an error, if any.
+  */
+ interface setenv {(key: string): void}
+ /**
+  * Unsetenv unsets a single environment variable.
+  */
+ interface unsetenv {(key: string): void}
+ /**
+  * Clearenv deletes all environment variables.
+  */
+ interface clearenv {(): void}
+ /**
+  * Environ returns a copy of strings representing the environment,
+  * in the form "key=value".
+  */
+ interface environ {(): Array<string>}
  interface timeout {
   timeout(): boolean
  }
- /**
-  * PathError records an error and the operation and file path that caused it.
-  */
  interface PathError extends fs.PathError{}
- /**
-  * SyscallError records an error from a specific system call.
-  */
  interface SyscallError {
   syscall: string
   err: Error
@@ -1176,71 +1145,54 @@ namespace os {
    */
   timeout(): boolean
  }
- interface newSyscallError {
-  /**
-   * NewSyscallError returns, as an error, a new SyscallError
-   * with the given system call name and error details.
-   * As a convenience, if err is nil, NewSyscallError returns nil.
-   */
-  (syscall: string, err: Error): void
- }
- interface isExist {
-  /**
-   * IsExist returns a boolean indicating whether the error is known to report
-   * that a file or directory already exists. It is satisfied by ErrExist as
-   * well as some syscall errors.
-   * 
-   * This function predates errors.Is. It only supports errors returned by
-   * the os package. New code should use errors.Is(err, fs.ErrExist).
-   */
-  (err: Error): boolean
- }
- interface isNotExist {
-  /**
-   * IsNotExist returns a boolean indicating whether the error is known to
-   * report that a file or directory does not exist. It is satisfied by
-   * ErrNotExist as well as some syscall errors.
-   * 
-   * This function predates errors.Is. It only supports errors returned by
-   * the os package. New code should use errors.Is(err, fs.ErrNotExist).
-   */
-  (err: Error): boolean
- }
- interface isPermission {
-  /**
-   * IsPermission returns a boolean indicating whether the error is known to
-   * report that permission is denied. It is satisfied by ErrPermission as well
-   * as some syscall errors.
-   * 
-   * This function predates errors.Is. It only supports errors returned by
-   * the os package. New code should use errors.Is(err, fs.ErrPermission).
-   */
-  (err: Error): boolean
- }
- interface isTimeout {
-  /**
-   * IsTimeout returns a boolean indicating whether the error is known
-   * to report that a timeout occurred.
-   * 
-   * This function predates errors.Is, and the notion of whether an
-   * error indicates a timeout can be ambiguous. For example, the Unix
-   * error EWOULDBLOCK sometimes indicates a timeout and sometimes does not.
-   * New code should use errors.Is with a value appropriate to the call
-   * returning the error, such as os.ErrDeadlineExceeded.
-   */
-  (err: Error): boolean
- }
- interface syscallErrorType extends syscall.Errno{}
  /**
-  * Process stores the information about a process created by StartProcess.
+  * NewSyscallError returns, as an error, a new SyscallError
+  * with the given system call name and error details.
+  * As a convenience, if err is nil, NewSyscallError returns nil.
   */
+ interface newSyscallError {(syscall: string, err: Error): void}
+ /**
+  * IsExist returns a boolean indicating whether the error is known to report
+  * that a file or directory already exists. It is satisfied by ErrExist as
+  * well as some syscall errors.
+  * 
+  * This function predates errors.Is. It only supports errors returned by
+  * the os package. New code should use errors.Is(err, fs.ErrExist).
+  */
+ interface isExist {(err: Error): boolean}
+ /**
+  * IsNotExist returns a boolean indicating whether the error is known to
+  * report that a file or directory does not exist. It is satisfied by
+  * ErrNotExist as well as some syscall errors.
+  * 
+  * This function predates errors.Is. It only supports errors returned by
+  * the os package. New code should use errors.Is(err, fs.ErrNotExist).
+  */
+ interface isNotExist {(err: Error): boolean}
+ /**
+  * IsPermission returns a boolean indicating whether the error is known to
+  * report that permission is denied. It is satisfied by ErrPermission as well
+  * as some syscall errors.
+  * 
+  * This function predates errors.Is. It only supports errors returned by
+  * the os package. New code should use errors.Is(err, fs.ErrPermission).
+  */
+ interface isPermission {(err: Error): boolean}
+ /**
+  * IsTimeout returns a boolean indicating whether the error is known
+  * to report that a timeout occurred.
+  * 
+  * This function predates errors.Is, and the notion of whether an
+  * error indicates a timeout can be ambiguous. For example, the Unix
+  * error EWOULDBLOCK sometimes indicates a timeout and sometimes does not.
+  * New code should use errors.Is with a value appropriate to the call
+  * returning the error, such as os.ErrDeadlineExceeded.
+  */
+ interface isTimeout {(err: Error): boolean}
+ interface syscallErrorType extends syscall.Errno{}
  interface Process {
   pid: number
  }
- /**
-  * ProcAttr holds the attributes that will be applied to a new process
-  * started by StartProcess.
-  */
  interface ProcAttr {
   /**
    * If Dir is non-empty, the child changes into the directory before
@@ -1272,57 +1224,44 @@ namespace os {
    */
   sys?: syscall.SysProcAttr
  }
- /**
-  * A Signal represents an operating system signal.
-  * The usual underlying implementation is operating system-dependent:
-  * on Unix it is syscall.Signal.
-  */
  interface Signal {
   string(): string
   signal(): void // to distinguish from other Stringers
  }
- interface getpid {
-  /**
-   * Getpid returns the process id of the caller.
-   */
-  (): number
- }
- interface getppid {
-  /**
-   * Getppid returns the process id of the caller's parent.
-   */
-  (): number
- }
- interface findProcess {
-  /**
-   * FindProcess looks for a running process by its pid.
-   * 
-   * The Process it returns can be used to obtain information
-   * about the underlying operating system process.
-   * 
-   * On Unix systems, FindProcess always succeeds and returns a Process
-   * for the given pid, regardless of whether the process exists.
-   */
-  (pid: number): (Process | undefined)
- }
- interface startProcess {
-  /**
-   * StartProcess starts a new process with the program, arguments and attributes
-   * specified by name, argv and attr. The argv slice will become os.Args in the
-   * new process, so it normally starts with the program name.
-   * 
-   * If the calling goroutine has locked the operating system thread
-   * with runtime.LockOSThread and modified any inheritable OS-level
-   * thread state (for example, Linux or Plan 9 name spaces), the new
-   * process will inherit the caller's thread state.
-   * 
-   * StartProcess is a low-level interface. The os/exec package provides
-   * higher-level interfaces.
-   * 
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string, argv: Array<string>, attr: ProcAttr): (Process | undefined)
- }
+ /**
+  * Getpid returns the process id of the caller.
+  */
+ interface getpid {(): number}
+ /**
+  * Getppid returns the process id of the caller's parent.
+  */
+ interface getppid {(): number}
+ /**
+  * FindProcess looks for a running process by its pid.
+  * 
+  * The Process it returns can be used to obtain information
+  * about the underlying operating system process.
+  * 
+  * On Unix systems, FindProcess always succeeds and returns a Process
+  * for the given pid, regardless of whether the process exists.
+  */
+ interface findProcess {(pid: number): (Process | undefined)}
+ /**
+  * StartProcess starts a new process with the program, arguments and attributes
+  * specified by name, argv and attr. The argv slice will become os.Args in the
+  * new process, so it normally starts with the program name.
+  * 
+  * If the calling goroutine has locked the operating system thread
+  * with runtime.LockOSThread and modified any inheritable OS-level
+  * thread state (for example, Linux or Plan 9 name spaces), the new
+  * process will inherit the caller's thread state.
+  * 
+  * StartProcess is a low-level interface. The os/exec package provides
+  * higher-level interfaces.
+  * 
+  * If there is an error, it will be of type *PathError.
+  */
+ interface startProcess {(name: string, argv: Array<string>, attr: ProcAttr): (Process | undefined)}
  interface Process {
   /**
    * Release releases any resources associated with the Process p,
@@ -1401,9 +1340,6 @@ namespace os {
    */
   sysUsage(): any
  }
- /**
-  * ProcessState stores information about a process, as reported by Wait.
-  */
  interface ProcessState {
  }
  interface ProcessState {
@@ -1422,32 +1358,26 @@ namespace os {
    */
   exitCode(): number
  }
- interface executable {
-  /**
-   * Executable returns the path name for the executable that started
-   * the current process. There is no guarantee that the path is still
-   * pointing to the correct executable. If a symlink was used to start
-   * the process, depending on the operating system, the result might
-   * be the symlink or the path it pointed to. If a stable result is
-   * needed, path/filepath.EvalSymlinks might help.
-   * 
-   * Executable returns an absolute path unless an error occurred.
-   * 
-   * The main use case is finding resources located relative to an
-   * executable.
-   */
-  (): string
- }
+ /**
+  * Executable returns the path name for the executable that started
+  * the current process. There is no guarantee that the path is still
+  * pointing to the correct executable. If a symlink was used to start
+  * the process, depending on the operating system, the result might
+  * be the symlink or the path it pointed to. If a stable result is
+  * needed, path/filepath.EvalSymlinks might help.
+  * 
+  * Executable returns an absolute path unless an error occurred.
+  * 
+  * The main use case is finding resources located relative to an
+  * executable.
+  */
+ interface executable {(): string}
  interface File {
   /**
    * Name returns the name of the file as presented to Open.
    */
   name(): string
  }
- /**
-  * LinkError records an error during a link or symlink or rename
-  * system call and the paths that caused it.
-  */
  interface LinkError {
   op: string
   old: string
@@ -1483,8 +1413,8 @@ namespace os {
    */
   readFrom(r: io.Reader): number
  }
- type _subaAtvj = io.Writer
- interface onlyWriter extends _subaAtvj {
+ type _subUwtMP = io.Writer
+ interface onlyWriter extends _subUwtMP {
  }
  interface File {
   /**
@@ -1511,10 +1441,6 @@ namespace os {
    * relative to the current offset, and 2 means relative to the end.
    * It returns the new offset and an error, if any.
    * The behavior of Seek on a file opened with O_APPEND is not specified.
-   * 
-   * If f is a directory, the behavior of Seek varies by operating
-   * system; you can seek to the beginning of the directory on Unix-like
-   * operating systems, but not on Windows.
    */
   seek(offset: number, whence: number): number
  }
@@ -1525,143 +1451,122 @@ namespace os {
    */
   writeString(s: string): number
  }
- interface mkdir {
-  /**
-   * Mkdir creates a new directory with the specified name and permission
-   * bits (before umask).
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string, perm: FileMode): void
- }
- interface chdir {
-  /**
-   * Chdir changes the current working directory to the named directory.
-   * If there is an error, it will be of type *PathError.
-   */
-  (dir: string): void
- }
- interface open {
-  /**
-   * Open opens the named file for reading. If successful, methods on
-   * the returned file can be used for reading; the associated file
-   * descriptor has mode O_RDONLY.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): (File | undefined)
- }
- interface create {
-  /**
-   * Create creates or truncates the named file. If the file already exists,
-   * it is truncated. If the file does not exist, it is created with mode 0666
-   * (before umask). If successful, methods on the returned File can
-   * be used for I/O; the associated file descriptor has mode O_RDWR.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): (File | undefined)
- }
- interface openFile {
-  /**
-   * OpenFile is the generalized open call; most users will use Open
-   * or Create instead. It opens the named file with specified flag
-   * (O_RDONLY etc.). If the file does not exist, and the O_CREATE flag
-   * is passed, it is created with mode perm (before umask). If successful,
-   * methods on the returned File can be used for I/O.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string, flag: number, perm: FileMode): (File | undefined)
- }
- interface rename {
-  /**
-   * Rename renames (moves) oldpath to newpath.
-   * If newpath already exists and is not a directory, Rename replaces it.
-   * OS-specific restrictions may apply when oldpath and newpath are in different directories.
-   * If there is an error, it will be of type *LinkError.
-   */
-  (oldpath: string): void
- }
- interface tempDir {
-  /**
-   * TempDir returns the default directory to use for temporary files.
-   * 
-   * On Unix systems, it returns $TMPDIR if non-empty, else /tmp.
-   * On Windows, it uses GetTempPath, returning the first non-empty
-   * value from %TMP%, %TEMP%, %USERPROFILE%, or the Windows directory.
-   * On Plan 9, it returns /tmp.
-   * 
-   * The directory is neither guaranteed to exist nor have accessible
-   * permissions.
-   */
-  (): string
- }
- interface userCacheDir {
-  /**
-   * UserCacheDir returns the default root directory to use for user-specific
-   * cached data. Users should create their own application-specific subdirectory
-   * within this one and use that.
-   * 
-   * On Unix systems, it returns $XDG_CACHE_HOME as specified by
-   * https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html if
-   * non-empty, else $HOME/.cache.
-   * On Darwin, it returns $HOME/Library/Caches.
-   * On Windows, it returns %LocalAppData%.
-   * On Plan 9, it returns $home/lib/cache.
-   * 
-   * If the location cannot be determined (for example, $HOME is not defined),
-   * then it will return an error.
-   */
-  (): string
- }
- interface userConfigDir {
-  /**
-   * UserConfigDir returns the default root directory to use for user-specific
-   * configuration data. Users should create their own application-specific
-   * subdirectory within this one and use that.
-   * 
-   * On Unix systems, it returns $XDG_CONFIG_HOME as specified by
-   * https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html if
-   * non-empty, else $HOME/.config.
-   * On Darwin, it returns $HOME/Library/Application Support.
-   * On Windows, it returns %AppData%.
-   * On Plan 9, it returns $home/lib.
-   * 
-   * If the location cannot be determined (for example, $HOME is not defined),
-   * then it will return an error.
-   */
-  (): string
- }
- interface userHomeDir {
-  /**
-   * UserHomeDir returns the current user's home directory.
-   * 
-   * On Unix, including macOS, it returns the $HOME environment variable.
-   * On Windows, it returns %USERPROFILE%.
-   * On Plan 9, it returns the $home environment variable.
-   */
-  (): string
- }
- interface chmod {
-  /**
-   * Chmod changes the mode of the named file to mode.
-   * If the file is a symbolic link, it changes the mode of the link's target.
-   * If there is an error, it will be of type *PathError.
-   * 
-   * A different subset of the mode bits are used, depending on the
-   * operating system.
-   * 
-   * On Unix, the mode's permission bits, ModeSetuid, ModeSetgid, and
-   * ModeSticky are used.
-   * 
-   * On Windows, only the 0200 bit (owner writable) of mode is used; it
-   * controls whether the file's read-only attribute is set or cleared.
-   * The other bits are currently unused. For compatibility with Go 1.12
-   * and earlier, use a non-zero mode. Use mode 0400 for a read-only
-   * file and 0600 for a readable+writable file.
-   * 
-   * On Plan 9, the mode's permission bits, ModeAppend, ModeExclusive,
-   * and ModeTemporary are used.
-   */
-  (name: string, mode: FileMode): void
- }
+ /**
+  * Mkdir creates a new directory with the specified name and permission
+  * bits (before umask).
+  * If there is an error, it will be of type *PathError.
+  */
+ interface mkdir {(name: string, perm: FileMode): void}
+ /**
+  * Chdir changes the current working directory to the named directory.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface chdir {(dir: string): void}
+ /**
+  * Open opens the named file for reading. If successful, methods on
+  * the returned file can be used for reading; the associated file
+  * descriptor has mode O_RDONLY.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface open {(name: string): (File | undefined)}
+ /**
+  * Create creates or truncates the named file. If the file already exists,
+  * it is truncated. If the file does not exist, it is created with mode 0666
+  * (before umask). If successful, methods on the returned File can
+  * be used for I/O; the associated file descriptor has mode O_RDWR.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface create {(name: string): (File | undefined)}
+ /**
+  * OpenFile is the generalized open call; most users will use Open
+  * or Create instead. It opens the named file with specified flag
+  * (O_RDONLY etc.). If the file does not exist, and the O_CREATE flag
+  * is passed, it is created with mode perm (before umask). If successful,
+  * methods on the returned File can be used for I/O.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface openFile {(name: string, flag: number, perm: FileMode): (File | undefined)}
+ /**
+  * Rename renames (moves) oldpath to newpath.
+  * If newpath already exists and is not a directory, Rename replaces it.
+  * OS-specific restrictions may apply when oldpath and newpath are in different directories.
+  * Even within the same directory, on non-Unix platforms Rename is not an atomic operation.
+  * If there is an error, it will be of type *LinkError.
+  */
+ interface rename {(oldpath: string): void}
+ /**
+  * TempDir returns the default directory to use for temporary files.
+  * 
+  * On Unix systems, it returns $TMPDIR if non-empty, else /tmp.
+  * On Windows, it uses GetTempPath, returning the first non-empty
+  * value from %TMP%, %TEMP%, %USERPROFILE%, or the Windows directory.
+  * On Plan 9, it returns /tmp.
+  * 
+  * The directory is neither guaranteed to exist nor have accessible
+  * permissions.
+  */
+ interface tempDir {(): string}
+ /**
+  * UserCacheDir returns the default root directory to use for user-specific
+  * cached data. Users should create their own application-specific subdirectory
+  * within this one and use that.
+  * 
+  * On Unix systems, it returns $XDG_CACHE_HOME as specified by
+  * https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html if
+  * non-empty, else $HOME/.cache.
+  * On Darwin, it returns $HOME/Library/Caches.
+  * On Windows, it returns %LocalAppData%.
+  * On Plan 9, it returns $home/lib/cache.
+  * 
+  * If the location cannot be determined (for example, $HOME is not defined),
+  * then it will return an error.
+  */
+ interface userCacheDir {(): string}
+ /**
+  * UserConfigDir returns the default root directory to use for user-specific
+  * configuration data. Users should create their own application-specific
+  * subdirectory within this one and use that.
+  * 
+  * On Unix systems, it returns $XDG_CONFIG_HOME as specified by
+  * https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html if
+  * non-empty, else $HOME/.config.
+  * On Darwin, it returns $HOME/Library/Application Support.
+  * On Windows, it returns %AppData%.
+  * On Plan 9, it returns $home/lib.
+  * 
+  * If the location cannot be determined (for example, $HOME is not defined),
+  * then it will return an error.
+  */
+ interface userConfigDir {(): string}
+ /**
+  * UserHomeDir returns the current user's home directory.
+  * 
+  * On Unix, including macOS, it returns the $HOME environment variable.
+  * On Windows, it returns %USERPROFILE%.
+  * On Plan 9, it returns the $home environment variable.
+  */
+ interface userHomeDir {(): string}
+ /**
+  * Chmod changes the mode of the named file to mode.
+  * If the file is a symbolic link, it changes the mode of the link's target.
+  * If there is an error, it will be of type *PathError.
+  * 
+  * A different subset of the mode bits are used, depending on the
+  * operating system.
+  * 
+  * On Unix, the mode's permission bits, ModeSetuid, ModeSetgid, and
+  * ModeSticky are used.
+  * 
+  * On Windows, only the 0200 bit (owner writable) of mode is used; it
+  * controls whether the file's read-only attribute is set or cleared.
+  * The other bits are currently unused. For compatibility with Go 1.12
+  * and earlier, use a non-zero mode. Use mode 0400 for a read-only
+  * file and 0600 for a readable+writable file.
+  * 
+  * On Plan 9, the mode's permission bits, ModeAppend, ModeExclusive,
+  * and ModeTemporary are used.
+  */
+ interface chmod {(name: string, mode: FileMode): void}
  interface File {
   /**
    * Chmod changes the mode of the file to mode.
@@ -1725,21 +1630,23 @@ namespace os {
    */
   syscallConn(): syscall.RawConn
  }
- interface dirFS {
-  /**
-   * DirFS returns a file system (an fs.FS) for the tree of files rooted at the directory dir.
-   * 
-   * Note that DirFS("/prefix") only guarantees that the Open calls it makes to the
-   * operating system will begin with "/prefix": DirFS("/prefix").Open("file") is the
-   * same as os.Open("/prefix/file"). So if /prefix/file is a symbolic link pointing outside
-   * the /prefix tree, then using DirFS does not stop the access any more than using
-   * os.Open does. DirFS is therefore not a general substitute for a chroot-style security
-   * mechanism when the directory tree contains arbitrary content.
-   * 
-   * The directory dir must not be "".
-   */
-  (dir: string): fs.FS
- }
+ /**
+  * DirFS returns a file system (an fs.FS) for the tree of files rooted at the directory dir.
+  * 
+  * Note that DirFS("/prefix") only guarantees that the Open calls it makes to the
+  * operating system will begin with "/prefix": DirFS("/prefix").Open("file") is the
+  * same as os.Open("/prefix/file"). So if /prefix/file is a symbolic link pointing outside
+  * the /prefix tree, then using DirFS does not stop the access any more than using
+  * os.Open does. Additionally, the root of the fs.FS returned for a relative path,
+  * DirFS("prefix"), will be affected by later calls to Chdir. DirFS is therefore not
+  * a general substitute for a chroot-style security mechanism when the directory tree
+  * contains arbitrary content.
+  * 
+  * The directory dir must not be "".
+  * 
+  * The result implements fs.StatFS.
+  */
+ interface dirFS {(dir: string): fs.FS}
  interface dirFS extends String{}
  interface dirFS {
   open(name: string): fs.File
@@ -1747,23 +1654,21 @@ namespace os {
  interface dirFS {
   stat(name: string): fs.FileInfo
  }
- interface readFile {
-  /**
-   * ReadFile reads the named file and returns the contents.
-   * A successful call returns err == nil, not err == EOF.
-   * Because ReadFile reads the whole file, it does not treat an EOF from Read
-   * as an error to be reported.
-   */
-  (name: string): string
- }
- interface writeFile {
-  /**
-   * WriteFile writes data to the named file, creating it if necessary.
-   * If the file does not exist, WriteFile creates it with permissions perm (before umask);
-   * otherwise WriteFile truncates it before writing, without changing permissions.
-   */
-  (name: string, data: string, perm: FileMode): void
- }
+ /**
+  * ReadFile reads the named file and returns the contents.
+  * A successful call returns err == nil, not err == EOF.
+  * Because ReadFile reads the whole file, it does not treat an EOF from Read
+  * as an error to be reported.
+  */
+ interface readFile {(name: string): string}
+ /**
+  * WriteFile writes data to the named file, creating it if necessary.
+  * If the file does not exist, WriteFile creates it with permissions perm (before umask);
+  * otherwise WriteFile truncates it before writing, without changing permissions.
+  * Since Writefile requires multiple system calls to complete, a failure mid-operation
+  * can leave the file in a partially written state.
+  */
+ interface writeFile {(name: string, data: string, perm: FileMode): void}
  interface File {
   /**
    * Close closes the File, rendering it unusable for I/O.
@@ -1773,29 +1678,25 @@ namespace os {
    */
   close(): void
  }
- interface chown {
-  /**
-   * Chown changes the numeric uid and gid of the named file.
-   * If the file is a symbolic link, it changes the uid and gid of the link's target.
-   * A uid or gid of -1 means to not change that value.
-   * If there is an error, it will be of type *PathError.
-   * 
-   * On Windows or Plan 9, Chown always returns the syscall.EWINDOWS or
-   * EPLAN9 error, wrapped in *PathError.
-   */
-  (name: string, uid: number): void
- }
- interface lchown {
-  /**
-   * Lchown changes the numeric uid and gid of the named file.
-   * If the file is a symbolic link, it changes the uid and gid of the link itself.
-   * If there is an error, it will be of type *PathError.
-   * 
-   * On Windows, it always returns the syscall.EWINDOWS error, wrapped
-   * in *PathError.
-   */
-  (name: string, uid: number): void
- }
+ /**
+  * Chown changes the numeric uid and gid of the named file.
+  * If the file is a symbolic link, it changes the uid and gid of the link's target.
+  * A uid or gid of -1 means to not change that value.
+  * If there is an error, it will be of type *PathError.
+  * 
+  * On Windows or Plan 9, Chown always returns the syscall.EWINDOWS or
+  * EPLAN9 error, wrapped in *PathError.
+  */
+ interface chown {(name: string, uid: number): void}
+ /**
+  * Lchown changes the numeric uid and gid of the named file.
+  * If the file is a symbolic link, it changes the uid and gid of the link itself.
+  * If there is an error, it will be of type *PathError.
+  * 
+  * On Windows, it always returns the syscall.EWINDOWS error, wrapped
+  * in *PathError.
+  */
+ interface lchown {(name: string, uid: number): void}
  interface File {
   /**
    * Chown changes the numeric uid and gid of the named file.
@@ -1822,17 +1723,15 @@ namespace os {
    */
   sync(): void
  }
- interface chtimes {
-  /**
-   * Chtimes changes the access and modification times of the named
-   * file, similar to the Unix utime() or utimes() functions.
-   * 
-   * The underlying filesystem may truncate or round the values to a
-   * less precise time unit.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string, atime: time.Time, mtime: time.Time): void
- }
+ /**
+  * Chtimes changes the access and modification times of the named
+  * file, similar to the Unix utime() or utimes() functions.
+  * 
+  * The underlying filesystem may truncate or round the values to a
+  * less precise time unit.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface chtimes {(name: string, atime: time.Time, mtime: time.Time): void}
  interface File {
   /**
    * Chdir changes the current working directory to the file,
@@ -1841,12 +1740,6 @@ namespace os {
    */
   chdir(): void
  }
- /**
-  * file is the real representation of *File.
-  * The extra level of indirection ensures that no clients of os
-  * can overwrite this data, which could cause the finalizer
-  * to close the wrong file descriptor.
-  */
  interface file {
  }
  interface File {
@@ -1866,62 +1759,47 @@ namespace os {
    */
   fd(): number
  }
- interface newFile {
-  /**
-   * NewFile returns a new File with the given file descriptor and
-   * name. The returned value will be nil if fd is not a valid file
-   * descriptor. On Unix systems, if the file descriptor is in
-   * non-blocking mode, NewFile will attempt to return a pollable File
-   * (one for which the SetDeadline methods work).
-   * 
-   * After passing it to NewFile, fd may become invalid under the same
-   * conditions described in the comments of the Fd method, and the same
-   * constraints apply.
-   */
-  (fd: number, name: string): (File | undefined)
- }
  /**
-  * newFileKind describes the kind of file to newFile.
+  * NewFile returns a new File with the given file descriptor and
+  * name. The returned value will be nil if fd is not a valid file
+  * descriptor. On Unix systems, if the file descriptor is in
+  * non-blocking mode, NewFile will attempt to return a pollable File
+  * (one for which the SetDeadline methods work).
+  * 
+  * After passing it to NewFile, fd may become invalid under the same
+  * conditions described in the comments of the Fd method, and the same
+  * constraints apply.
   */
+ interface newFile {(fd: number, name: string): (File | undefined)}
  interface newFileKind extends Number{}
- interface truncate {
-  /**
-   * Truncate changes the size of the named file.
-   * If the file is a symbolic link, it changes the size of the link's target.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string, size: number): void
- }
- interface remove {
-  /**
-   * Remove removes the named file or (empty) directory.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): void
- }
- interface link {
-  /**
-   * Link creates newname as a hard link to the oldname file.
-   * If there is an error, it will be of type *LinkError.
-   */
-  (oldname: string): void
- }
- interface symlink {
-  /**
-   * Symlink creates newname as a symbolic link to oldname.
-   * On Windows, a symlink to a non-existent oldname creates a file symlink;
-   * if oldname is later created as a directory the symlink will not work.
-   * If there is an error, it will be of type *LinkError.
-   */
-  (oldname: string): void
- }
- interface readlink {
-  /**
-   * Readlink returns the destination of the named symbolic link.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): string
- }
+ /**
+  * Truncate changes the size of the named file.
+  * If the file is a symbolic link, it changes the size of the link's target.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface truncate {(name: string, size: number): void}
+ /**
+  * Remove removes the named file or (empty) directory.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface remove {(name: string): void}
+ /**
+  * Link creates newname as a hard link to the oldname file.
+  * If there is an error, it will be of type *LinkError.
+  */
+ interface link {(oldname: string): void}
+ /**
+  * Symlink creates newname as a symbolic link to oldname.
+  * On Windows, a symlink to a non-existent oldname creates a file symlink;
+  * if oldname is later created as a directory the symlink will not work.
+  * If there is an error, it will be of type *LinkError.
+  */
+ interface symlink {(oldname: string): void}
+ /**
+  * Readlink returns the destination of the named symbolic link.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface readlink {(name: string): string}
  interface unixDirent {
  }
  interface unixDirent {
@@ -1936,104 +1814,79 @@ namespace os {
  interface unixDirent {
   info(): FileInfo
  }
- interface getwd {
-  /**
-   * Getwd returns a rooted path name corresponding to the
-   * current directory. If the current directory can be
-   * reached via multiple paths (due to symbolic links),
-   * Getwd may return any one of them.
-   */
-  (): string
- }
- interface mkdirAll {
-  /**
-   * MkdirAll creates a directory named path,
-   * along with any necessary parents, and returns nil,
-   * or else returns an error.
-   * The permission bits perm (before umask) are used for all
-   * directories that MkdirAll creates.
-   * If path is already a directory, MkdirAll does nothing
-   * and returns nil.
-   */
-  (path: string, perm: FileMode): void
- }
- interface removeAll {
-  /**
-   * RemoveAll removes path and any children it contains.
-   * It removes everything it can but returns the first error
-   * it encounters. If the path does not exist, RemoveAll
-   * returns nil (no error).
-   * If there is an error, it will be of type *PathError.
-   */
-  (path: string): void
- }
- interface isPathSeparator {
-  /**
-   * IsPathSeparator reports whether c is a directory separator character.
-   */
-  (c: number): boolean
- }
- interface pipe {
-  /**
-   * Pipe returns a connected pair of Files; reads from r return bytes written to w.
-   * It returns the files and an error, if any.
-   */
-  (): [(File | undefined), (File | undefined)]
- }
- interface getuid {
-  /**
-   * Getuid returns the numeric user id of the caller.
-   * 
-   * On Windows, it returns -1.
-   */
-  (): number
- }
- interface geteuid {
-  /**
-   * Geteuid returns the numeric effective user id of the caller.
-   * 
-   * On Windows, it returns -1.
-   */
-  (): number
- }
- interface getgid {
-  /**
-   * Getgid returns the numeric group id of the caller.
-   * 
-   * On Windows, it returns -1.
-   */
-  (): number
- }
- interface getegid {
-  /**
-   * Getegid returns the numeric effective group id of the caller.
-   * 
-   * On Windows, it returns -1.
-   */
-  (): number
- }
- interface getgroups {
-  /**
-   * Getgroups returns a list of the numeric ids of groups that the caller belongs to.
-   * 
-   * On Windows, it returns syscall.EWINDOWS. See the os/user package
-   * for a possible alternative.
-   */
-  (): Array<number>
- }
- interface exit {
-  /**
-   * Exit causes the current program to exit with the given status code.
-   * Conventionally, code zero indicates success, non-zero an error.
-   * The program terminates immediately; deferred functions are not run.
-   * 
-   * For portability, the status code should be in the range [0, 125].
-   */
-  (code: number): void
- }
  /**
-  * rawConn implements syscall.RawConn.
+  * Getwd returns a rooted path name corresponding to the
+  * current directory. If the current directory can be
+  * reached via multiple paths (due to symbolic links),
+  * Getwd may return any one of them.
   */
+ interface getwd {(): string}
+ /**
+  * MkdirAll creates a directory named path,
+  * along with any necessary parents, and returns nil,
+  * or else returns an error.
+  * The permission bits perm (before umask) are used for all
+  * directories that MkdirAll creates.
+  * If path is already a directory, MkdirAll does nothing
+  * and returns nil.
+  */
+ interface mkdirAll {(path: string, perm: FileMode): void}
+ /**
+  * RemoveAll removes path and any children it contains.
+  * It removes everything it can but returns the first error
+  * it encounters. If the path does not exist, RemoveAll
+  * returns nil (no error).
+  * If there is an error, it will be of type *PathError.
+  */
+ interface removeAll {(path: string): void}
+ /**
+  * IsPathSeparator reports whether c is a directory separator character.
+  */
+ interface isPathSeparator {(c: number): boolean}
+ /**
+  * Pipe returns a connected pair of Files; reads from r return bytes written to w.
+  * It returns the files and an error, if any.
+  */
+ interface pipe {(): [(File | undefined), (File | undefined)]}
+ /**
+  * Getuid returns the numeric user id of the caller.
+  * 
+  * On Windows, it returns -1.
+  */
+ interface getuid {(): number}
+ /**
+  * Geteuid returns the numeric effective user id of the caller.
+  * 
+  * On Windows, it returns -1.
+  */
+ interface geteuid {(): number}
+ /**
+  * Getgid returns the numeric group id of the caller.
+  * 
+  * On Windows, it returns -1.
+  */
+ interface getgid {(): number}
+ /**
+  * Getegid returns the numeric effective group id of the caller.
+  * 
+  * On Windows, it returns -1.
+  */
+ interface getegid {(): number}
+ /**
+  * Getgroups returns a list of the numeric ids of groups that the caller belongs to.
+  * 
+  * On Windows, it returns syscall.EWINDOWS. See the os/user package
+  * for a possible alternative.
+  */
+ interface getgroups {(): Array<number>}
+ /**
+  * Exit causes the current program to exit with the given status code.
+  * Conventionally, code zero indicates success, non-zero an error.
+  * The program terminates immediately; deferred functions are not run.
+  * 
+  * For portability, the status code should be in the range [0, 125].
+  */
+ interface exit {(code: number): void}
  interface rawConn {
  }
  interface rawConn {
@@ -2045,22 +1898,18 @@ namespace os {
  interface rawConn {
   write(f: (_arg0: number) => boolean): void
  }
- interface stat {
-  /**
-   * Stat returns a FileInfo describing the named file.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): FileInfo
- }
- interface lstat {
-  /**
-   * Lstat returns a FileInfo describing the named file.
-   * If the file is a symbolic link, the returned FileInfo
-   * describes the symbolic link. Lstat makes no attempt to follow the link.
-   * If there is an error, it will be of type *PathError.
-   */
-  (name: string): FileInfo
- }
+ /**
+  * Stat returns a FileInfo describing the named file.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface stat {(name: string): FileInfo}
+ /**
+  * Lstat returns a FileInfo describing the named file.
+  * If the file is a symbolic link, the returned FileInfo
+  * describes the symbolic link. Lstat makes no attempt to follow the link.
+  * If there is an error, it will be of type *PathError.
+  */
+ interface lstat {(name: string): FileInfo}
  interface File {
   /**
    * Stat returns the FileInfo structure describing file.
@@ -2068,60 +1917,39 @@ namespace os {
    */
   stat(): FileInfo
  }
- interface hostname {
-  /**
-   * Hostname returns the host name reported by the kernel.
-   */
-  (): string
- }
- interface createTemp {
-  /**
-   * CreateTemp creates a new temporary file in the directory dir,
-   * opens the file for reading and writing, and returns the resulting file.
-   * The filename is generated by taking pattern and adding a random string to the end.
-   * If pattern includes a "*", the random string replaces the last "*".
-   * If dir is the empty string, CreateTemp uses the default directory for temporary files, as returned by TempDir.
-   * Multiple programs or goroutines calling CreateTemp simultaneously will not choose the same file.
-   * The caller can use the file's Name method to find the pathname of the file.
-   * It is the caller's responsibility to remove the file when it is no longer needed.
-   */
-  (dir: string): (File | undefined)
- }
- interface mkdirTemp {
-  /**
-   * MkdirTemp creates a new temporary directory in the directory dir
-   * and returns the pathname of the new directory.
-   * The new directory's name is generated by adding a random string to the end of pattern.
-   * If pattern includes a "*", the random string replaces the last "*" instead.
-   * If dir is the empty string, MkdirTemp uses the default directory for temporary files, as returned by TempDir.
-   * Multiple programs or goroutines calling MkdirTemp simultaneously will not choose the same directory.
-   * It is the caller's responsibility to remove the directory when it is no longer needed.
-   */
-  (dir: string): string
- }
- interface getpagesize {
-  /**
-   * Getpagesize returns the underlying system's memory page size.
-   */
-  (): number
- }
  /**
-  * File represents an open file descriptor.
+  * Hostname returns the host name reported by the kernel.
   */
- type _subgXOVp = file
- interface File extends _subgXOVp {
- }
+ interface hostname {(): string}
  /**
-  * A FileInfo describes a file and is returned by Stat and Lstat.
+  * CreateTemp creates a new temporary file in the directory dir,
+  * opens the file for reading and writing, and returns the resulting file.
+  * The filename is generated by taking pattern and adding a random string to the end.
+  * If pattern includes a "*", the random string replaces the last "*".
+  * If dir is the empty string, CreateTemp uses the default directory for temporary files, as returned by TempDir.
+  * Multiple programs or goroutines calling CreateTemp simultaneously will not choose the same file.
+  * The caller can use the file's Name method to find the pathname of the file.
+  * It is the caller's responsibility to remove the file when it is no longer needed.
   */
+ interface createTemp {(dir: string): (File | undefined)}
+ /**
+  * MkdirTemp creates a new temporary directory in the directory dir
+  * and returns the pathname of the new directory.
+  * The new directory's name is generated by adding a random string to the end of pattern.
+  * If pattern includes a "*", the random string replaces the last "*" instead.
+  * If dir is the empty string, MkdirTemp uses the default directory for temporary files, as returned by TempDir.
+  * Multiple programs or goroutines calling MkdirTemp simultaneously will not choose the same directory.
+  * It is the caller's responsibility to remove the directory when it is no longer needed.
+  */
+ interface mkdirTemp {(dir: string): string}
+ /**
+  * Getpagesize returns the underlying system's memory page size.
+  */
+ interface getpagesize {(): number}
+ type _subcYmBt = file
+ interface File extends _subcYmBt {
+ }
  interface FileInfo extends fs.FileInfo{}
- /**
-  * A FileMode represents a file's mode and permission bits.
-  * The bits have the same definition on all systems, so that
-  * information about files can be moved from one system
-  * to another portably. Not all bits apply to all systems.
-  * The only required bit is ModeDir for directories.
-  */
  interface FileMode extends fs.FileMode{}
  interface fileStat {
   name(): string
@@ -2129,20 +1957,15 @@ namespace os {
  interface fileStat {
   isDir(): boolean
  }
- interface sameFile {
-  /**
-   * SameFile reports whether fi1 and fi2 describe the same file.
-   * For example, on Unix this means that the device and inode fields
-   * of the two underlying structures are identical; on other systems
-   * the decision may be based on the path names.
-   * SameFile only applies to results returned by this package's Stat.
-   * It returns false in other cases.
-   */
-  (fi1: FileInfo): boolean
- }
  /**
-  * A fileStat is the implementation of FileInfo returned by Stat and Lstat.
+  * SameFile reports whether fi1 and fi2 describe the same file.
+  * For example, on Unix this means that the device and inode fields
+  * of the two underlying structures are identical; on other systems
+  * the decision may be based on the path names.
+  * SameFile only applies to results returned by this package's Stat.
+  * It returns false in other cases.
   */
+ interface sameFile {(fi1: FileInfo): boolean}
  interface fileStat {
  }
  interface fileStat {
@@ -2169,233 +1992,187 @@ namespace os {
  * system, see the path package.
  */
 namespace filepath {
- interface match {
-  /**
-   * Match reports whether name matches the shell file name pattern.
-   * The pattern syntax is:
-   * 
-   * ```
-   * 	pattern:
-   * 		{ term }
-   * 	term:
-   * 		'*'         matches any sequence of non-Separator characters
-   * 		'?'         matches any single non-Separator character
-   * 		'[' [ '^' ] { character-range } ']'
-   * 		            character class (must be non-empty)
-   * 		c           matches character c (c != '*', '?', '\\', '[')
-   * 		'\\' c      matches character c
-   * 
-   * 	character-range:
-   * 		c           matches character c (c != '\\', '-', ']')
-   * 		'\\' c      matches character c
-   * 		lo '-' hi   matches character c for lo <= c <= hi
-   * ```
-   * 
-   * Match requires pattern to match all of name, not just a substring.
-   * The only possible returned error is ErrBadPattern, when pattern
-   * is malformed.
-   * 
-   * On Windows, escaping is disabled. Instead, '\\' is treated as
-   * path separator.
-   */
-  (pattern: string): boolean
- }
- interface glob {
-  /**
-   * Glob returns the names of all files matching pattern or nil
-   * if there is no matching file. The syntax of patterns is the same
-   * as in Match. The pattern may describe hierarchical names such as
-   * /usr/*\/bin/ed (assuming the Separator is '/').
-   * 
-   * Glob ignores file system errors such as I/O errors reading directories.
-   * The only possible returned error is ErrBadPattern, when pattern
-   * is malformed.
-   */
-  (pattern: string): Array<string>
- }
  /**
-  * A lazybuf is a lazily constructed path buffer.
-  * It supports append, reading previously appended bytes,
-  * and retrieving the final string. It does not allocate a buffer
-  * to hold the output until that output diverges from s.
+  * Match reports whether name matches the shell file name pattern.
+  * The pattern syntax is:
+  * 
+  * ```
+  * 	pattern:
+  * 		{ term }
+  * 	term:
+  * 		'*'         matches any sequence of non-Separator characters
+  * 		'?'         matches any single non-Separator character
+  * 		'[' [ '^' ] { character-range } ']'
+  * 		            character class (must be non-empty)
+  * 		c           matches character c (c != '*', '?', '\\', '[')
+  * 		'\\' c      matches character c
+  * 
+  * 	character-range:
+  * 		c           matches character c (c != '\\', '-', ']')
+  * 		'\\' c      matches character c
+  * 		lo '-' hi   matches character c for lo <= c <= hi
+  * ```
+  * 
+  * Match requires pattern to match all of name, not just a substring.
+  * The only possible returned error is ErrBadPattern, when pattern
+  * is malformed.
+  * 
+  * On Windows, escaping is disabled. Instead, '\\' is treated as
+  * path separator.
   */
+ interface match {(pattern: string): boolean}
+ /**
+  * Glob returns the names of all files matching pattern or nil
+  * if there is no matching file. The syntax of patterns is the same
+  * as in Match. The pattern may describe hierarchical names such as
+  * /usr/*\/bin/ed (assuming the Separator is '/').
+  * 
+  * Glob ignores file system errors such as I/O errors reading directories.
+  * The only possible returned error is ErrBadPattern, when pattern
+  * is malformed.
+  */
+ interface glob {(pattern: string): Array<string>}
  interface lazybuf {
  }
- interface clean {
-  /**
-   * Clean returns the shortest path name equivalent to path
-   * by purely lexical processing. It applies the following rules
-   * iteratively until no further processing can be done:
-   * 
-   * ```
-   * 	1. Replace multiple Separator elements with a single one.
-   * 	2. Eliminate each . path name element (the current directory).
-   * 	3. Eliminate each inner .. path name element (the parent directory)
-   * 	   along with the non-.. element that precedes it.
-   * 	4. Eliminate .. elements that begin a rooted path:
-   * 	   that is, replace "/.." by "/" at the beginning of a path,
-   * 	   assuming Separator is '/'.
-   * ```
-   * 
-   * The returned path ends in a slash only if it represents a root directory,
-   * such as "/" on Unix or `C:\` on Windows.
-   * 
-   * Finally, any occurrences of slash are replaced by Separator.
-   * 
-   * If the result of this process is an empty string, Clean
-   * returns the string ".".
-   * 
-   * See also Rob Pike, ``Lexical File Names in Plan 9 or
-   * Getting Dot-Dot Right,''
-   * https://9p.io/sys/doc/lexnames.html
-   */
-  (path: string): string
- }
- interface toSlash {
-  /**
-   * ToSlash returns the result of replacing each separator character
-   * in path with a slash ('/') character. Multiple separators are
-   * replaced by multiple slashes.
-   */
-  (path: string): string
- }
- interface fromSlash {
-  /**
-   * FromSlash returns the result of replacing each slash ('/') character
-   * in path with a separator character. Multiple slashes are replaced
-   * by multiple separators.
-   */
-  (path: string): string
- }
- interface splitList {
-  /**
-   * SplitList splits a list of paths joined by the OS-specific ListSeparator,
-   * usually found in PATH or GOPATH environment variables.
-   * Unlike strings.Split, SplitList returns an empty slice when passed an empty
-   * string.
-   */
-  (path: string): Array<string>
- }
- interface split {
-  /**
-   * Split splits path immediately following the final Separator,
-   * separating it into a directory and file name component.
-   * If there is no Separator in path, Split returns an empty dir
-   * and file set to path.
-   * The returned values have the property that path = dir+file.
-   */
-  (path: string): string
- }
- interface join {
-  /**
-   * Join joins any number of path elements into a single path,
-   * separating them with an OS specific Separator. Empty elements
-   * are ignored. The result is Cleaned. However, if the argument
-   * list is empty or all its elements are empty, Join returns
-   * an empty string.
-   * On Windows, the result will only be a UNC path if the first
-   * non-empty element is a UNC path.
-   */
-  (...elem: string[]): string
- }
- interface ext {
-  /**
-   * Ext returns the file name extension used by path.
-   * The extension is the suffix beginning at the final dot
-   * in the final element of path; it is empty if there is
-   * no dot.
-   */
-  (path: string): string
- }
- interface evalSymlinks {
-  /**
-   * EvalSymlinks returns the path name after the evaluation of any symbolic
-   * links.
-   * If path is relative the result will be relative to the current directory,
-   * unless one of the components is an absolute symbolic link.
-   * EvalSymlinks calls Clean on the result.
-   */
-  (path: string): string
- }
- interface abs {
-  /**
-   * Abs returns an absolute representation of path.
-   * If the path is not absolute it will be joined with the current
-   * working directory to turn it into an absolute path. The absolute
-   * path name for a given file is not guaranteed to be unique.
-   * Abs calls Clean on the result.
-   */
-  (path: string): string
- }
- interface rel {
-  /**
-   * Rel returns a relative path that is lexically equivalent to targpath when
-   * joined to basepath with an intervening separator. That is,
-   * Join(basepath, Rel(basepath, targpath)) is equivalent to targpath itself.
-   * On success, the returned path will always be relative to basepath,
-   * even if basepath and targpath share no elements.
-   * An error is returned if targpath can't be made relative to basepath or if
-   * knowing the current working directory would be necessary to compute it.
-   * Rel calls Clean on the result.
-   */
-  (basepath: string): string
- }
  /**
-  * WalkFunc is the type of the function called by Walk to visit each
-  * file or directory.
+  * Clean returns the shortest path name equivalent to path
+  * by purely lexical processing. It applies the following rules
+  * iteratively until no further processing can be done:
   * 
-  * The path argument contains the argument to Walk as a prefix.
-  * That is, if Walk is called with root argument "dir" and finds a file
-  * named "a" in that directory, the walk function will be called with
-  * argument "dir/a".
+  *  1. Replace multiple Separator elements with a single one.
+  *  2. Eliminate each . path name element (the current directory).
+  *  3. Eliminate each inner .. path name element (the parent directory)
+  * ```
+  *     along with the non-.. element that precedes it.
+  * ```
+  *  4. Eliminate .. elements that begin a rooted path:
+  * ```
+  *     that is, replace "/.." by "/" at the beginning of a path,
+  *     assuming Separator is '/'.
+  * ```
   * 
-  * The directory and file are joined with Join, which may clean the
-  * directory name: if Walk is called with the root argument "x/../dir"
-  * and finds a file named "a" in that directory, the walk function will
-  * be called with argument "dir/a", not "x/../dir/a".
+  * The returned path ends in a slash only if it represents a root directory,
+  * such as "/" on Unix or `C:\` on Windows.
   * 
-  * The info argument is the fs.FileInfo for the named path.
+  * Finally, any occurrences of slash are replaced by Separator.
   * 
-  * The error result returned by the function controls how Walk continues.
-  * If the function returns the special value SkipDir, Walk skips the
-  * current directory (path if info.IsDir() is true, otherwise path's
-  * parent directory). Otherwise, if the function returns a non-nil error,
-  * Walk stops entirely and returns that error.
+  * If the result of this process is an empty string, Clean
+  * returns the string ".".
   * 
-  * The err argument reports an error related to path, signaling that Walk
-  * will not walk into that directory. The function can decide how to
-  * handle that error; as described earlier, returning the error will
-  * cause Walk to stop walking the entire tree.
-  * 
-  * Walk calls the function with a non-nil err argument in two cases.
-  * 
-  * First, if an os.Lstat on the root directory or any directory or file
-  * in the tree fails, Walk calls the function with path set to that
-  * directory or file's path, info set to nil, and err set to the error
-  * from os.Lstat.
-  * 
-  * Second, if a directory's Readdirnames method fails, Walk calls the
-  * function with path set to the directory's path, info, set to an
-  * fs.FileInfo describing the directory, and err set to the error from
-  * Readdirnames.
+  * See also Rob Pike, “Lexical File Names in Plan 9 or
+  * Getting Dot-Dot Right,”
+  * https://9p.io/sys/doc/lexnames.html
   */
+ interface clean {(path: string): string}
+ /**
+  * IsLocal reports whether path, using lexical analysis only, has all of these properties:
+  * 
+  * ```
+  *   - is within the subtree rooted at the directory in which path is evaluated
+  *   - is not an absolute path
+  *   - is not empty
+  *   - on Windows, is not a reserved name such as "NUL"
+  * ```
+  * 
+  * If IsLocal(path) returns true, then
+  * Join(base, path) will always produce a path contained within base and
+  * Clean(path) will always produce an unrooted path with no ".." path elements.
+  * 
+  * IsLocal is a purely lexical operation.
+  * In particular, it does not account for the effect of any symbolic links
+  * that may exist in the filesystem.
+  */
+ interface isLocal {(path: string): boolean}
+ /**
+  * ToSlash returns the result of replacing each separator character
+  * in path with a slash ('/') character. Multiple separators are
+  * replaced by multiple slashes.
+  */
+ interface toSlash {(path: string): string}
+ /**
+  * FromSlash returns the result of replacing each slash ('/') character
+  * in path with a separator character. Multiple slashes are replaced
+  * by multiple separators.
+  */
+ interface fromSlash {(path: string): string}
+ /**
+  * SplitList splits a list of paths joined by the OS-specific ListSeparator,
+  * usually found in PATH or GOPATH environment variables.
+  * Unlike strings.Split, SplitList returns an empty slice when passed an empty
+  * string.
+  */
+ interface splitList {(path: string): Array<string>}
+ /**
+  * Split splits path immediately following the final Separator,
+  * separating it into a directory and file name component.
+  * If there is no Separator in path, Split returns an empty dir
+  * and file set to path.
+  * The returned values have the property that path = dir+file.
+  */
+ interface split {(path: string): string}
+ /**
+  * Join joins any number of path elements into a single path,
+  * separating them with an OS specific Separator. Empty elements
+  * are ignored. The result is Cleaned. However, if the argument
+  * list is empty or all its elements are empty, Join returns
+  * an empty string.
+  * On Windows, the result will only be a UNC path if the first
+  * non-empty element is a UNC path.
+  */
+ interface join {(...elem: string[]): string}
+ /**
+  * Ext returns the file name extension used by path.
+  * The extension is the suffix beginning at the final dot
+  * in the final element of path; it is empty if there is
+  * no dot.
+  */
+ interface ext {(path: string): string}
+ /**
+  * EvalSymlinks returns the path name after the evaluation of any symbolic
+  * links.
+  * If path is relative the result will be relative to the current directory,
+  * unless one of the components is an absolute symbolic link.
+  * EvalSymlinks calls Clean on the result.
+  */
+ interface evalSymlinks {(path: string): string}
+ /**
+  * Abs returns an absolute representation of path.
+  * If the path is not absolute it will be joined with the current
+  * working directory to turn it into an absolute path. The absolute
+  * path name for a given file is not guaranteed to be unique.
+  * Abs calls Clean on the result.
+  */
+ interface abs {(path: string): string}
+ /**
+  * Rel returns a relative path that is lexically equivalent to targpath when
+  * joined to basepath with an intervening separator. That is,
+  * Join(basepath, Rel(basepath, targpath)) is equivalent to targpath itself.
+  * On success, the returned path will always be relative to basepath,
+  * even if basepath and targpath share no elements.
+  * An error is returned if targpath can't be made relative to basepath or if
+  * knowing the current working directory would be necessary to compute it.
+  * Rel calls Clean on the result.
+  */
+ interface rel {(basepath: string): string}
  interface WalkFunc {(path: string, info: fs.FileInfo, err: Error): void }
- interface walkDir {
-  /**
-   * WalkDir walks the file tree rooted at root, calling fn for each file or
-   * directory in the tree, including root.
-   * 
-   * All errors that arise visiting files and directories are filtered by fn:
-   * see the fs.WalkDirFunc documentation for details.
-   * 
-   * The files are walked in lexical order, which makes the output deterministic
-   * but requires WalkDir to read an entire directory into memory before proceeding
-   * to walk that directory.
-   * 
-   * WalkDir does not follow symbolic links.
-   */
-  (root: string, fn: fs.WalkDirFunc): void
- }
+ /**
+  * WalkDir walks the file tree rooted at root, calling fn for each file or
+  * directory in the tree, including root.
+  * 
+  * All errors that arise visiting files and directories are filtered by fn:
+  * see the fs.WalkDirFunc documentation for details.
+  * 
+  * The files are walked in lexical order, which makes the output deterministic
+  * but requires WalkDir to read an entire directory into memory before proceeding
+  * to walk that directory.
+  * 
+  * WalkDir does not follow symbolic links.
+  * 
+  * WalkDir calls fn with paths that use the separator character appropriate
+  * for the operating system. This is unlike [io/fs.WalkDir], which always
+  * uses slash separated paths.
+  */
+ interface walkDir {(root: string, fn: fs.WalkDirFunc): void}
  interface statDirEntry {
  }
  interface statDirEntry {
@@ -2410,69 +2187,57 @@ namespace filepath {
  interface statDirEntry {
   info(): fs.FileInfo
  }
- interface walk {
-  /**
-   * Walk walks the file tree rooted at root, calling fn for each file or
-   * directory in the tree, including root.
-   * 
-   * All errors that arise visiting files and directories are filtered by fn:
-   * see the WalkFunc documentation for details.
-   * 
-   * The files are walked in lexical order, which makes the output deterministic
-   * but requires Walk to read an entire directory into memory before proceeding
-   * to walk that directory.
-   * 
-   * Walk does not follow symbolic links.
-   * 
-   * Walk is less efficient than WalkDir, introduced in Go 1.16,
-   * which avoids calling os.Lstat on every visited file or directory.
-   */
-  (root: string, fn: WalkFunc): void
- }
- interface base {
-  /**
-   * Base returns the last element of path.
-   * Trailing path separators are removed before extracting the last element.
-   * If the path is empty, Base returns ".".
-   * If the path consists entirely of separators, Base returns a single separator.
-   */
-  (path: string): string
- }
- interface dir {
-  /**
-   * Dir returns all but the last element of path, typically the path's directory.
-   * After dropping the final element, Dir calls Clean on the path and trailing
-   * slashes are removed.
-   * If the path is empty, Dir returns ".".
-   * If the path consists entirely of separators, Dir returns a single separator.
-   * The returned path does not end in a separator unless it is the root directory.
-   */
-  (path: string): string
- }
- interface volumeName {
-  /**
-   * VolumeName returns leading volume name.
-   * Given "C:\foo\bar" it returns "C:" on Windows.
-   * Given "\\host\share\foo" it returns "\\host\share".
-   * On other platforms it returns "".
-   */
-  (path: string): string
- }
- interface isAbs {
-  /**
-   * IsAbs reports whether the path is absolute.
-   */
-  (path: string): boolean
- }
- interface hasPrefix {
-  /**
-   * HasPrefix exists for historical compatibility and should not be used.
-   * 
-   * Deprecated: HasPrefix does not respect path boundaries and
-   * does not ignore case when required.
-   */
-  (p: string): boolean
- }
+ /**
+  * Walk walks the file tree rooted at root, calling fn for each file or
+  * directory in the tree, including root.
+  * 
+  * All errors that arise visiting files and directories are filtered by fn:
+  * see the WalkFunc documentation for details.
+  * 
+  * The files are walked in lexical order, which makes the output deterministic
+  * but requires Walk to read an entire directory into memory before proceeding
+  * to walk that directory.
+  * 
+  * Walk does not follow symbolic links.
+  * 
+  * Walk is less efficient than WalkDir, introduced in Go 1.16,
+  * which avoids calling os.Lstat on every visited file or directory.
+  */
+ interface walk {(root: string, fn: WalkFunc): void}
+ /**
+  * Base returns the last element of path.
+  * Trailing path separators are removed before extracting the last element.
+  * If the path is empty, Base returns ".".
+  * If the path consists entirely of separators, Base returns a single separator.
+  */
+ interface base {(path: string): string}
+ /**
+  * Dir returns all but the last element of path, typically the path's directory.
+  * After dropping the final element, Dir calls Clean on the path and trailing
+  * slashes are removed.
+  * If the path is empty, Dir returns ".".
+  * If the path consists entirely of separators, Dir returns a single separator.
+  * The returned path does not end in a separator unless it is the root directory.
+  */
+ interface dir {(path: string): string}
+ /**
+  * VolumeName returns leading volume name.
+  * Given "C:\foo\bar" it returns "C:" on Windows.
+  * Given "\\host\share\foo" it returns "\\host\share".
+  * On other platforms it returns "".
+  */
+ interface volumeName {(path: string): string}
+ /**
+  * IsAbs reports whether the path is absolute.
+  */
+ interface isAbs {(path: string): boolean}
+ /**
+  * HasPrefix exists for historical compatibility and should not be used.
+  * 
+  * Deprecated: HasPrefix does not respect path boundaries and
+  * does not ignore case when required.
+  */
+ interface hasPrefix {(p: string): boolean}
 }
 
 /**
@@ -2496,11 +2261,6 @@ namespace ozzo_validation {
  * Package dbx provides a set of DB-agnostic and easy-to-use query building methods for relational databases.
  */
 namespace dbx {
- /**
-  * Builder supports building SQL statements in a DB-agnostic way.
-  * Builder mainly provides two sets of query building methods: those building SELECT statements
-  * and those manipulating DB data or schema (e.g. INSERT statements, CREATE TABLE statements).
-  */
  interface Builder {
   /**
    * NewQuery creates a new Query object with the given SQL statement.
@@ -2636,17 +2396,12 @@ namespace dbx {
    */
   dropIndex(table: string): (Query | undefined)
  }
- /**
-  * BaseBuilder provides a basic implementation of the Builder interface.
-  */
  interface BaseBuilder {
  }
- interface newBaseBuilder {
-  /**
-   * NewBaseBuilder creates a new BaseBuilder instance.
-   */
-  (db: DB, executor: Executor): (BaseBuilder | undefined)
- }
+ /**
+  * NewBaseBuilder creates a new BaseBuilder instance.
+  */
+ interface newBaseBuilder {(db: DB, executor: Executor): (BaseBuilder | undefined)}
  interface BaseBuilder {
   /**
    * DB returns the DB instance that this builder is associated with.
@@ -2824,24 +2579,16 @@ namespace dbx {
    */
   dropIndex(table: string): (Query | undefined)
  }
- /**
-  * MssqlBuilder is the builder for SQL Server databases.
-  */
- type _subgQNQI = BaseBuilder
- interface MssqlBuilder extends _subgQNQI {
+ type _subrYFfs = BaseBuilder
+ interface MssqlBuilder extends _subrYFfs {
+ }
+ type _subkaSuL = BaseQueryBuilder
+ interface MssqlQueryBuilder extends _subkaSuL {
  }
  /**
-  * MssqlQueryBuilder is the query builder for SQL Server databases.
+  * NewMssqlBuilder creates a new MssqlBuilder instance.
   */
- type _subxcYUx = BaseQueryBuilder
- interface MssqlQueryBuilder extends _subxcYUx {
- }
- interface newMssqlBuilder {
-  /**
-   * NewMssqlBuilder creates a new MssqlBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newMssqlBuilder {(db: DB, executor: Executor): Builder}
  interface MssqlBuilder {
   /**
    * QueryBuilder returns the query builder supporting the current DB.
@@ -2902,18 +2649,13 @@ namespace dbx {
    */
   buildOrderByAndLimit(sql: string, cols: Array<string>, limit: number, offset: number): string
  }
+ type _subpHYdR = BaseBuilder
+ interface MysqlBuilder extends _subpHYdR {
+ }
  /**
-  * MysqlBuilder is the builder for MySQL databases.
+  * NewMysqlBuilder creates a new MysqlBuilder instance.
   */
- type _subCcAxE = BaseBuilder
- interface MysqlBuilder extends _subCcAxE {
- }
- interface newMysqlBuilder {
-  /**
-   * NewMysqlBuilder creates a new MysqlBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newMysqlBuilder {(db: DB, executor: Executor): Builder}
  interface MysqlBuilder {
   /**
    * QueryBuilder returns the query builder supporting the current DB.
@@ -2978,24 +2720,16 @@ namespace dbx {
    */
   dropForeignKey(table: string): (Query | undefined)
  }
- /**
-  * OciBuilder is the builder for Oracle databases.
-  */
- type _subZNKcA = BaseBuilder
- interface OciBuilder extends _subZNKcA {
+ type _subsrGNg = BaseBuilder
+ interface OciBuilder extends _subsrGNg {
+ }
+ type _subxyyzY = BaseQueryBuilder
+ interface OciQueryBuilder extends _subxyyzY {
  }
  /**
-  * OciQueryBuilder is the query builder for Oracle databases.
+  * NewOciBuilder creates a new OciBuilder instance.
   */
- type _subPGaPJ = BaseQueryBuilder
- interface OciQueryBuilder extends _subPGaPJ {
- }
- interface newOciBuilder {
-  /**
-   * NewOciBuilder creates a new OciBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newOciBuilder {(db: DB, executor: Executor): Builder}
  interface OciBuilder {
   /**
    * Select returns a new SelectQuery object that can be used to build a SELECT statement.
@@ -3048,18 +2782,13 @@ namespace dbx {
    */
   buildOrderByAndLimit(sql: string, cols: Array<string>, limit: number, offset: number): string
  }
+ type _submncRi = BaseBuilder
+ interface PgsqlBuilder extends _submncRi {
+ }
  /**
-  * PgsqlBuilder is the builder for PostgreSQL databases.
+  * NewPgsqlBuilder creates a new PgsqlBuilder instance.
   */
- type _subWvfiL = BaseBuilder
- interface PgsqlBuilder extends _subWvfiL {
- }
- interface newPgsqlBuilder {
-  /**
-   * NewPgsqlBuilder creates a new PgsqlBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newPgsqlBuilder {(db: DB, executor: Executor): Builder}
  interface PgsqlBuilder {
   /**
    * Select returns a new SelectQuery object that can be used to build a SELECT statement.
@@ -3116,18 +2845,13 @@ namespace dbx {
    */
   alterColumn(table: string): (Query | undefined)
  }
+ type _subLnCoc = BaseBuilder
+ interface SqliteBuilder extends _subLnCoc {
+ }
  /**
-  * SqliteBuilder is the builder for SQLite databases.
+  * NewSqliteBuilder creates a new SqliteBuilder instance.
   */
- type _subqhbwV = BaseBuilder
- interface SqliteBuilder extends _subqhbwV {
- }
- interface newSqliteBuilder {
-  /**
-   * NewSqliteBuilder creates a new SqliteBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newSqliteBuilder {(db: DB, executor: Executor): Builder}
  interface SqliteBuilder {
   /**
    * QueryBuilder returns the query builder supporting the current DB.
@@ -3216,18 +2940,13 @@ namespace dbx {
    */
   dropForeignKey(table: string): (Query | undefined)
  }
+ type _subIaUDk = BaseBuilder
+ interface StandardBuilder extends _subIaUDk {
+ }
  /**
-  * StandardBuilder is the builder that is used by DB for an unknown driver.
+  * NewStandardBuilder creates a new StandardBuilder instance.
   */
- type _subGOBhZ = BaseBuilder
- interface StandardBuilder extends _subGOBhZ {
- }
- interface newStandardBuilder {
-  /**
-   * NewStandardBuilder creates a new StandardBuilder instance.
-   */
-  (db: DB, executor: Executor): Builder
- }
+ interface newStandardBuilder {(db: DB, executor: Executor): Builder}
  interface StandardBuilder {
   /**
    * QueryBuilder returns the query builder supporting the current DB.
@@ -3286,8 +3005,8 @@ namespace dbx {
   * DB enhances sql.DB by providing a set of DB-agnostic query building methods.
   * DB allows easier query building and population of data into Go variables.
   */
- type _subKFDZf = Builder
- interface DB extends _subKFDZf {
+ type _sublBkgP = Builder
+ interface DB extends _sublBkgP {
   /**
    * FieldMapper maps struct fields to DB columns. Defaults to DefaultFieldMapFunc.
    */
@@ -3318,27 +3037,21 @@ namespace dbx {
   * Errors represents a list of errors.
   */
  interface Errors extends Array<Error>{}
- interface newFromDB {
-  /**
-   * NewFromDB encapsulates an existing database connection.
-   */
-  (sqlDB: sql.DB, driverName: string): (DB | undefined)
- }
- interface open {
-  /**
-   * Open opens a database specified by a driver name and data source name (DSN).
-   * Note that Open does not check if DSN is specified correctly. It doesn't try to establish a DB connection either.
-   * Please refer to sql.Open() for more information.
-   */
-  (driverName: string): (DB | undefined)
- }
- interface mustOpen {
-  /**
-   * MustOpen opens a database and establishes a connection to it.
-   * Please refer to sql.Open() and sql.Ping() for more information.
-   */
-  (driverName: string): (DB | undefined)
- }
+ /**
+  * NewFromDB encapsulates an existing database connection.
+  */
+ interface newFromDB {(sqlDB: sql.DB, driverName: string): (DB | undefined)}
+ /**
+  * Open opens a database specified by a driver name and data source name (DSN).
+  * Note that Open does not check if DSN is specified correctly. It doesn't try to establish a DB connection either.
+  * Please refer to sql.Open() for more information.
+  */
+ interface open {(driverName: string): (DB | undefined)}
+ /**
+  * MustOpen opens a database and establishes a connection to it.
+  * Please refer to sql.Open() and sql.Ping() for more information.
+  */
+ interface mustOpen {(driverName: string): (DB | undefined)}
  interface DB {
   /**
    * Clone makes a shallow copy of DB.
@@ -3434,9 +3147,6 @@ namespace dbx {
    */
   error(): string
  }
- /**
-  * Expression represents a DB expression that can be embedded in a SQL statement.
-  */
  interface Expression {
   /**
    * Build converts an expression into a SQL fragment.
@@ -3444,127 +3154,86 @@ namespace dbx {
    */
   build(_arg0: DB, _arg1: Params): string
  }
- /**
-  * HashExp represents a hash expression.
-  * 
-  * A hash expression is a map whose keys are DB column names which need to be filtered according
-  * to the corresponding values. For example, HashExp{"level": 2, "dept": 10} will generate
-  * the SQL: "level"=2 AND "dept"=10.
-  * 
-  * HashExp also handles nil values and slice values. For example, HashExp{"level": []interface{}{1, 2}, "dept": nil}
-  * will generate: "level" IN (1, 2) AND "dept" IS NULL.
-  */
  interface HashExp extends _TygojaDict{}
- interface newExp {
-  /**
-   * NewExp generates an expression with the specified SQL fragment and the optional binding parameters.
-   */
-  (e: string, ...params: Params[]): Expression
- }
- interface not {
-  /**
-   * Not generates a NOT expression which prefixes "NOT" to the specified expression.
-   */
-  (e: Expression): Expression
- }
- interface and {
-  /**
-   * And generates an AND expression which concatenates the given expressions with "AND".
-   */
-  (...exps: Expression[]): Expression
- }
- interface or {
-  /**
-   * Or generates an OR expression which concatenates the given expressions with "OR".
-   */
-  (...exps: Expression[]): Expression
- }
- interface _in {
-  /**
-   * In generates an IN expression for the specified column and the list of allowed values.
-   * If values is empty, a SQL "0=1" will be generated which represents a false expression.
-   */
-  (col: string, ...values: {
-   }[]): Expression
- }
- interface notIn {
-  /**
-   * NotIn generates an NOT IN expression for the specified column and the list of disallowed values.
-   * If values is empty, an empty string will be returned indicating a true expression.
-   */
-  (col: string, ...values: {
-   }[]): Expression
- }
- interface like {
-  /**
-   * Like generates a LIKE expression for the specified column and the possible strings that the column should be like.
-   * If multiple values are present, the column should be like *all* of them. For example, Like("name", "key", "word")
-   * will generate a SQL expression: "name" LIKE "%key%" AND "name" LIKE "%word%".
-   * 
-   * By default, each value will be surrounded by "%" to enable partial matching. If a value contains special characters
-   * such as "%", "\", "_", they will also be properly escaped.
-   * 
-   * You may call Escape() and/or Match() to change the default behavior. For example, Like("name", "key").Match(false, true)
-   * generates "name" LIKE "key%".
-   */
-  (col: string, ...values: string[]): (LikeExp | undefined)
- }
- interface notLike {
-  /**
-   * NotLike generates a NOT LIKE expression.
-   * For example, NotLike("name", "key", "word") will generate a SQL expression:
-   * "name" NOT LIKE "%key%" AND "name" NOT LIKE "%word%". Please see Like() for more details.
-   */
-  (col: string, ...values: string[]): (LikeExp | undefined)
- }
- interface orLike {
-  /**
-   * OrLike generates an OR LIKE expression.
-   * This is similar to Like() except that the column should be like one of the possible values.
-   * For example, OrLike("name", "key", "word") will generate a SQL expression:
-   * "name" LIKE "%key%" OR "name" LIKE "%word%". Please see Like() for more details.
-   */
-  (col: string, ...values: string[]): (LikeExp | undefined)
- }
- interface orNotLike {
-  /**
-   * OrNotLike generates an OR NOT LIKE expression.
-   * For example, OrNotLike("name", "key", "word") will generate a SQL expression:
-   * "name" NOT LIKE "%key%" OR "name" NOT LIKE "%word%". Please see Like() for more details.
-   */
-  (col: string, ...values: string[]): (LikeExp | undefined)
- }
- interface exists {
-  /**
-   * Exists generates an EXISTS expression by prefixing "EXISTS" to the given expression.
-   */
-  (exp: Expression): Expression
- }
- interface notExists {
-  /**
-   * NotExists generates an EXISTS expression by prefixing "NOT EXISTS" to the given expression.
-   */
-  (exp: Expression): Expression
- }
- interface between {
-  /**
-   * Between generates a BETWEEN expression.
-   * For example, Between("age", 10, 30) generates: "age" BETWEEN 10 AND 30
-   */
-  (col: string, from: {
-   }): Expression
- }
- interface notBetween {
-  /**
-   * NotBetween generates a NOT BETWEEN expression.
-   * For example, NotBetween("age", 10, 30) generates: "age" NOT BETWEEN 10 AND 30
-   */
-  (col: string, from: {
-   }): Expression
- }
  /**
-  * Exp represents an expression with a SQL fragment and a list of optional binding parameters.
+  * NewExp generates an expression with the specified SQL fragment and the optional binding parameters.
   */
+ interface newExp {(e: string, ...params: Params[]): Expression}
+ /**
+  * Not generates a NOT expression which prefixes "NOT" to the specified expression.
+  */
+ interface not {(e: Expression): Expression}
+ /**
+  * And generates an AND expression which concatenates the given expressions with "AND".
+  */
+ interface and {(...exps: Expression[]): Expression}
+ /**
+  * Or generates an OR expression which concatenates the given expressions with "OR".
+  */
+ interface or {(...exps: Expression[]): Expression}
+ /**
+  * In generates an IN expression for the specified column and the list of allowed values.
+  * If values is empty, a SQL "0=1" will be generated which represents a false expression.
+  */
+ interface in {(col: string, ...values: {
+   }[]): Expression}
+ /**
+  * NotIn generates an NOT IN expression for the specified column and the list of disallowed values.
+  * If values is empty, an empty string will be returned indicating a true expression.
+  */
+ interface notIn {(col: string, ...values: {
+   }[]): Expression}
+ /**
+  * Like generates a LIKE expression for the specified column and the possible strings that the column should be like.
+  * If multiple values are present, the column should be like *all* of them. For example, Like("name", "key", "word")
+  * will generate a SQL expression: "name" LIKE "%key%" AND "name" LIKE "%word%".
+  * 
+  * By default, each value will be surrounded by "%" to enable partial matching. If a value contains special characters
+  * such as "%", "\", "_", they will also be properly escaped.
+  * 
+  * You may call Escape() and/or Match() to change the default behavior. For example, Like("name", "key").Match(false, true)
+  * generates "name" LIKE "key%".
+  */
+ interface like {(col: string, ...values: string[]): (LikeExp | undefined)}
+ /**
+  * NotLike generates a NOT LIKE expression.
+  * For example, NotLike("name", "key", "word") will generate a SQL expression:
+  * "name" NOT LIKE "%key%" AND "name" NOT LIKE "%word%". Please see Like() for more details.
+  */
+ interface notLike {(col: string, ...values: string[]): (LikeExp | undefined)}
+ /**
+  * OrLike generates an OR LIKE expression.
+  * This is similar to Like() except that the column should be like one of the possible values.
+  * For example, OrLike("name", "key", "word") will generate a SQL expression:
+  * "name" LIKE "%key%" OR "name" LIKE "%word%". Please see Like() for more details.
+  */
+ interface orLike {(col: string, ...values: string[]): (LikeExp | undefined)}
+ /**
+  * OrNotLike generates an OR NOT LIKE expression.
+  * For example, OrNotLike("name", "key", "word") will generate a SQL expression:
+  * "name" NOT LIKE "%key%" OR "name" NOT LIKE "%word%". Please see Like() for more details.
+  */
+ interface orNotLike {(col: string, ...values: string[]): (LikeExp | undefined)}
+ /**
+  * Exists generates an EXISTS expression by prefixing "EXISTS" to the given expression.
+  */
+ interface exists {(exp: Expression): Expression}
+ /**
+  * NotExists generates an EXISTS expression by prefixing "NOT EXISTS" to the given expression.
+  */
+ interface notExists {(exp: Expression): Expression}
+ /**
+  * Between generates a BETWEEN expression.
+  * For example, Between("age", 10, 30) generates: "age" BETWEEN 10 AND 30
+  */
+ interface between {(col: string, from: {
+   }): Expression}
+ /**
+  * NotBetween generates a NOT BETWEEN expression.
+  * For example, NotBetween("age", 10, 30) generates: "age" NOT BETWEEN 10 AND 30
+  */
+ interface notBetween {(col: string, from: {
+   }): Expression}
  interface Exp {
  }
  interface Exp {
@@ -3579,9 +3248,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * NotExp represents an expression that should prefix "NOT" to a specified expression.
-  */
  interface NotExp {
  }
  interface NotExp {
@@ -3590,9 +3256,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * AndOrExp represents an expression that concatenates multiple expressions using either "AND" or "OR".
-  */
  interface AndOrExp {
  }
  interface AndOrExp {
@@ -3601,9 +3264,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * InExp represents an "IN" or "NOT IN" expression.
-  */
  interface InExp {
  }
  interface InExp {
@@ -3612,9 +3272,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * LikeExp represents a variant of LIKE expressions.
-  */
  interface LikeExp {
   /**
    * Like stores the LIKE operator. It can be "LIKE", "NOT LIKE".
@@ -3642,9 +3299,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * ExistsExp represents an EXISTS or NOT EXISTS expression.
-  */
  interface ExistsExp {
  }
  interface ExistsExp {
@@ -3653,9 +3307,6 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- /**
-  * BetweenExp represents a BETWEEN or a NOT BETWEEN expression.
-  */
  interface BetweenExp {
  }
  interface BetweenExp {
@@ -3664,15 +3315,10 @@ namespace dbx {
    */
   build(db: DB, params: Params): string
  }
- interface enclose {
-  /**
-   * Enclose surrounds the provided nonempty expression with parenthesis "()".
-   */
-  (exp: Expression): Expression
- }
  /**
-  * EncloseExp represents a parenthesis enclosed expression.
+  * Enclose surrounds the provided nonempty expression with parenthesis "()".
   */
+ interface enclose {(exp: Expression): Expression}
  interface EncloseExp {
  }
  interface EncloseExp {
@@ -3692,10 +3338,8 @@ namespace dbx {
   */
  interface ModelQuery {
  }
- interface newModelQuery {
-  (model: {
-   }, fieldMapFunc: FieldMapFunc, db: DB, builder: Builder): (ModelQuery | undefined)
- }
+ interface newModelQuery {(model: {
+   }, fieldMapFunc: FieldMapFunc, db: DB, builder: Builder): (ModelQuery | undefined)}
  interface ModelQuery {
   /**
    * Context returns the context associated with the query.
@@ -3744,30 +3388,14 @@ namespace dbx {
    */
   delete(): void
  }
- /**
-  * ExecHookFunc executes before op allowing custom handling like auto fail/retry.
-  */
  interface ExecHookFunc {(q: Query, op: () => void): void }
- /**
-  * OneHookFunc executes right before the query populate the row result from One() call (aka. op).
-  */
  interface OneHookFunc {(q: Query, a: {
   }, op: (b: {
   }) => void): void }
- /**
-  * AllHookFunc executes right before the query populate the row result from All() call (aka. op).
-  */
  interface AllHookFunc {(q: Query, sliceA: {
   }, op: (sliceB: {
   }) => void): void }
- /**
-  * Params represents a list of parameter values to be bound to a SQL statement.
-  * The map keys are the parameter names while the map values are the corresponding parameter values.
-  */
  interface Params extends _TygojaDict{}
- /**
-  * Executor prepares, executes, or queries a SQL statement.
-  */
  interface Executor {
   /**
    * Exec executes a SQL statement
@@ -3794,9 +3422,6 @@ namespace dbx {
    */
   prepare(query: string): (sql.Stmt | undefined)
  }
- /**
-  * Query represents a SQL statement to be executed.
-  */
  interface Query {
   /**
    * FieldMapper maps struct field names to DB column names.
@@ -3825,12 +3450,10 @@ namespace dbx {
    */
   execLogFunc: ExecLogFunc
  }
- interface newQuery {
-  /**
-   * NewQuery creates a new Query with the given SQL statement.
-   */
-  (db: DB, executor: Executor, sql: string): (Query | undefined)
- }
+ /**
+  * NewQuery creates a new Query with the given SQL statement.
+  */
+ interface newQuery {(db: DB, executor: Executor, sql: string): (Query | undefined)}
  interface Query {
   /**
    * SQL returns the original SQL used to create the query.
@@ -3952,9 +3575,6 @@ namespace dbx {
    */
   rows(): (Rows | undefined)
  }
- /**
-  * QueryBuilder builds different clauses for a SELECT SQL statement.
-  */
  interface QueryBuilder {
   /**
    * BuildSelect generates a SELECT clause from the given selected column names.
@@ -3989,17 +3609,12 @@ namespace dbx {
    */
   buildUnion(_arg0: Array<UnionInfo>, _arg1: Params): string
  }
- /**
-  * BaseQueryBuilder provides a basic implementation of QueryBuilder.
-  */
  interface BaseQueryBuilder {
  }
- interface newBaseQueryBuilder {
-  /**
-   * NewBaseQueryBuilder creates a new BaseQueryBuilder instance.
-   */
-  (db: DB): (BaseQueryBuilder | undefined)
- }
+ /**
+  * NewBaseQueryBuilder creates a new BaseQueryBuilder instance.
+  */
+ interface newBaseQueryBuilder {(db: DB): (BaseQueryBuilder | undefined)}
  interface BaseQueryBuilder {
   /**
    * DB returns the DB instance associated with the query builder.
@@ -4066,9 +3681,6 @@ namespace dbx {
    */
   buildLimit(limit: number, offset: number): string
  }
- /**
-  * VarTypeError indicates a variable type error when trying to populating a variable with DB result.
-  */
  interface VarTypeError extends String{}
  interface VarTypeError {
   /**
@@ -4076,17 +3688,9 @@ namespace dbx {
    */
   error(): string
  }
- /**
-  * NullStringMap is a map of sql.NullString that can be used to hold DB query result.
-  * The map keys correspond to the DB column names, while the map values are their corresponding column values.
-  */
  interface NullStringMap extends _TygojaDict{}
- /**
-  * Rows enhances sql.Rows by providing additional data query methods.
-  * Rows can be obtained by calling Query.Rows(). It is mainly used to populate data row by row.
-  */
- type _subebiTc = sql.Rows
- interface Rows extends _subebiTc {
+ type _subdNlLt = sql.Rows
+ interface Rows extends _subdNlLt {
  }
  interface Rows {
   /**
@@ -4115,14 +3719,7 @@ namespace dbx {
   scanStruct(a: {
    }): void
  }
- /**
-  * BuildHookFunc defines a callback function that is executed on Query creation.
-  */
  interface BuildHookFunc {(q: Query): void }
- /**
-  * SelectQuery represents a DB-agnostic SELECT query.
-  * It can be built into a DB-specific query by calling the Build() method.
-  */
  interface SelectQuery {
   /**
    * FieldMapper maps struct field names to DB column names.
@@ -4133,27 +3730,19 @@ namespace dbx {
    */
   tableMapper: TableMapFunc
  }
- /**
-  * JoinInfo contains the specification for a JOIN clause.
-  */
  interface JoinInfo {
   join: string
   table: string
   on: Expression
  }
- /**
-  * UnionInfo contains the specification for a UNION clause.
-  */
  interface UnionInfo {
   all: boolean
   query?: Query
  }
- interface newSelectQuery {
-  /**
-   * NewSelectQuery creates a new SelectQuery instance.
-   */
-  (builder: Builder, db: DB): (SelectQuery | undefined)
- }
+ /**
+  * NewSelectQuery creates a new SelectQuery instance.
+  */
+ interface newSelectQuery {(builder: Builder, db: DB): (SelectQuery | undefined)}
  interface SelectQuery {
   /**
    * WithBuildHook runs the provided hook function with the query created on Build().
@@ -4404,9 +3993,6 @@ namespace dbx {
   column(a: {
    }): void
  }
- /**
-  * QueryInfo represents a debug/info struct with exported SelectQuery fields.
-  */
  interface QueryInfo {
   builder: Builder
   selects: Array<string>
@@ -4443,16 +4029,13 @@ namespace dbx {
   }): string }
  interface structInfo {
  }
- type _subyHkwc = structInfo
- interface structValue extends _subyHkwc {
+ type _subsFJBf = structInfo
+ interface structValue extends _subsFJBf {
  }
  interface fieldInfo {
  }
  interface structInfoMapKey {
  }
- /**
-  * PostScanner is an optional interface used by ScanStruct.
-  */
  interface PostScanner {
   /**
    * PostScan executes right after the struct has been populated
@@ -4461,29 +4044,22 @@ namespace dbx {
    */
   postScan(): void
  }
- interface defaultFieldMapFunc {
-  /**
-   * DefaultFieldMapFunc maps a field name to a DB column name.
-   * The mapping rule set by this method is that words in a field name will be separated by underscores
-   * and the name will be turned into lower case. For example, "FirstName" maps to "first_name", and "MyID" becomes "my_id".
-   * See DB.FieldMapper for more details.
-   */
-  (f: string): string
- }
- interface getTableName {
-  /**
-   * GetTableName implements the default way of determining the table name corresponding to the given model struct
-   * or slice of structs. To get the actual table name for a model, you should use DB.TableMapFunc() instead.
-   * Do not call this method in a model's TableName() method because it will cause infinite loop.
-   */
-  (a: {
-   }): string
- }
  /**
-  * Tx enhances sql.Tx with additional querying methods.
+  * DefaultFieldMapFunc maps a field name to a DB column name.
+  * The mapping rule set by this method is that words in a field name will be separated by underscores
+  * and the name will be turned into lower case. For example, "FirstName" maps to "first_name", and "MyID" becomes "my_id".
+  * See DB.FieldMapper for more details.
   */
- type _subxvwus = Builder
- interface Tx extends _subxvwus {
+ interface defaultFieldMapFunc {(f: string): string}
+ /**
+  * GetTableName implements the default way of determining the table name corresponding to the given model struct
+  * or slice of structs. To get the actual table name for a model, you should use DB.TableMapFunc() instead.
+  * Do not call this method in a model's TableName() method because it will cause infinite loop.
+  */
+ interface getTableName {(a: {
+   }): string}
+ type _sublEyYY = Builder
+ interface Tx extends _sublEyYY {
  }
  interface Tx {
   /**
@@ -4496,201 +4072,6 @@ namespace dbx {
    * Rollback aborts the transaction.
    */
   rollback(): void
- }
-}
-
-namespace security {
- interface s256Challenge {
-  /**
-   * S256Challenge creates base64 encoded sha256 challenge string derived from code.
-   * The padding of the result base64 string is stripped per [RFC 7636].
-   * 
-   * [RFC 7636]: https://datatracker.ietf.org/doc/html/rfc7636#section-4.2
-   */
-  (code: string): string
- }
- interface md5 {
-  /**
-   * MD5 creates md5 hash from the provided plain text.
-   */
-  (text: string): string
- }
- interface sha256 {
-  /**
-   * SHA256 creates sha256 hash as defined in FIPS 180-4 from the provided text.
-   */
-  (text: string): string
- }
- interface sha512 {
-  /**
-   * SHA512 creates sha512 hash as defined in FIPS 180-4 from the provided text.
-   */
-  (text: string): string
- }
- // @ts-ignore
- import crand = rand
- interface encrypt {
-  /**
-   * Encrypt encrypts data with key (must be valid 32 char aes key).
-   */
-  (data: string, key: string): string
- }
- interface decrypt {
-  /**
-   * Decrypt decrypts encrypted text with key (must be valid 32 chars aes key).
-   */
-  (cipherText: string, key: string): string
- }
- interface parseUnverifiedJWT {
-  /**
-   * ParseUnverifiedJWT parses JWT token and returns its claims
-   * but DOES NOT verify the signature.
-   * 
-   * It verifies only the exp, iat and nbf claims.
-   */
-  (token: string): jwt.MapClaims
- }
- interface parseJWT {
-  /**
-   * ParseJWT verifies and parses JWT token and returns its claims.
-   */
-  (token: string, verificationKey: string): jwt.MapClaims
- }
- interface newJWT {
-  /**
-   * NewJWT generates and returns new HS256 signed JWT token.
-   */
-  (payload: jwt.MapClaims, signingKey: string, secondsDuration: number): string
- }
- interface newToken {
-  /**
-   * Deprecated:
-   * Consider replacing with NewJWT().
-   * 
-   * NewToken is a legacy alias for NewJWT that generates a HS256 signed JWT token.
-   */
-  (payload: jwt.MapClaims, signingKey: string, secondsDuration: number): string
- }
- // @ts-ignore
- import cryptoRand = rand
- // @ts-ignore
- import mathRand = rand
- interface randomString {
-  /**
-   * RandomString generates a cryptographically random string with the specified length.
-   * 
-   * The generated string matches [A-Za-z0-9]+ and it's transparent to URL-encoding.
-   */
-  (length: number): string
- }
- interface randomStringWithAlphabet {
-  /**
-   * RandomStringWithAlphabet generates a cryptographically random string
-   * with the specified length and characters set.
-   * 
-   * It panics if for some reason rand.Int returns a non-nil error.
-   */
-  (length: number, alphabet: string): string
- }
- interface pseudorandomString {
-  /**
-   * PseudorandomString generates a pseudorandom string with the specified length.
-   * 
-   * The generated string matches [A-Za-z0-9]+ and it's transparent to URL-encoding.
-   * 
-   * For a cryptographically random string (but a little bit slower) use RandomString instead.
-   */
-  (length: number): string
- }
- interface pseudorandomStringWithAlphabet {
-  /**
-   * PseudorandomStringWithAlphabet generates a pseudorandom string
-   * with the specified length and characters set.
-   * 
-   * For a cryptographically random (but a little bit slower) use RandomStringWithAlphabet instead.
-   */
-  (length: number, alphabet: string): string
- }
-}
-
-/**
- * Package template is a thin wrapper around the standard html/template
- * and text/template packages that implements a convenient registry to
- * load and cache templates on the fly concurrently.
- * 
- * It was created to assist the JSVM plugin HTML rendering, but could be used in other Go code.
- * 
- * Example:
- * 
- * ```
- * 	registry := template.NewRegistry()
- * 
- * 	html1, err := registry.LoadFiles(
- * 		// the files set wil be parsed only once and then cached
- * 		"layout.html",
- * 		"content.html",
- * 	).Render(map[string]any{"name": "John"})
- * 
- * 	html2, err := registry.LoadFiles(
- * 		// reuse the already parsed and cached files set
- * 		"layout.html",
- * 		"content.html",
- * 	).Render(map[string]any{"name": "Jane"})
- * ```
- */
-namespace template {
- interface newRegistry {
-  /**
-   * NewRegistry creates and initializes a new blank templates registry.
-   * 
-   * Use the Registry.Load* methods to load templates into the registry.
-   */
-  (): (Registry | undefined)
- }
- /**
-  * Registry defines a templates registry that is safe to be used by multiple goroutines.
-  * 
-  * Use the Registry.Load* methods to load templates into the registry.
-  */
- interface Registry {
- }
- interface Registry {
-  /**
-   * LoadFiles caches (if not already) the specified filenames set as a
-   * single template and returns a ready to use Renderer instance.
-   * 
-   * There must be at least 1 filename specified.
-   */
-  loadFiles(...filenames: string[]): (Renderer | undefined)
- }
- interface Registry {
-  /**
-   * LoadString caches (if not already) the specified inline string as a
-   * single template and returns a ready to use Renderer instance.
-   */
-  loadString(text: string): (Renderer | undefined)
- }
- interface Registry {
-  /**
-   * LoadString caches (if not already) the specified fs and globPatterns
-   * pair as single template and returns a ready to use Renderer instance.
-   * 
-   * There must be at least 1 file matching the provided globPattern(s)
-   * (note that most file names serves as glob patterns matching themselves).
-   */
-  loadFS(fs: fs.FS, ...globPatterns: string[]): (Renderer | undefined)
- }
- /**
-  * Renderer defines a single parsed template.
-  */
- interface Renderer {
- }
- interface Renderer {
-  /**
-   * Render executes the template with the specified data as the dot object
-   * and returns the result as plain string.
-   */
-  render(data: any): string
  }
 }
 
@@ -4711,76 +4092,209 @@ namespace template {
  * Note that the examples in this package assume a Unix system.
  * They may not run on Windows, and they do not run in the Go Playground
  * used by golang.org and godoc.org.
+ * 
+ * # Executables in the current directory
+ * 
+ * The functions Command and LookPath look for a program
+ * in the directories listed in the current path, following the
+ * conventions of the host operating system.
+ * Operating systems have for decades included the current
+ * directory in this search, sometimes implicitly and sometimes
+ * configured explicitly that way by default.
+ * Modern practice is that including the current directory
+ * is usually unexpected and often leads to security problems.
+ * 
+ * To avoid those security problems, as of Go 1.19, this package will not resolve a program
+ * using an implicit or explicit path entry relative to the current directory.
+ * That is, if you run exec.LookPath("go"), it will not successfully return
+ * ./go on Unix nor .\go.exe on Windows, no matter how the path is configured.
+ * Instead, if the usual path algorithms would result in that answer,
+ * these functions return an error err satisfying errors.Is(err, ErrDot).
+ * 
+ * For example, consider these two program snippets:
+ * 
+ * ```
+ * 	path, err := exec.LookPath("prog")
+ * 	if err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * 	use(path)
+ * ```
+ * 
+ * and
+ * 
+ * ```
+ * 	cmd := exec.Command("prog")
+ * 	if err := cmd.Run(); err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * ```
+ * 
+ * These will not find and run ./prog or .\prog.exe,
+ * no matter how the current path is configured.
+ * 
+ * Code that always wants to run a program from the current directory
+ * can be rewritten to say "./prog" instead of "prog".
+ * 
+ * Code that insists on including results from relative path entries
+ * can instead override the error using an errors.Is check:
+ * 
+ * ```
+ * 	path, err := exec.LookPath("prog")
+ * 	if errors.Is(err, exec.ErrDot) {
+ * 		err = nil
+ * 	}
+ * 	if err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * 	use(path)
+ * ```
+ * 
+ * and
+ * 
+ * ```
+ * 	cmd := exec.Command("prog")
+ * 	if errors.Is(cmd.Err, exec.ErrDot) {
+ * 		cmd.Err = nil
+ * 	}
+ * 	if err := cmd.Run(); err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * ```
+ * 
+ * Setting the environment variable GODEBUG=execerrdot=0
+ * disables generation of ErrDot entirely, temporarily restoring the pre-Go 1.19
+ * behavior for programs that are unable to apply more targeted fixes.
+ * A future version of Go may remove support for this variable.
+ * 
+ * Before adding such overrides, make sure you understand the
+ * security implications of doing so.
+ * See https://go.dev/blog/path-security for more information.
  */
 namespace exec {
- interface command {
-  /**
-   * Command returns the Cmd struct to execute the named program with
-   * the given arguments.
-   * 
-   * It sets only the Path and Args in the returned structure.
-   * 
-   * If name contains no path separators, Command uses LookPath to
-   * resolve name to a complete path if possible. Otherwise it uses name
-   * directly as Path.
-   * 
-   * The returned Cmd's Args field is constructed from the command name
-   * followed by the elements of arg, so arg should not include the
-   * command name itself. For example, Command("echo", "hello").
-   * Args[0] is always name, not the possibly resolved Path.
-   * 
-   * On Windows, processes receive the whole command line as a single string
-   * and do their own parsing. Command combines and quotes Args into a command
-   * line string with an algorithm compatible with applications using
-   * CommandLineToArgvW (which is the most common way). Notable exceptions are
-   * msiexec.exe and cmd.exe (and thus, all batch files), which have a different
-   * unquoting algorithm. In these or other similar cases, you can do the
-   * quoting yourself and provide the full command line in SysProcAttr.CmdLine,
-   * leaving Args empty.
-   */
-  (name: string, ...arg: string[]): (Cmd | undefined)
- }
+ /**
+  * Command returns the Cmd struct to execute the named program with
+  * the given arguments.
+  * 
+  * It sets only the Path and Args in the returned structure.
+  * 
+  * If name contains no path separators, Command uses LookPath to
+  * resolve name to a complete path if possible. Otherwise it uses name
+  * directly as Path.
+  * 
+  * The returned Cmd's Args field is constructed from the command name
+  * followed by the elements of arg, so arg should not include the
+  * command name itself. For example, Command("echo", "hello").
+  * Args[0] is always name, not the possibly resolved Path.
+  * 
+  * On Windows, processes receive the whole command line as a single string
+  * and do their own parsing. Command combines and quotes Args into a command
+  * line string with an algorithm compatible with applications using
+  * CommandLineToArgvW (which is the most common way). Notable exceptions are
+  * msiexec.exe and cmd.exe (and thus, all batch files), which have a different
+  * unquoting algorithm. In these or other similar cases, you can do the
+  * quoting yourself and provide the full command line in SysProcAttr.CmdLine,
+  * leaving Args empty.
+  */
+ interface command {(name: string, ...arg: string[]): (Cmd | undefined)}
+}
+
+namespace security {
+ // @ts-ignore
+ import crand = rand
+ /**
+  * S256Challenge creates base64 encoded sha256 challenge string derived from code.
+  * The padding of the result base64 string is stripped per [RFC 7636].
+  * 
+  * [RFC 7636]: https://datatracker.ietf.org/doc/html/rfc7636#section-4.2
+  */
+ interface s256Challenge {(code: string): string}
+ /**
+  * Encrypt encrypts data with key (must be valid 32 char aes key).
+  */
+ interface encrypt {(data: string, key: string): string}
+ /**
+  * Decrypt decrypts encrypted text with key (must be valid 32 chars aes key).
+  */
+ interface decrypt {(cipherText: string, key: string): string}
+ /**
+  * ParseUnverifiedJWT parses JWT token and returns its claims
+  * but DOES NOT verify the signature.
+  * 
+  * It verifies only the exp, iat and nbf claims.
+  */
+ interface parseUnverifiedJWT {(token: string): jwt.MapClaims}
+ /**
+  * ParseJWT verifies and parses JWT token and returns its claims.
+  */
+ interface parseJWT {(token: string, verificationKey: string): jwt.MapClaims}
+ /**
+  * NewJWT generates and returns new HS256 signed JWT token.
+  */
+ interface newJWT {(payload: jwt.MapClaims, signingKey: string, secondsDuration: number): string}
+ /**
+  * Deprecated:
+  * Consider replacing with NewJWT().
+  * 
+  * NewToken is a legacy alias for NewJWT that generates a HS256 signed JWT token.
+  */
+ interface newToken {(payload: jwt.MapClaims, signingKey: string, secondsDuration: number): string}
+ // @ts-ignore
+ import cryptoRand = rand
+ // @ts-ignore
+ import mathRand = rand
+ /**
+  * RandomString generates a cryptographically random string with the specified length.
+  * 
+  * The generated string matches [A-Za-z0-9]+ and it's transparent to URL-encoding.
+  */
+ interface randomString {(length: number): string}
+ /**
+  * RandomStringWithAlphabet generates a cryptographically random string
+  * with the specified length and characters set.
+  * 
+  * It panics if for some reason rand.Int returns a non-nil error.
+  */
+ interface randomStringWithAlphabet {(length: number, alphabet: string): string}
+ /**
+  * PseudorandomString generates a pseudorandom string with the specified length.
+  * 
+  * The generated string matches [A-Za-z0-9]+ and it's transparent to URL-encoding.
+  * 
+  * For a cryptographically random string (but a little bit slower) use RandomString instead.
+  */
+ interface pseudorandomString {(length: number): string}
+ /**
+  * PseudorandomStringWithAlphabet generates a pseudorandom string
+  * with the specified length and characters set.
+  * 
+  * For a cryptographically random (but a little bit slower) use RandomStringWithAlphabet instead.
+  */
+ interface pseudorandomStringWithAlphabet {(length: number, alphabet: string): string}
 }
 
 namespace filesystem {
- /**
-  * FileReader defines an interface for a file resource reader.
-  */
  interface FileReader {
   open(): io.ReadSeekCloser
  }
- /**
-  * File defines a single file [io.ReadSeekCloser] resource.
-  * 
-  * The file could be from a local path, multipipart/formdata header, etc.
-  */
  interface File {
   name: string
   originalName: string
   size: number
   reader: FileReader
  }
- interface newFileFromPath {
-  /**
-   * NewFileFromPath creates a new File instance from the provided local file path.
-   */
-  (path: string): (File | undefined)
- }
- interface newFileFromBytes {
-  /**
-   * NewFileFromBytes creates a new File instance from the provided byte slice.
-   */
-  (b: string, name: string): (File | undefined)
- }
- interface newFileFromMultipart {
-  /**
-   * NewFileFromMultipart creates a new File instace from the provided multipart header.
-   */
-  (mh: multipart.FileHeader): (File | undefined)
- }
  /**
-  * MultipartReader defines a FileReader from [multipart.FileHeader].
+  * NewFileFromPath creates a new File instance from the provided local file path.
   */
+ interface newFileFromPath {(path: string): (File | undefined)}
+ /**
+  * NewFileFromBytes creates a new File instance from the provided byte slice.
+  */
+ interface newFileFromBytes {(b: string, name: string): (File | undefined)}
+ /**
+  * NewFileFromMultipart creates a new File instace from the provided multipart header.
+  */
+ interface newFileFromMultipart {(mh: multipart.FileHeader): (File | undefined)}
  interface MultipartReader {
   header?: multipart.FileHeader
  }
@@ -4790,9 +4304,6 @@ namespace filesystem {
    */
   open(): io.ReadSeekCloser
  }
- /**
-  * PathReader defines a FileReader from a local file path.
-  */
  interface PathReader {
   path: string
  }
@@ -4802,9 +4313,6 @@ namespace filesystem {
    */
   open(): io.ReadSeekCloser
  }
- /**
-  * BytesReader defines a FileReader from bytes content.
-  */
  interface BytesReader {
   bytes: string
  }
@@ -4814,8 +4322,8 @@ namespace filesystem {
    */
   open(): io.ReadSeekCloser
  }
- type _subGdHaW = bytes.Reader
- interface bytesReadSeekCloser extends _subGdHaW {
+ type _subDsRyl = bytes.Reader
+ interface bytesReadSeekCloser extends _subDsRyl {
  }
  interface bytesReadSeekCloser {
   /**
@@ -4825,22 +4333,18 @@ namespace filesystem {
  }
  interface System {
  }
- interface newS3 {
-  /**
-   * NewS3 initializes an S3 filesystem instance.
-   * 
-   * NB! Make sure to call `Close()` after you are done working with it.
-   */
-  (bucketName: string, region: string, endpoint: string, accessKey: string, secretKey: string, s3ForcePathStyle: boolean): (System | undefined)
- }
- interface newLocal {
-  /**
-   * NewLocal initializes a new local filesystem instance.
-   * 
-   * NB! Make sure to call `Close()` after you are done working with it.
-   */
-  (dirPath: string): (System | undefined)
- }
+ /**
+  * NewS3 initializes an S3 filesystem instance.
+  * 
+  * NB! Make sure to call `Close()` after you are done working with it.
+  */
+ interface newS3 {(bucketName: string, region: string, endpoint: string, accessKey: string, secretKey: string, s3ForcePathStyle: boolean): (System | undefined)}
+ /**
+  * NewLocal initializes a new local filesystem instance.
+  * 
+  * NB! Make sure to call `Close()` after you are done working with it.
+  */
+ interface newLocal {(dirPath: string): (System | undefined)}
  interface System {
   /**
    * SetContext assigns the specified context to the current filesystem.
@@ -4939,54 +4443,38 @@ namespace filesystem {
  * Package tokens implements various user and admin tokens generation methods.
  */
 namespace tokens {
- interface newAdminAuthToken {
-  /**
-   * NewAdminAuthToken generates and returns a new admin authentication token.
-   */
-  (app: core.App, admin: models.Admin): string
- }
- interface newAdminResetPasswordToken {
-  /**
-   * NewAdminResetPasswordToken generates and returns a new admin password reset request token.
-   */
-  (app: core.App, admin: models.Admin): string
- }
- interface newAdminFileToken {
-  /**
-   * NewAdminFileToken generates and returns a new admin private file access token.
-   */
-  (app: core.App, admin: models.Admin): string
- }
- interface newRecordAuthToken {
-  /**
-   * NewRecordAuthToken generates and returns a new auth record authentication token.
-   */
-  (app: core.App, record: models.Record): string
- }
- interface newRecordVerifyToken {
-  /**
-   * NewRecordVerifyToken generates and returns a new record verification token.
-   */
-  (app: core.App, record: models.Record): string
- }
- interface newRecordResetPasswordToken {
-  /**
-   * NewRecordResetPasswordToken generates and returns a new auth record password reset request token.
-   */
-  (app: core.App, record: models.Record): string
- }
- interface newRecordChangeEmailToken {
-  /**
-   * NewRecordChangeEmailToken generates and returns a new auth record change email request token.
-   */
-  (app: core.App, record: models.Record, newEmail: string): string
- }
- interface newRecordFileToken {
-  /**
-   * NewRecordFileToken generates and returns a new record private file access token.
-   */
-  (app: core.App, record: models.Record): string
- }
+ /**
+  * NewAdminAuthToken generates and returns a new admin authentication token.
+  */
+ interface newAdminAuthToken {(app: core.App, admin: models.Admin): string}
+ /**
+  * NewAdminResetPasswordToken generates and returns a new admin password reset request token.
+  */
+ interface newAdminResetPasswordToken {(app: core.App, admin: models.Admin): string}
+ /**
+  * NewAdminFileToken generates and returns a new admin private file access token.
+  */
+ interface newAdminFileToken {(app: core.App, admin: models.Admin): string}
+ /**
+  * NewRecordAuthToken generates and returns a new auth record authentication token.
+  */
+ interface newRecordAuthToken {(app: core.App, record: models.Record): string}
+ /**
+  * NewRecordVerifyToken generates and returns a new record verification token.
+  */
+ interface newRecordVerifyToken {(app: core.App, record: models.Record): string}
+ /**
+  * NewRecordResetPasswordToken generates and returns a new auth record password reset request token.
+  */
+ interface newRecordResetPasswordToken {(app: core.App, record: models.Record): string}
+ /**
+  * NewRecordChangeEmailToken generates and returns a new auth record change email request token.
+  */
+ interface newRecordChangeEmailToken {(app: core.App, record: models.Record, newEmail: string): string}
+ /**
+  * NewRecordFileToken generates and returns a new record private file access token.
+  */
+ interface newRecordFileToken {(app: core.App, record: models.Record): string}
 }
 
 /**
@@ -4996,23 +4484,18 @@ namespace tokens {
 namespace forms {
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * AdminLogin is an admin email/pass login form.
-  */
  interface AdminLogin {
   identity: string
   password: string
  }
- interface newAdminLogin {
-  /**
-   * NewAdminLogin creates a new [AdminLogin] form initialized with
-   * the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App): (AdminLogin | undefined)
- }
+ /**
+  * NewAdminLogin creates a new [AdminLogin] form initialized with
+  * the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newAdminLogin {(app: core.App): (AdminLogin | undefined)}
  interface AdminLogin {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5035,24 +4518,19 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Admin | undefined>[]): (models.Admin | undefined)
  }
- /**
-  * AdminPasswordResetConfirm is an admin password reset confirmation form.
-  */
  interface AdminPasswordResetConfirm {
   token: string
   password: string
   passwordConfirm: string
  }
- interface newAdminPasswordResetConfirm {
-  /**
-   * NewAdminPasswordResetConfirm creates a new [AdminPasswordResetConfirm]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App): (AdminPasswordResetConfirm | undefined)
- }
+ /**
+  * NewAdminPasswordResetConfirm creates a new [AdminPasswordResetConfirm]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newAdminPasswordResetConfirm {(app: core.App): (AdminPasswordResetConfirm | undefined)}
  interface AdminPasswordResetConfirm {
   /**
    * SetDao replaces the form Dao instance with the provided one.
@@ -5078,22 +4556,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Admin | undefined>[]): (models.Admin | undefined)
  }
- /**
-  * AdminPasswordResetRequest is an admin password reset request form.
-  */
  interface AdminPasswordResetRequest {
   email: string
  }
- interface newAdminPasswordResetRequest {
-  /**
-   * NewAdminPasswordResetRequest creates a new [AdminPasswordResetRequest]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App): (AdminPasswordResetRequest | undefined)
- }
+ /**
+  * NewAdminPasswordResetRequest creates a new [AdminPasswordResetRequest]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newAdminPasswordResetRequest {(app: core.App): (AdminPasswordResetRequest | undefined)}
  interface AdminPasswordResetRequest {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5118,9 +4591,6 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Admin | undefined>[]): void
  }
- /**
-  * AdminUpsert is a [models.Admin] upsert (create/update) form.
-  */
  interface AdminUpsert {
   id: string
   avatar: number
@@ -5128,17 +4598,15 @@ namespace forms {
   password: string
   passwordConfirm: string
  }
- interface newAdminUpsert {
-  /**
-   * NewAdminUpsert creates a new [AdminUpsert] form with initializer
-   * config created from the provided [core.App] and [models.Admin] instances
-   * (for create you could pass a pointer to an empty Admin - `&models.Admin{}`).
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, admin: models.Admin): (AdminUpsert | undefined)
- }
+ /**
+  * NewAdminUpsert creates a new [AdminUpsert] form with initializer
+  * config created from the provided [core.App] and [models.Admin] instances
+  * (for create you could pass a pointer to an empty Admin - `&models.Admin{}`).
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newAdminUpsert {(app: core.App, admin: models.Admin): (AdminUpsert | undefined)}
  interface AdminUpsert {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5160,11 +4628,6 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Admin | undefined>[]): void
  }
- /**
-  * AppleClientSecretCreate is a [models.Admin] upsert (create/update) form.
-  * 
-  * Reference: https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens
-  */
  interface AppleClientSecretCreate {
   /**
    * ClientId is the identifier of your app (aka. Service ID).
@@ -5191,13 +4654,11 @@ namespace forms {
    */
   duration: number
  }
- interface newAppleClientSecretCreate {
-  /**
-   * NewAppleClientSecretCreate creates a new [AppleClientSecretCreate] form with initializer
-   * config created from the provided [core.App] instances.
-   */
-  (app: core.App): (AppleClientSecretCreate | undefined)
- }
+ /**
+  * NewAppleClientSecretCreate creates a new [AppleClientSecretCreate] form with initializer
+  * config created from the provided [core.App] instances.
+  */
+ interface newAppleClientSecretCreate {(app: core.App): (AppleClientSecretCreate | undefined)}
  interface AppleClientSecretCreate {
   /**
    * Validate makes the form validatable by implementing [validation.Validatable] interface.
@@ -5210,18 +4671,13 @@ namespace forms {
    */
   submit(): string
  }
- /**
-  * BackupCreate is a request form for creating a new app backup.
-  */
  interface BackupCreate {
   name: string
  }
- interface newBackupCreate {
-  /**
-   * NewBackupCreate creates new BackupCreate request form.
-   */
-  (app: core.App): (BackupCreate | undefined)
- }
+ /**
+  * NewBackupCreate creates new BackupCreate request form.
+  */
+ interface newBackupCreate {(app: core.App): (BackupCreate | undefined)}
  interface BackupCreate {
   /**
    * SetContext replaces the default form context with the provided one.
@@ -5243,52 +4699,8 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<string>[]): void
  }
- /**
-  * BackupUpload is a request form for uploading a new app backup.
-  */
- interface BackupUpload {
-  file?: filesystem.File
- }
- interface newBackupUpload {
-  /**
-   * NewBackupUpload creates new BackupUpload request form.
-   */
-  (app: core.App): (BackupUpload | undefined)
- }
- interface BackupUpload {
-  /**
-   * SetContext replaces the default form upload context with the provided one.
-   */
-  setContext(ctx: context.Context): void
- }
- interface BackupUpload {
-  /**
-   * Validate makes the form validatable by implementing [validation.Validatable] interface.
-   */
-  validate(): void
- }
- interface BackupUpload {
-  /**
-   * Submit validates the form and upload the backup file.
-   * 
-   * You can optionally provide a list of InterceptorFunc to further
-   * modify the form behavior before uploading the backup.
-   */
-  submit(...interceptors: InterceptorFunc<filesystem.File | undefined>[]): void
- }
- /**
-  * InterceptorNextFunc is a interceptor handler function.
-  * Usually used in combination with InterceptorFunc.
-  */
  interface InterceptorNextFunc<T> {(t: T): void }
- /**
-  * InterceptorFunc defines a single interceptor function that
-  * will execute the provided next func handler.
-  */
  interface InterceptorFunc<T> {(next: InterceptorNextFunc<T>): InterceptorNextFunc<T> }
- /**
-  * CollectionUpsert is a [models.Collection] upsert (create/update) form.
-  */
  interface CollectionUpsert {
   id: string
   type: string
@@ -5303,17 +4715,15 @@ namespace forms {
   deleteRule?: string
   options: types.JsonMap
  }
- interface newCollectionUpsert {
-  /**
-   * NewCollectionUpsert creates a new [CollectionUpsert] form with initializer
-   * config created from the provided [core.App] and [models.Collection] instances
-   * (for create you could pass a pointer to an empty Collection - `&models.Collection{}`).
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (CollectionUpsert | undefined)
- }
+ /**
+  * NewCollectionUpsert creates a new [CollectionUpsert] form with initializer
+  * config created from the provided [core.App] and [models.Collection] instances
+  * (for create you could pass a pointer to an empty Collection - `&models.Collection{}`).
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newCollectionUpsert {(app: core.App, collection: models.Collection): (CollectionUpsert | undefined)}
  interface CollectionUpsert {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5337,24 +4747,18 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Collection | undefined>[]): void
  }
- /**
-  * CollectionsImport is a form model to bulk import
-  * (create, replace and delete) collections from a user provided list.
-  */
  interface CollectionsImport {
   collections: Array<(models.Collection | undefined)>
   deleteMissing: boolean
  }
- interface newCollectionsImport {
-  /**
-   * NewCollectionsImport creates a new [CollectionsImport] form with
-   * initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App): (CollectionsImport | undefined)
- }
+ /**
+  * NewCollectionsImport creates a new [CollectionsImport] form with
+  * initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newCollectionsImport {(app: core.App): (CollectionsImport | undefined)}
  interface CollectionsImport {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5383,42 +4787,32 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<Array<(models.Collection | undefined)>>[]): void
  }
- /**
-  * RealtimeSubscribe is a realtime subscriptions request form.
-  */
  interface RealtimeSubscribe {
   clientId: string
   subscriptions: Array<string>
  }
- interface newRealtimeSubscribe {
-  /**
-   * NewRealtimeSubscribe creates new RealtimeSubscribe request form.
-   */
-  (): (RealtimeSubscribe | undefined)
- }
+ /**
+  * NewRealtimeSubscribe creates new RealtimeSubscribe request form.
+  */
+ interface newRealtimeSubscribe {(): (RealtimeSubscribe | undefined)}
  interface RealtimeSubscribe {
   /**
    * Validate makes the form validatable by implementing [validation.Validatable] interface.
    */
   validate(): void
  }
- /**
-  * RecordEmailChangeConfirm is an auth record email change confirmation form.
-  */
  interface RecordEmailChangeConfirm {
   token: string
   password: string
  }
- interface newRecordEmailChangeConfirm {
-  /**
-   * NewRecordEmailChangeConfirm creates a new [RecordEmailChangeConfirm] form
-   * initialized with from the provided [core.App] and [models.Collection] instances.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordEmailChangeConfirm | undefined)
- }
+ /**
+  * NewRecordEmailChangeConfirm creates a new [RecordEmailChangeConfirm] form
+  * initialized with from the provided [core.App] and [models.Collection] instances.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordEmailChangeConfirm {(app: core.App, collection: models.Collection): (RecordEmailChangeConfirm | undefined)}
  interface RecordEmailChangeConfirm {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5441,22 +4835,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): (models.Record | undefined)
  }
- /**
-  * RecordEmailChangeRequest is an auth record email change request form.
-  */
  interface RecordEmailChangeRequest {
   newEmail: string
  }
- interface newRecordEmailChangeRequest {
-  /**
-   * NewRecordEmailChangeRequest creates a new [RecordEmailChangeRequest] form
-   * initialized with from the provided [core.App] and [models.Record] instances.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, record: models.Record): (RecordEmailChangeRequest | undefined)
- }
+ /**
+  * NewRecordEmailChangeRequest creates a new [RecordEmailChangeRequest] form
+  * initialized with from the provided [core.App] and [models.Record] instances.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordEmailChangeRequest {(app: core.App, record: models.Record): (RecordEmailChangeRequest | undefined)}
  interface RecordEmailChangeRequest {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5478,23 +4867,13 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): void
  }
- /**
-  * RecordOAuth2LoginData defines the OA
-  */
  interface RecordOAuth2LoginData {
   externalAuth?: models.ExternalAuth
   record?: models.Record
   oAuth2User?: auth.AuthUser
   providerClient: auth.Provider
  }
- /**
-  * BeforeOAuth2RecordCreateFunc defines a callback function that will
-  * be called before OAuth2 new Record creation.
-  */
  interface BeforeOAuth2RecordCreateFunc {(createForm: RecordUpsert, authRecord: models.Record, authUser: auth.AuthUser): void }
- /**
-  * RecordOAuth2Login is an auth record OAuth2 login form.
-  */
  interface RecordOAuth2Login {
   /**
    * The name of the OAuth2 client provider (eg. "google")
@@ -5518,16 +4897,14 @@ namespace forms {
    */
   createData: _TygojaDict
  }
- interface newRecordOAuth2Login {
-  /**
-   * NewRecordOAuth2Login creates a new [RecordOAuth2Login] form with
-   * initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection, optAuthRecord: models.Record): (RecordOAuth2Login | undefined)
- }
+ /**
+  * NewRecordOAuth2Login creates a new [RecordOAuth2Login] form with
+  * initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordOAuth2Login {(app: core.App, collection: models.Collection, optAuthRecord: models.Record): (RecordOAuth2Login | undefined)}
  interface RecordOAuth2Login {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5561,23 +4938,18 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<RecordOAuth2LoginData | undefined>[]): [(models.Record | undefined), (auth.AuthUser | undefined)]
  }
- /**
-  * RecordPasswordLogin is record username/email + password login form.
-  */
  interface RecordPasswordLogin {
   identity: string
   password: string
  }
- interface newRecordPasswordLogin {
-  /**
-   * NewRecordPasswordLogin creates a new [RecordPasswordLogin] form initialized
-   * with from the provided [core.App] and [models.Collection] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordPasswordLogin | undefined)
- }
+ /**
+  * NewRecordPasswordLogin creates a new [RecordPasswordLogin] form initialized
+  * with from the provided [core.App] and [models.Collection] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordPasswordLogin {(app: core.App, collection: models.Collection): (RecordPasswordLogin | undefined)}
  interface RecordPasswordLogin {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5600,24 +4972,19 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): (models.Record | undefined)
  }
- /**
-  * RecordPasswordResetConfirm is an auth record password reset confirmation form.
-  */
  interface RecordPasswordResetConfirm {
   token: string
   password: string
   passwordConfirm: string
  }
- interface newRecordPasswordResetConfirm {
-  /**
-   * NewRecordPasswordResetConfirm creates a new [RecordPasswordResetConfirm]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordPasswordResetConfirm | undefined)
- }
+ /**
+  * NewRecordPasswordResetConfirm creates a new [RecordPasswordResetConfirm]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordPasswordResetConfirm {(app: core.App, collection: models.Collection): (RecordPasswordResetConfirm | undefined)}
  interface RecordPasswordResetConfirm {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5640,22 +5007,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): (models.Record | undefined)
  }
- /**
-  * RecordPasswordResetRequest is an auth record reset password request form.
-  */
  interface RecordPasswordResetRequest {
   email: string
  }
- interface newRecordPasswordResetRequest {
-  /**
-   * NewRecordPasswordResetRequest creates a new [RecordPasswordResetRequest]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordPasswordResetRequest | undefined)
- }
+ /**
+  * NewRecordPasswordResetRequest creates a new [RecordPasswordResetRequest]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordPasswordResetRequest {(app: core.App, collection: models.Collection): (RecordPasswordResetRequest | undefined)}
  interface RecordPasswordResetRequest {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5680,9 +5042,6 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): void
  }
- /**
-  * RecordUpsert is a [models.Record] upsert (create/update) form.
-  */
  interface RecordUpsert {
   /**
    * base model fields
@@ -5700,17 +5059,15 @@ namespace forms {
   passwordConfirm: string
   oldPassword: string
  }
- interface newRecordUpsert {
-  /**
-   * NewRecordUpsert creates a new [RecordUpsert] form with initializer
-   * config created from the provided [core.App] and [models.Record] instances
-   * (for create you could pass a pointer to an empty Record - models.NewRecord(collection)).
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, record: models.Record): (RecordUpsert | undefined)
- }
+ /**
+  * NewRecordUpsert creates a new [RecordUpsert] form with initializer
+  * config created from the provided [core.App] and [models.Record] instances
+  * (for create you could pass a pointer to an empty Record - models.NewRecord(collection)).
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordUpsert {(app: core.App, record: models.Record): (RecordUpsert | undefined)}
  interface RecordUpsert {
   /**
    * Data returns the loaded form's data.
@@ -5825,22 +5182,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): void
  }
- /**
-  * RecordVerificationConfirm is an auth record email verification confirmation form.
-  */
  interface RecordVerificationConfirm {
   token: string
  }
- interface newRecordVerificationConfirm {
-  /**
-   * NewRecordVerificationConfirm creates a new [RecordVerificationConfirm]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordVerificationConfirm | undefined)
- }
+ /**
+  * NewRecordVerificationConfirm creates a new [RecordVerificationConfirm]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordVerificationConfirm {(app: core.App, collection: models.Collection): (RecordVerificationConfirm | undefined)}
  interface RecordVerificationConfirm {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5863,22 +5215,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): (models.Record | undefined)
  }
- /**
-  * RecordVerificationRequest is an auth record email verification request form.
-  */
  interface RecordVerificationRequest {
   email: string
  }
- interface newRecordVerificationRequest {
-  /**
-   * NewRecordVerificationRequest creates a new [RecordVerificationRequest]
-   * form initialized with from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App, collection: models.Collection): (RecordVerificationRequest | undefined)
- }
+ /**
+  * NewRecordVerificationRequest creates a new [RecordVerificationRequest]
+  * form initialized with from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
+  */
+ interface newRecordVerificationRequest {(app: core.App, collection: models.Collection): (RecordVerificationRequest | undefined)}
  interface RecordVerificationRequest {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5903,22 +5250,17 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<models.Record | undefined>[]): void
  }
+ type _subVhdvG = settings.Settings
+ interface SettingsUpsert extends _subVhdvG {
+ }
  /**
-  * SettingsUpsert is a [settings.Settings] upsert (create/update) form.
+  * NewSettingsUpsert creates a new [SettingsUpsert] form with initializer
+  * config created from the provided [core.App] instance.
+  * 
+  * If you want to submit the form as part of a transaction,
+  * you can change the default Dao via [SetDao()].
   */
- type _subfHXme = settings.Settings
- interface SettingsUpsert extends _subfHXme {
- }
- interface newSettingsUpsert {
-  /**
-   * NewSettingsUpsert creates a new [SettingsUpsert] form with initializer
-   * config created from the provided [core.App] instance.
-   * 
-   * If you want to submit the form as part of a transaction,
-   * you can change the default Dao via [SetDao()].
-   */
-  (app: core.App): (SettingsUpsert | undefined)
- }
+ interface newSettingsUpsert {(app: core.App): (SettingsUpsert | undefined)}
  interface SettingsUpsert {
   /**
    * SetDao replaces the default form Dao instance with the provided one.
@@ -5942,19 +5284,14 @@ namespace forms {
    */
   submit(...interceptors: InterceptorFunc<settings.Settings | undefined>[]): void
  }
- /**
-  * TestEmailSend is a email template test request form.
-  */
  interface TestEmailSend {
   template: string
   email: string
  }
- interface newTestEmailSend {
-  /**
-   * NewTestEmailSend creates and initializes new TestEmailSend form.
-   */
-  (app: core.App): (TestEmailSend | undefined)
- }
+ /**
+  * NewTestEmailSend creates and initializes new TestEmailSend form.
+  */
+ interface newTestEmailSend {(app: core.App): (TestEmailSend | undefined)}
  interface TestEmailSend {
   /**
    * Validate makes the form validatable by implementing [validation.Validatable] interface.
@@ -5967,21 +5304,16 @@ namespace forms {
    */
   submit(): void
  }
- /**
-  * TestS3Filesystem defines a S3 filesystem connection test.
-  */
  interface TestS3Filesystem {
   /**
    * The name of the filesystem - storage or backups
    */
   filesystem: string
  }
- interface newTestS3Filesystem {
-  /**
-   * NewTestS3Filesystem creates and initializes new TestS3Filesystem form.
-   */
-  (app: core.App): (TestS3Filesystem | undefined)
- }
+ /**
+  * NewTestS3Filesystem creates and initializes new TestS3Filesystem form.
+  */
+ interface newTestS3Filesystem {(app: core.App): (TestS3Filesystem | undefined)}
  interface TestS3Filesystem {
   /**
    * Validate makes the form validatable by implementing [validation.Validatable] interface.
@@ -5997,6 +5329,77 @@ namespace forms {
 }
 
 /**
+ * Package template is a thin wrapper around the standard html/template
+ * and text/template packages that implements a convenient registry to
+ * load and cache templates on the fly concurrently.
+ * 
+ * It was created to assist the JSVM plugin HTML rendering, but could be used in other Go code.
+ * 
+ * Example:
+ * 
+ * ```
+ * 	registry := template.NewRegistry()
+ * 
+ * 	html1, err := registry.LoadFiles(
+ * 		// the files set wil be parsed only once and then cached
+ * 		"layout.html",
+ * 		"content.html",
+ * 	).Render(map[string]any{"name": "John"})
+ * 
+ * 	html2, err := registry.LoadFiles(
+ * 		// reuse the already parsed and cached files set
+ * 		"layout.html",
+ * 		"content.html",
+ * 	).Render(map[string]any{"name": "Jane"})
+ * ```
+ */
+namespace template {
+ /**
+  * NewRegistry creates and initializes a new blank templates registry.
+  * 
+  * Use the Registry.Load* methods to load templates into the registry.
+  */
+ interface newRegistry {(): (Registry | undefined)}
+ interface Registry {
+ }
+ interface Registry {
+  /**
+   * LoadFiles caches (if not already) the specified filenames set as a
+   * single template and returns a ready to use Renderer instance.
+   * 
+   * There must be at least 1 filename specified.
+   */
+  loadFiles(...filenames: string[]): (Renderer | undefined)
+ }
+ interface Registry {
+  /**
+   * LoadString caches (if not already) the specified inline string as a
+   * single template and returns a ready to use Renderer instance.
+   */
+  loadString(text: string): (Renderer | undefined)
+ }
+ interface Registry {
+  /**
+   * LoadString caches (if not already) the specified fs and globPatterns
+   * pair as single template and returns a ready to use Renderer instance.
+   * 
+   * There must be at least 1 file matching the provided globPattern(s)
+   * (note that most file names serves as glob patterns matching themselves).
+   */
+  loadFS(fs: fs.FS, ...globPatterns: string[]): (Renderer | undefined)
+ }
+ interface Renderer {
+ }
+ interface Renderer {
+  /**
+   * Render executes the template with the specified data as the dot object
+   * and returns the result as plain string.
+   */
+  render(data: any): string
+ }
+}
+
+/**
  * Package apis implements the default PocketBase api services and middlewares.
  */
 namespace apis {
@@ -6004,9 +5407,6 @@ namespace apis {
  }
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * ApiError defines the struct for a basic api error response.
-  */
  interface ApiError {
   code: number
   message: string
@@ -6024,57 +5424,49 @@ namespace apis {
    */
   rawData(): any
  }
- interface newNotFoundError {
-  /**
-   * NewNotFoundError creates and returns 404 `ApiError`.
-   */
-  (message: string, data: any): (ApiError | undefined)
- }
- interface newBadRequestError {
-  /**
-   * NewBadRequestError creates and returns 400 `ApiError`.
-   */
-  (message: string, data: any): (ApiError | undefined)
- }
- interface newForbiddenError {
-  /**
-   * NewForbiddenError creates and returns 403 `ApiError`.
-   */
-  (message: string, data: any): (ApiError | undefined)
- }
- interface newUnauthorizedError {
-  /**
-   * NewUnauthorizedError creates and returns 401 `ApiError`.
-   */
-  (message: string, data: any): (ApiError | undefined)
- }
- interface newApiError {
-  /**
-   * NewApiError creates and returns new normalized `ApiError` instance.
-   */
-  (status: number, message: string, data: any): (ApiError | undefined)
- }
+ /**
+  * NewNotFoundError creates and returns 404 `ApiError`.
+  */
+ interface newNotFoundError {(message: string, data: any): (ApiError | undefined)}
+ /**
+  * NewBadRequestError creates and returns 400 `ApiError`.
+  */
+ interface newBadRequestError {(message: string, data: any): (ApiError | undefined)}
+ /**
+  * NewForbiddenError creates and returns 403 `ApiError`.
+  */
+ interface newForbiddenError {(message: string, data: any): (ApiError | undefined)}
+ /**
+  * NewUnauthorizedError creates and returns 401 `ApiError`.
+  */
+ interface newUnauthorizedError {(message: string, data: any): (ApiError | undefined)}
+ /**
+  * NewApiError creates and returns new normalized `ApiError` instance.
+  */
+ interface newApiError {(status: number, message: string, data: any): (ApiError | undefined)}
  interface backupApi {
  }
- interface initApi {
-  /**
-   * InitApi creates a configured echo instance with registered
-   * system and app specific routes and middlewares.
-   */
-  (app: core.App): (echo.Echo | undefined)
- }
- interface staticDirectoryHandler {
-  /**
-   * StaticDirectoryHandler is similar to `echo.StaticDirectoryHandler`
-   * but without the directory redirect which conflicts with RemoveTrailingSlash middleware.
-   * 
-   * If a file resource is missing and indexFallback is set, the request
-   * will be forwarded to the base index.html (useful also for SPA).
-   * 
-   * @see https://github.com/labstack/echo/issues/2211
-   */
-  (fileSystem: fs.FS, indexFallback: boolean): echo.HandlerFunc
- }
+ /**
+  * InitApi creates a configured echo instance with registered
+  * system and app specific routes and middlewares.
+  */
+ interface initApi {(app: core.App): (echo.Echo | undefined)}
+ /**
+  * StaticDirectoryHandler is similar to `echo.StaticDirectoryHandler`
+  * but without the directory redirect which conflicts with RemoveTrailingSlash middleware.
+  * 
+  * If a file resource is missing and indexFallback is set, the request
+  * will be forwarded to the base index.html (useful also for SPA).
+  * 
+  * @see https://github.com/labstack/echo/issues/2211
+  */
+ interface staticDirectoryHandler {(fileSystem: fs.FS, indexFallback: boolean): echo.HandlerFunc}
+ interface uiCacheControl {(): echo.MiddlewareFunc}
+ /**
+  * installerRedirect redirects the user to the installer admin UI page
+  * when the application needs some preliminary configurations to be done.
+  */
+ interface installerRedirect {(app: core.App): echo.MiddlewareFunc}
  interface collectionApi {
  }
  interface fileApi {
@@ -6090,117 +5482,97 @@ namespace apis {
  }
  interface logsApi {
  }
- interface requireGuestOnly {
-  /**
-   * RequireGuestOnly middleware requires a request to NOT have a valid
-   * Authorization header.
-   * 
-   * This middleware is the opposite of [apis.RequireAdminOrRecordAuth()].
-   */
-  (): echo.MiddlewareFunc
- }
- interface requireRecordAuth {
-  /**
-   * RequireRecordAuth middleware requires a request to have
-   * a valid record auth Authorization header.
-   * 
-   * The auth record could be from any collection.
-   * 
-   * You can further filter the allowed record auth collections by
-   * specifying their names.
-   * 
-   * Example:
-   * 
-   * ```
-   * 	apis.RequireRecordAuth()
-   * ```
-   * 
-   * Or:
-   * 
-   * ```
-   * 	apis.RequireRecordAuth("users", "supervisors")
-   * ```
-   * 
-   * To restrict the auth record only to the loaded context collection,
-   * use [apis.RequireSameContextRecordAuth()] instead.
-   */
-  (...optCollectionNames: string[]): echo.MiddlewareFunc
- }
- interface requireSameContextRecordAuth {
-  /**
-   * RequireSameContextRecordAuth middleware requires a request to have
-   * a valid record Authorization header.
-   * 
-   * The auth record must be from the same collection already loaded in the context.
-   */
-  (): echo.MiddlewareFunc
- }
- interface requireAdminAuth {
-  /**
-   * RequireAdminAuth middleware requires a request to have
-   * a valid admin Authorization header.
-   */
-  (): echo.MiddlewareFunc
- }
- interface requireAdminAuthOnlyIfAny {
-  /**
-   * RequireAdminAuthOnlyIfAny middleware requires a request to have
-   * a valid admin Authorization header ONLY if the application has
-   * at least 1 existing Admin model.
-   */
-  (app: core.App): echo.MiddlewareFunc
- }
- interface requireAdminOrRecordAuth {
-  /**
-   * RequireAdminOrRecordAuth middleware requires a request to have
-   * a valid admin or record Authorization header set.
-   * 
-   * You can further filter the allowed auth record collections by providing their names.
-   * 
-   * This middleware is the opposite of [apis.RequireGuestOnly()].
-   */
-  (...optCollectionNames: string[]): echo.MiddlewareFunc
- }
- interface requireAdminOrOwnerAuth {
-  /**
-   * RequireAdminOrOwnerAuth middleware requires a request to have
-   * a valid admin or auth record owner Authorization header set.
-   * 
-   * This middleware is similar to [apis.RequireAdminOrRecordAuth()] but
-   * for the auth record token expects to have the same id as the path
-   * parameter ownerIdParam (default to "id" if empty).
-   */
-  (ownerIdParam: string): echo.MiddlewareFunc
- }
- interface loadAuthContext {
-  /**
-   * LoadAuthContext middleware reads the Authorization request header
-   * and loads the token related record or admin instance into the
-   * request's context.
-   * 
-   * This middleware is expected to be already registered by default for all routes.
-   */
-  (app: core.App): echo.MiddlewareFunc
- }
- interface loadCollectionContext {
-  /**
-   * LoadCollectionContext middleware finds the collection with related
-   * path identifier and loads it into the request context.
-   * 
-   * Set optCollectionTypes to further filter the found collection by its type.
-   */
-  (app: core.App, ...optCollectionTypes: string[]): echo.MiddlewareFunc
- }
- interface activityLogger {
-  /**
-   * ActivityLogger middleware takes care to save the request information
-   * into the logs database.
-   * 
-   * The middleware does nothing if the app logs retention period is zero
-   * (aka. app.Settings().Logs.MaxDays = 0).
-   */
-  (app: core.App): echo.MiddlewareFunc
- }
+ /**
+  * RequireGuestOnly middleware requires a request to NOT have a valid
+  * Authorization header.
+  * 
+  * This middleware is the opposite of [apis.RequireAdminOrRecordAuth()].
+  */
+ interface requireGuestOnly {(): echo.MiddlewareFunc}
+ /**
+  * RequireRecordAuth middleware requires a request to have
+  * a valid record auth Authorization header.
+  * 
+  * The auth record could be from any collection.
+  * 
+  * You can further filter the allowed record auth collections by
+  * specifying their names.
+  * 
+  * Example:
+  * 
+  * ```
+  * 	apis.RequireRecordAuth()
+  * ```
+  * 
+  * Or:
+  * 
+  * ```
+  * 	apis.RequireRecordAuth("users", "supervisors")
+  * ```
+  * 
+  * To restrict the auth record only to the loaded context collection,
+  * use [apis.RequireSameContextRecordAuth()] instead.
+  */
+ interface requireRecordAuth {(...optCollectionNames: string[]): echo.MiddlewareFunc}
+ /**
+  * RequireSameContextRecordAuth middleware requires a request to have
+  * a valid record Authorization header.
+  * 
+  * The auth record must be from the same collection already loaded in the context.
+  */
+ interface requireSameContextRecordAuth {(): echo.MiddlewareFunc}
+ /**
+  * RequireAdminAuth middleware requires a request to have
+  * a valid admin Authorization header.
+  */
+ interface requireAdminAuth {(): echo.MiddlewareFunc}
+ /**
+  * RequireAdminAuthOnlyIfAny middleware requires a request to have
+  * a valid admin Authorization header ONLY if the application has
+  * at least 1 existing Admin model.
+  */
+ interface requireAdminAuthOnlyIfAny {(app: core.App): echo.MiddlewareFunc}
+ /**
+  * RequireAdminOrRecordAuth middleware requires a request to have
+  * a valid admin or record Authorization header set.
+  * 
+  * You can further filter the allowed auth record collections by providing their names.
+  * 
+  * This middleware is the opposite of [apis.RequireGuestOnly()].
+  */
+ interface requireAdminOrRecordAuth {(...optCollectionNames: string[]): echo.MiddlewareFunc}
+ /**
+  * RequireAdminOrOwnerAuth middleware requires a request to have
+  * a valid admin or auth record owner Authorization header set.
+  * 
+  * This middleware is similar to [apis.RequireAdminOrRecordAuth()] but
+  * for the auth record token expects to have the same id as the path
+  * parameter ownerIdParam (default to "id" if empty).
+  */
+ interface requireAdminOrOwnerAuth {(ownerIdParam: string): echo.MiddlewareFunc}
+ /**
+  * LoadAuthContext middleware reads the Authorization request header
+  * and loads the token related record or admin instance into the
+  * request's context.
+  * 
+  * This middleware is expected to be already registered by default for all routes.
+  */
+ interface loadAuthContext {(app: core.App): echo.MiddlewareFunc}
+ /**
+  * LoadCollectionContext middleware finds the collection with related
+  * path identifier and loads it into the request context.
+  * 
+  * Set optCollectionTypes to further filter the found collection by its type.
+  */
+ interface loadCollectionContext {(app: core.App, ...optCollectionTypes: string[]): echo.MiddlewareFunc}
+ /**
+  * ActivityLogger middleware takes care to save the request information
+  * into the logs database.
+  * 
+  * The middleware does nothing if the app logs retention period is zero
+  * (aka. app.Settings().Logs.MaxDays = 0).
+  */
+ interface activityLogger {(app: core.App): echo.MiddlewareFunc}
  interface realtimeApi {
  }
  interface recordData {
@@ -6222,96 +5594,60 @@ namespace apis {
  }
  interface recordApi {
  }
- interface requestData {
-  /**
-   * Deprecated: Use RequestInfo instead.
-   */
-  (c: echo.Context): (models.RequestInfo | undefined)
- }
- interface requestInfo {
-  /**
-   * RequestInfo exports cached common request data fields
-   * (query, body, logged auth state, etc.) from the provided context.
-   */
-  (c: echo.Context): (models.RequestInfo | undefined)
- }
- interface recordAuthResponse {
-  /**
-   * RecordAuthResponse writes standardised json record auth response
-   * into the specified request context.
-   */
-  (app: core.App, c: echo.Context, authRecord: models.Record, meta: any, ...finalizers: ((token: string) => void)[]): void
- }
- interface enrichRecord {
-  /**
-   * EnrichRecord parses the request context and enrich the provided record:
-   * ```
-   *   - expands relations (if defaultExpands and/or ?expand query param is set)
-   *   - ensures that the emails of the auth record and its expanded auth relations
-   *     are visibe only for the current logged admin, record owner or record with manage access
-   * ```
-   */
-  (c: echo.Context, dao: daos.Dao, record: models.Record, ...defaultExpands: string[]): void
- }
- interface enrichRecords {
-  /**
-   * EnrichRecords parses the request context and enriches the provided records:
-   * ```
-   *   - expands relations (if defaultExpands and/or ?expand query param is set)
-   *   - ensures that the emails of the auth records and their expanded auth relations
-   *     are visibe only for the current logged admin, record owner or record with manage access
-   * ```
-   */
-  (c: echo.Context, dao: daos.Dao, records: Array<(models.Record | undefined)>, ...defaultExpands: string[]): void
- }
  /**
-  * ServeConfig defines a configuration struct for apis.Serve().
+  * Deprecated: Use RequestInfo instead.
   */
+ interface requestData {(c: echo.Context): (models.RequestInfo | undefined)}
+ /**
+  * RequestInfo exports cached common request data fields
+  * (query, body, logged auth state, etc.) from the provided context.
+  */
+ interface requestInfo {(c: echo.Context): (models.RequestInfo | undefined)}
+ /**
+  * RecordAuthResponse writes standardised json record auth response
+  * into the specified request context.
+  */
+ interface recordAuthResponse {(app: core.App, c: echo.Context, authRecord: models.Record, meta: any, ...finalizers: ((token: string) => void)[]): void}
+ /**
+  * EnrichRecord parses the request context and enrich the provided record:
+  * ```
+  *   - expands relations (if defaultExpands and/or ?expand query param is set)
+  *   - ensures that the emails of the auth record and its expanded auth relations
+  *     are visibe only for the current logged admin, record owner or record with manage access
+  * ```
+  */
+ interface enrichRecord {(c: echo.Context, dao: daos.Dao, record: models.Record, ...defaultExpands: string[]): void}
+ /**
+  * EnrichRecords parses the request context and enriches the provided records:
+  * ```
+  *   - expands relations (if defaultExpands and/or ?expand query param is set)
+  *   - ensures that the emails of the auth records and their expanded auth relations
+  *     are visibe only for the current logged admin, record owner or record with manage access
+  * ```
+  */
+ interface enrichRecords {(c: echo.Context, dao: daos.Dao, records: Array<(models.Record | undefined)>, ...defaultExpands: string[]): void}
  interface ServeConfig {
   /**
    * ShowStartBanner indicates whether to show or hide the server start console message.
    */
   showStartBanner: boolean
   /**
-   * HttpAddr is the TCP address to listen for the HTTP server (eg. `127.0.0.1:80`).
+   * HttpAddr is the HTTP server address to bind (eg. `127.0.0.1:80`).
    */
   httpAddr: string
   /**
-   * HttpsAddr is the TCP address to listen for the HTTPS server (eg. `127.0.0.1:443`).
+   * HttpsAddr is the HTTPS server address to bind (eg. `127.0.0.1:443`).
    */
   httpsAddr: string
-  /**
-   * Optional domains list to use when issuing the TLS certificate.
-   * 
-   * If not set, the host from the bound server address will be used.
-   * 
-   * For convenience, for each "non-www" domain a "www" entry and
-   * redirect will be automatically added.
-   */
-  certificateDomains: Array<string>
   /**
    * AllowedOrigins is an optional list of CORS origins (default to "*").
    */
   allowedOrigins: Array<string>
  }
- interface serve {
-  /**
-   * Serve starts a new app web server.
-   * 
-   * NB! The app should be bootstrapped before starting the web server.
-   * 
-   * Example:
-   * 
-   * ```
-   * 	app.Bootstrap()
-   * 	apis.Serve(app, apis.ServeConfig{
-   * 		HttpAddr:        "127.0.0.1:8080",
-   * 		ShowStartBanner: false,
-   * 	})
-   * ```
-   */
-  (app: core.App, config: ServeConfig): (http.Server | undefined)
- }
+ /**
+  * Serve starts a new app web server.
+  */
+ interface serve {(app: core.App, config: ServeConfig): (http.Server | undefined)}
  interface migrationsConnection {
   db?: dbx.DB
   migrationsList: migrate.MigrationsList
@@ -6321,34 +5657,22 @@ namespace apis {
 }
 
 namespace pocketbase {
- /**
-  * appWrapper serves as a private core.App instance wrapper.
-  */
- type _subQvPjn = core.App
- interface appWrapper extends _subQvPjn {
+ type _subHfGqq = core.App
+ interface appWrapper extends _subHfGqq {
  }
- /**
-  * PocketBase defines a PocketBase app launcher.
-  * 
-  * It implements [core.App] via embedding and all of the app interface methods
-  * could be accessed directly through the instance (eg. PocketBase.DataDir()).
-  */
- type _subONvCh = appWrapper
- interface PocketBase extends _subONvCh {
+ type _subeOFaI = appWrapper
+ interface PocketBase extends _subeOFaI {
   /**
    * RootCmd is the main console command
    */
   rootCmd?: cobra.Command
  }
- /**
-  * Config is the PocketBase initialization config struct.
-  */
  interface Config {
   /**
    * optional default values for the console flags
    */
   defaultDebug: boolean
-  defaultDataDir: string // if not set, it will fallback to "./pb_data"
+  defaultDataDir: string // if not set, it will fallback to "./.data"
   defaultEncryptionEnv: string
   /**
    * hide the default console server info on app startup
@@ -6362,31 +5686,27 @@ namespace pocketbase {
   logsMaxOpenConns: number // default to core.DefaultLogsMaxOpenConns
   logsMaxIdleConns: number // default to core.DefaultLogsMaxIdleConns
  }
- interface _new {
-  /**
-   * New creates a new PocketBase instance with the default configuration.
-   * Use [NewWithConfig()] if you want to provide a custom configuration.
-   * 
-   * Note that the application will not be initialized/bootstrapped yet,
-   * aka. DB connections, migrations, app settings, etc. will not be accessible.
-   * Everything will be initialized when [Start()] is executed.
-   * If you want to initialize the application before calling [Start()],
-   * then you'll have to manually call [Bootstrap()].
-   */
-  (): (PocketBase | undefined)
- }
- interface newWithConfig {
-  /**
-   * NewWithConfig creates a new PocketBase instance with the provided config.
-   * 
-   * Note that the application will not be initialized/bootstrapped yet,
-   * aka. DB connections, migrations, app settings, etc. will not be accessible.
-   * Everything will be initialized when [Start()] is executed.
-   * If you want to initialize the application before calling [Start()],
-   * then you'll have to manually call [Bootstrap()].
-   */
-  (config: Config): (PocketBase | undefined)
- }
+ /**
+  * New creates a new PocketBase instance with the default configuration.
+  * Use [NewWithConfig()] if you want to provide a custom configuration.
+  * 
+  * Note that the application will not be initialized/bootstrapped yet,
+  * aka. DB connections, migrations, app settings, etc. will not be accessible.
+  * Everything will be initialized when [Start()] is executed.
+  * If you want to initialize the application before calling [Start()],
+  * then you'll have to manually call [Bootstrap()].
+  */
+ interface new {(): (PocketBase | undefined)}
+ /**
+  * NewWithConfig creates a new PocketBase instance with the provided config.
+  * 
+  * Note that the application will not be initialized/bootstrapped yet,
+  * aka. DB connections, migrations, app settings, etc. will not be accessible.
+  * Everything will be initialized when [Start()] is executed.
+  * If you want to initialize the application before calling [Start()],
+  * then you'll have to manually call [Bootstrap()].
+  */
+ interface newWithConfig {(config: Config): (PocketBase | undefined)}
  interface PocketBase {
   /**
    * Start starts the application, aka. registers the default system
@@ -6403,6 +5723,105 @@ namespace pocketbase {
    * system commands!
    */
   execute(): void
+ }
+}
+
+/**
+ * Package io provides basic interfaces to I/O primitives.
+ * Its primary job is to wrap existing implementations of such primitives,
+ * such as those in package os, into shared public interfaces that
+ * abstract the functionality, plus some other related primitives.
+ * 
+ * Because these interfaces and primitives wrap lower-level operations with
+ * various implementations, unless otherwise informed clients should not
+ * assume they are safe for parallel execution.
+ */
+namespace io {
+ interface Reader {
+  read(p: string): number
+ }
+ interface Writer {
+  write(p: string): number
+ }
+ interface ReadSeekCloser {
+ }
+}
+
+/**
+ * Package bytes implements functions for the manipulation of byte slices.
+ * It is analogous to the facilities of the strings package.
+ */
+namespace bytes {
+ interface Reader {
+ }
+ interface Reader {
+  /**
+   * Len returns the number of bytes of the unread portion of the
+   * slice.
+   */
+  len(): number
+ }
+ interface Reader {
+  /**
+   * Size returns the original length of the underlying byte slice.
+   * Size is the number of bytes available for reading via ReadAt.
+   * The result is unaffected by any method calls except Reset.
+   */
+  size(): number
+ }
+ interface Reader {
+  /**
+   * Read implements the io.Reader interface.
+   */
+  read(b: string): number
+ }
+ interface Reader {
+  /**
+   * ReadAt implements the io.ReaderAt interface.
+   */
+  readAt(b: string, off: number): number
+ }
+ interface Reader {
+  /**
+   * ReadByte implements the io.ByteReader interface.
+   */
+  readByte(): string
+ }
+ interface Reader {
+  /**
+   * UnreadByte complements ReadByte in implementing the io.ByteScanner interface.
+   */
+  unreadByte(): void
+ }
+ interface Reader {
+  /**
+   * ReadRune implements the io.RuneReader interface.
+   */
+  readRune(): [string, number]
+ }
+ interface Reader {
+  /**
+   * UnreadRune complements ReadRune in implementing the io.RuneScanner interface.
+   */
+  unreadRune(): void
+ }
+ interface Reader {
+  /**
+   * Seek implements the io.Seeker interface.
+   */
+  seek(offset: number, whence: number): number
+ }
+ interface Reader {
+  /**
+   * WriteTo implements the io.WriterTo interface.
+   */
+  writeTo(w: io.Writer): number
+ }
+ interface Reader {
+  /**
+   * Reset resets the Reader to be reading from b.
+   */
+  reset(b: string): void
  }
 }
 
@@ -6433,12 +5852,7 @@ namespace syscall {
  interface SysProcAttr {
   chroot: string // Chroot.
   credential?: Credential // Credential.
-  /**
-   * Ptrace tells the child to call ptrace(PTRACE_TRACEME).
-   * Call runtime.LockOSThread before starting a process with this set,
-   * and don't call UnlockOSThread until done with PtraceSyscall calls.
-   */
-  ptrace: boolean
+  ptrace: boolean // Enable tracing.
   setsid: boolean // Create session.
   /**
    * Setpgid sets the process group ID of the child to Pgid,
@@ -6463,25 +5877,9 @@ namespace syscall {
    */
   foreground: boolean
   pgid: number // Child's process group ID if Setpgid.
-  pdeathsig: Signal // Signal that the process will get when its parent dies (Linux and FreeBSD only)
-  cloneflags: number // Flags for clone calls (Linux only)
-  unshareflags: number // Flags for unshare calls (Linux only)
-  uidMappings: Array<SysProcIDMap> // User ID mappings for user namespaces.
-  gidMappings: Array<SysProcIDMap> // Group ID mappings for user namespaces.
-  /**
-   * GidMappingsEnableSetgroups enabling setgroups syscall.
-   * If false, then setgroups syscall will be disabled for the child process.
-   * This parameter is no-op if GidMappings == nil. Otherwise for unprivileged
-   * users this should be set to false for mappings work.
-   */
-  gidMappingsEnableSetgroups: boolean
-  ambientCaps: Array<number> // Ambient capabilities (Linux only)
  }
  // @ts-ignore
  import errorspkg = errors
- /**
-  * A RawConn is a raw network connection.
-  */
  interface RawConn {
   /**
    * Control invokes f on the underlying connection's file
@@ -6506,25 +5904,6 @@ namespace syscall {
    */
   write(f: (fd: number) => boolean): void
  }
- /**
-  * An Errno is an unsigned number describing an error condition.
-  * It implements the error interface. The zero Errno is by convention
-  * a non-error, so code to convert from Errno to error should use:
-  * ```
-  * 	err = nil
-  * 	if errno != 0 {
-  * 		err = errno
-  * 	}
-  * ```
-  * 
-  * Errno values can be tested against error values from the os package
-  * using errors.Is. For example:
-  * 
-  * ```
-  * 	_, _, err := syscall.Syscall(...)
-  * 	if errors.Is(err, fs.ErrNotExist) ...
-  * ```
-  */
  interface Errno extends Number{}
  interface Errno {
   error(): string
@@ -6546,7 +5925,7 @@ namespace syscall {
  * The calendrical calculations always assume a Gregorian calendar, with
  * no leap seconds.
  * 
- * Monotonic Clocks
+ * # Monotonic Clocks
  * 
  * Operating systems provide both a “wall clock,” which is subject to
  * changes for clock synchronization, and a “monotonic clock,” which is
@@ -6587,7 +5966,7 @@ namespace syscall {
  * The canonical way to strip a monotonic clock reading is to use t = t.Round(0).
  * 
  * If Times t and u both contain monotonic clock readings, the operations
- * t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
+ * t.After(u), t.Before(u), t.Equal(u), t.Compare(u), and t.Sub(u) are carried out
  * using the monotonic clock readings alone, ignoring the wall clock
  * readings. If either t or u contains no monotonic clock reading, these
  * operations fall back to using the wall clock readings.
@@ -6605,6 +5984,10 @@ namespace syscall {
  * t.UnmarshalJSON, and t.UnmarshalText always create times with
  * no monotonic clock reading.
  * 
+ * The monotonic clock reading exists only in Time values. It is not
+ * a part of Duration values or the Unix times returned by t.Unix and
+ * friends.
+ * 
  * Note that the Go == operator compares not just the time instant but
  * also the Location and the monotonic clock reading. See the
  * documentation for the Time type for a discussion of equality
@@ -6618,6 +6001,7 @@ namespace time {
  interface Time {
   /**
    * String returns the time formatted using the format string
+   * 
    * ```
    * 	"2006-01-02 15:04:05.999999999 -0700 MST"
    * ```
@@ -6657,51 +6041,6 @@ namespace time {
    */
   appendFormat(b: string, layout: string): string
  }
- /**
-  * A Time represents an instant in time with nanosecond precision.
-  * 
-  * Programs using times should typically store and pass them as values,
-  * not pointers. That is, time variables and struct fields should be of
-  * type time.Time, not *time.Time.
-  * 
-  * A Time value can be used by multiple goroutines simultaneously except
-  * that the methods GobDecode, UnmarshalBinary, UnmarshalJSON and
-  * UnmarshalText are not concurrency-safe.
-  * 
-  * Time instants can be compared using the Before, After, and Equal methods.
-  * The Sub method subtracts two instants, producing a Duration.
-  * The Add method adds a Time and a Duration, producing a Time.
-  * 
-  * The zero value of type Time is January 1, year 1, 00:00:00.000000000 UTC.
-  * As this time is unlikely to come up in practice, the IsZero method gives
-  * a simple way of detecting a time that has not been initialized explicitly.
-  * 
-  * Each Time has associated with it a Location, consulted when computing the
-  * presentation form of the time, such as in the Format, Hour, and Year methods.
-  * The methods Local, UTC, and In return a Time with a specific location.
-  * Changing the location in this way changes only the presentation; it does not
-  * change the instant in time being denoted and therefore does not affect the
-  * computations described in earlier paragraphs.
-  * 
-  * Representations of a Time value saved by the GobEncode, MarshalBinary,
-  * MarshalJSON, and MarshalText methods store the Time.Location's offset, but not
-  * the location name. They therefore lose information about Daylight Saving Time.
-  * 
-  * In addition to the required “wall clock” reading, a Time may contain an optional
-  * reading of the current process's monotonic clock, to provide additional precision
-  * for comparison or subtraction.
-  * See the “Monotonic Clocks” section in the package documentation for details.
-  * 
-  * Note that the Go == operator compares not just the time instant but also the
-  * Location and the monotonic clock reading. Therefore, Time values should not
-  * be used as map or database keys without first guaranteeing that the
-  * identical Location has been set for all values, which can be achieved
-  * through use of the UTC or Local method, and that the monotonic clock reading
-  * has been stripped by setting t = t.Round(0). In general, prefer t.Equal(u)
-  * to t == u, since t.Equal uses the most accurate comparison available and
-  * correctly handles the case when only one of its arguments has a monotonic
-  * clock reading.
-  */
  interface Time {
  }
  interface Time {
@@ -6715,6 +6054,13 @@ namespace time {
    * Before reports whether the time instant t is before u.
    */
   before(u: Time): boolean
+ }
+ interface Time {
+  /**
+   * Compare compares the time instant t with u. If t is before u, it returns -1;
+   * if t is after u, it returns +1; if they're the same, it returns 0.
+   */
+  compare(u: Time): number
  }
  interface Time {
   /**
@@ -6810,11 +6156,6 @@ namespace time {
    */
   yearDay(): number
  }
- /**
-  * A Duration represents the elapsed time between two instants
-  * as an int64 nanosecond count. The representation limits the
-  * largest representable duration to approximately 290 years.
-  */
  interface Duration extends Number{}
  interface Duration {
   /**
@@ -6879,6 +6220,13 @@ namespace time {
    */
   round(m: Duration): Duration
  }
+ interface Duration {
+  /**
+   * Abs returns the absolute value of d.
+   * As a special case, math.MinInt64 is converted to math.MaxInt64.
+   */
+  abs(): Duration
+ }
  interface Time {
   /**
    * Add returns the time t+d.
@@ -6941,6 +6289,16 @@ namespace time {
    * name of the zone (such as "CET") and its offset in seconds east of UTC.
    */
   zone(): [string, number]
+ }
+ interface Time {
+  /**
+   * ZoneBounds returns the bounds of the time zone in effect at time t.
+   * The zone begins at start and the next zone begins at end.
+   * If the zone begins at the beginning of time, start will be returned as a zero Time.
+   * If the zone goes on forever, end will be returned as a zero Time.
+   * The Location of the returned times will be the same as t.
+   */
+  zoneBounds(): Time
  }
  interface Time {
   /**
@@ -7011,28 +6369,32 @@ namespace time {
  interface Time {
   /**
    * MarshalJSON implements the json.Marshaler interface.
-   * The time is a quoted string in RFC 3339 format, with sub-second precision added if present.
+   * The time is a quoted string in the RFC 3339 format with sub-second precision.
+   * If the timestamp cannot be represented as valid RFC 3339
+   * (e.g., the year is out of range), then an error is reported.
    */
   marshalJSON(): string
  }
  interface Time {
   /**
    * UnmarshalJSON implements the json.Unmarshaler interface.
-   * The time is expected to be a quoted string in RFC 3339 format.
+   * The time must be a quoted string in the RFC 3339 format.
    */
   unmarshalJSON(data: string): void
  }
  interface Time {
   /**
    * MarshalText implements the encoding.TextMarshaler interface.
-   * The time is formatted in RFC 3339 format, with sub-second precision added if present.
+   * The time is formatted in RFC 3339 format with sub-second precision.
+   * If the timestamp cannot be represented as valid RFC 3339
+   * (e.g., the year is out of range), then an error is reported.
    */
   marshalText(): string
  }
  interface Time {
   /**
    * UnmarshalText implements the encoding.TextUnmarshaler interface.
-   * The time is expected to be in RFC 3339 format.
+   * The time must be in the RFC 3339 format.
    */
   unmarshalText(data: string): void
  }
@@ -7090,6 +6452,12 @@ namespace time {
  * fires. The go vet tool checks that CancelFuncs are used on all
  * control-flow paths.
  * 
+ * The WithCancelCause function returns a CancelCauseFunc, which
+ * takes an error and records it as the cancellation cause. Calling
+ * Cause on the canceled context or any of its children retrieves
+ * the cause. If no cause is specified, Cause(ctx) returns the same
+ * value as ctx.Err().
+ * 
  * Programs that use Contexts should follow these rules to keep interfaces
  * consistent across packages and enable static analysis tools to check context
  * propagation:
@@ -7117,12 +6485,6 @@ namespace time {
  * Contexts.
  */
 namespace context {
- /**
-  * A Context carries a deadline, a cancellation signal, and other values across
-  * API boundaries.
-  * 
-  * Context's methods may be called by multiple goroutines simultaneously.
-  */
  interface Context {
   /**
    * Deadline returns the time when work done on behalf of this context
@@ -7226,170 +6588,11 @@ namespace context {
 }
 
 /**
- * Package io provides basic interfaces to I/O primitives.
- * Its primary job is to wrap existing implementations of such primitives,
- * such as those in package os, into shared public interfaces that
- * abstract the functionality, plus some other related primitives.
- * 
- * Because these interfaces and primitives wrap lower-level operations with
- * various implementations, unless otherwise informed clients should not
- * assume they are safe for parallel execution.
- */
-namespace io {
- /**
-  * Reader is the interface that wraps the basic Read method.
-  * 
-  * Read reads up to len(p) bytes into p. It returns the number of bytes
-  * read (0 <= n <= len(p)) and any error encountered. Even if Read
-  * returns n < len(p), it may use all of p as scratch space during the call.
-  * If some data is available but not len(p) bytes, Read conventionally
-  * returns what is available instead of waiting for more.
-  * 
-  * When Read encounters an error or end-of-file condition after
-  * successfully reading n > 0 bytes, it returns the number of
-  * bytes read. It may return the (non-nil) error from the same call
-  * or return the error (and n == 0) from a subsequent call.
-  * An instance of this general case is that a Reader returning
-  * a non-zero number of bytes at the end of the input stream may
-  * return either err == EOF or err == nil. The next Read should
-  * return 0, EOF.
-  * 
-  * Callers should always process the n > 0 bytes returned before
-  * considering the error err. Doing so correctly handles I/O errors
-  * that happen after reading some bytes and also both of the
-  * allowed EOF behaviors.
-  * 
-  * Implementations of Read are discouraged from returning a
-  * zero byte count with a nil error, except when len(p) == 0.
-  * Callers should treat a return of 0 and nil as indicating that
-  * nothing happened; in particular it does not indicate EOF.
-  * 
-  * Implementations must not retain p.
-  */
- interface Reader {
-  read(p: string): number
- }
- /**
-  * Writer is the interface that wraps the basic Write method.
-  * 
-  * Write writes len(p) bytes from p to the underlying data stream.
-  * It returns the number of bytes written from p (0 <= n <= len(p))
-  * and any error encountered that caused the write to stop early.
-  * Write must return a non-nil error if it returns n < len(p).
-  * Write must not modify the slice data, even temporarily.
-  * 
-  * Implementations must not retain p.
-  */
- interface Writer {
-  write(p: string): number
- }
- /**
-  * ReadSeekCloser is the interface that groups the basic Read, Seek and Close
-  * methods.
-  */
- interface ReadSeekCloser {
- }
-}
-
-/**
- * Package bytes implements functions for the manipulation of byte slices.
- * It is analogous to the facilities of the strings package.
- */
-namespace bytes {
- /**
-  * A Reader implements the io.Reader, io.ReaderAt, io.WriterTo, io.Seeker,
-  * io.ByteScanner, and io.RuneScanner interfaces by reading from
-  * a byte slice.
-  * Unlike a Buffer, a Reader is read-only and supports seeking.
-  * The zero value for Reader operates like a Reader of an empty slice.
-  */
- interface Reader {
- }
- interface Reader {
-  /**
-   * Len returns the number of bytes of the unread portion of the
-   * slice.
-   */
-  len(): number
- }
- interface Reader {
-  /**
-   * Size returns the original length of the underlying byte slice.
-   * Size is the number of bytes available for reading via ReadAt.
-   * The returned value is always the same and is not affected by calls
-   * to any other method.
-   */
-  size(): number
- }
- interface Reader {
-  /**
-   * Read implements the io.Reader interface.
-   */
-  read(b: string): number
- }
- interface Reader {
-  /**
-   * ReadAt implements the io.ReaderAt interface.
-   */
-  readAt(b: string, off: number): number
- }
- interface Reader {
-  /**
-   * ReadByte implements the io.ByteReader interface.
-   */
-  readByte(): string
- }
- interface Reader {
-  /**
-   * UnreadByte complements ReadByte in implementing the io.ByteScanner interface.
-   */
-  unreadByte(): void
- }
- interface Reader {
-  /**
-   * ReadRune implements the io.RuneReader interface.
-   */
-  readRune(): [string, number]
- }
- interface Reader {
-  /**
-   * UnreadRune complements ReadRune in implementing the io.RuneScanner interface.
-   */
-  unreadRune(): void
- }
- interface Reader {
-  /**
-   * Seek implements the io.Seeker interface.
-   */
-  seek(offset: number, whence: number): number
- }
- interface Reader {
-  /**
-   * WriteTo implements the io.WriterTo interface.
-   */
-  writeTo(w: io.Writer): number
- }
- interface Reader {
-  /**
-   * Reset resets the Reader to be reading from b.
-   */
-  reset(b: string): void
- }
-}
-
-/**
  * Package fs defines basic interfaces to a file system.
  * A file system can be provided by the host operating system
  * but also by other packages.
  */
 namespace fs {
- /**
-  * An FS provides access to a hierarchical file system.
-  * 
-  * The FS interface is the minimum implementation required of the file system.
-  * A file system may implement additional interfaces,
-  * such as ReadFileFS, to provide additional or optimized functionality.
-  */
  interface FS {
   /**
    * Open opens the named file.
@@ -7404,21 +6607,11 @@ namespace fs {
    */
   open(name: string): File
  }
- /**
-  * A File provides access to a single file.
-  * The File interface is the minimum implementation required of the file.
-  * Directory files should also implement ReadDirFile.
-  * A file may implement io.ReaderAt or io.Seeker as optimizations.
-  */
  interface File {
   stat(): FileInfo
   read(_arg0: string): number
   close(): void
  }
- /**
-  * A DirEntry is an entry read from a directory
-  * (using the ReadDir function or a ReadDirFile's ReadDir method).
-  */
  interface DirEntry {
   /**
    * Name returns the name of the file (or subdirectory) described by the entry.
@@ -7445,9 +6638,6 @@ namespace fs {
    */
   info(): FileInfo
  }
- /**
-  * A FileInfo describes a file and is returned by Stat.
-  */
  interface FileInfo {
   name(): string // base name of the file
   size(): number // length in bytes for regular files; system-dependent for others
@@ -7456,13 +6646,6 @@ namespace fs {
   isDir(): boolean // abbreviation for Mode().IsDir()
   sys(): any // underlying data source (can return nil)
  }
- /**
-  * A FileMode represents a file's mode and permission bits.
-  * The bits have the same definition on all systems, so that
-  * information about files can be moved from one system
-  * to another portably. Not all bits apply to all systems.
-  * The only required bit is ModeDir for directories.
-  */
  interface FileMode extends Number{}
  interface FileMode {
   string(): string
@@ -7493,9 +6676,6 @@ namespace fs {
    */
   type(): FileMode
  }
- /**
-  * PathError records an error and the operation and file path that caused it.
-  */
  interface PathError {
   op: string
   path: string
@@ -7513,112 +6693,7 @@ namespace fs {
    */
   timeout(): boolean
  }
- /**
-  * WalkDirFunc is the type of the function called by WalkDir to visit
-  * each file or directory.
-  * 
-  * The path argument contains the argument to WalkDir as a prefix.
-  * That is, if WalkDir is called with root argument "dir" and finds a file
-  * named "a" in that directory, the walk function will be called with
-  * argument "dir/a".
-  * 
-  * The d argument is the fs.DirEntry for the named path.
-  * 
-  * The error result returned by the function controls how WalkDir
-  * continues. If the function returns the special value SkipDir, WalkDir
-  * skips the current directory (path if d.IsDir() is true, otherwise
-  * path's parent directory). Otherwise, if the function returns a non-nil
-  * error, WalkDir stops entirely and returns that error.
-  * 
-  * The err argument reports an error related to path, signaling that
-  * WalkDir will not walk into that directory. The function can decide how
-  * to handle that error; as described earlier, returning the error will
-  * cause WalkDir to stop walking the entire tree.
-  * 
-  * WalkDir calls the function with a non-nil err argument in two cases.
-  * 
-  * First, if the initial fs.Stat on the root directory fails, WalkDir
-  * calls the function with path set to root, d set to nil, and err set to
-  * the error from fs.Stat.
-  * 
-  * Second, if a directory's ReadDir method fails, WalkDir calls the
-  * function with path set to the directory's path, d set to an
-  * fs.DirEntry describing the directory, and err set to the error from
-  * ReadDir. In this second case, the function is called twice with the
-  * path of the directory: the first call is before the directory read is
-  * attempted and has err set to nil, giving the function a chance to
-  * return SkipDir and avoid the ReadDir entirely. The second call is
-  * after a failed ReadDir and reports the error from ReadDir.
-  * (If ReadDir succeeds, there is no second call.)
-  * 
-  * The differences between WalkDirFunc compared to filepath.WalkFunc are:
-  * 
-  * ```
-  *   - The second argument has type fs.DirEntry instead of fs.FileInfo.
-  *   - The function is called before reading a directory, to allow SkipDir
-  *     to bypass the directory read entirely.
-  *   - If a directory read fails, the function is called a second time
-  *     for that directory to report the error.
-  * ```
-  */
  interface WalkDirFunc {(path: string, d: DirEntry, err: Error): void }
-}
-
-/**
- * Package jwt is a Go implementation of JSON Web Tokens: http://self-issued.info/docs/draft-jones-json-web-token.html
- * 
- * See README.md for more info.
- */
-namespace jwt {
- /**
-  * MapClaims is a claims type that uses the map[string]interface{} for JSON decoding.
-  * This is the default claims type if you don't supply one
-  */
- interface MapClaims extends _TygojaDict{}
- interface MapClaims {
-  /**
-   * VerifyAudience Compares the aud claim against cmp.
-   * If required is false, this method will return true if the value matches or is unset
-   */
-  verifyAudience(cmp: string, req: boolean): boolean
- }
- interface MapClaims {
-  /**
-   * VerifyExpiresAt compares the exp claim against cmp (cmp <= exp).
-   * If req is false, it will return true, if exp is unset.
-   */
-  verifyExpiresAt(cmp: number, req: boolean): boolean
- }
- interface MapClaims {
-  /**
-   * VerifyIssuedAt compares the exp claim against cmp (cmp >= iat).
-   * If req is false, it will return true, if iat is unset.
-   */
-  verifyIssuedAt(cmp: number, req: boolean): boolean
- }
- interface MapClaims {
-  /**
-   * VerifyNotBefore compares the nbf claim against cmp (cmp >= nbf).
-   * If req is false, it will return true, if nbf is unset.
-   */
-  verifyNotBefore(cmp: number, req: boolean): boolean
- }
- interface MapClaims {
-  /**
-   * VerifyIssuer compares the iss claim against cmp.
-   * If required is false, this method will return true if the value matches or is unset
-   */
-  verifyIssuer(cmp: string, req: boolean): boolean
- }
- interface MapClaims {
-  /**
-   * Valid validates time based claims "exp, iat, nbf".
-   * There is no accounting for clock skew.
-   * As well, if any of the above claims are not in the token, it will still
-   * be considered a valid claim.
-   */
-  valid(): void
- }
 }
 
 /**
@@ -7635,9 +6710,6 @@ namespace jwt {
  * https://golang.org/s/sqlwiki.
  */
 namespace sql {
- /**
-  * TxOptions holds the transaction options to be used in DB.BeginTx.
-  */
  interface TxOptions {
   /**
    * Isolation is the transaction isolation level.
@@ -7646,20 +6718,6 @@ namespace sql {
   isolation: IsolationLevel
   readOnly: boolean
  }
- /**
-  * DB is a database handle representing a pool of zero or more
-  * underlying connections. It's safe for concurrent use by multiple
-  * goroutines.
-  * 
-  * The sql package creates and frees connections automatically; it
-  * also maintains a free pool of idle connections. If the database has
-  * a concept of per-connection state, such state can be reliably observed
-  * within a transaction (Tx) or connection (Conn). Once DB.Begin is called, the
-  * returned Tx is bound to a single connection. Once Commit or
-  * Rollback is called on the transaction, that transaction's
-  * connection is returned to DB's idle connection pool. The pool size
-  * can be controlled with SetMaxIdleConns.
-  */
  interface DB {
  }
  interface DB {
@@ -7858,7 +6916,7 @@ namespace sql {
   /**
    * Driver returns the database's underlying driver.
    */
-  driver(): any
+  driver(): driver.Driver
  }
  interface DB {
   /**
@@ -7872,18 +6930,6 @@ namespace sql {
    */
   conn(ctx: context.Context): (Conn | undefined)
  }
- /**
-  * Tx is an in-progress database transaction.
-  * 
-  * A transaction must end with a call to Commit or Rollback.
-  * 
-  * After a call to Commit or Rollback, all operations on the
-  * transaction fail with ErrTxDone.
-  * 
-  * The statements prepared for a transaction by calling
-  * the transaction's Prepare or Stmt methods are closed
-  * by the call to Commit or Rollback.
-  */
  interface Tx {
  }
  interface Tx {
@@ -7933,11 +6979,14 @@ namespace sql {
    * an existing statement.
    * 
    * Example:
-   *  updateMoney, err := db.Prepare("UPDATE balance SET money=money+? WHERE id=?")
-   *  ...
-   *  tx, err := db.Begin()
-   *  ...
-   *  res, err := tx.StmtContext(ctx, updateMoney).Exec(123.45, 98293203)
+   * 
+   * ```
+   * 	updateMoney, err := db.Prepare("UPDATE balance SET money=money+? WHERE id=?")
+   * 	...
+   * 	tx, err := db.Begin()
+   * 	...
+   * 	res, err := tx.StmtContext(ctx, updateMoney).Exec(123.45, 98293203)
+   * ```
    * 
    * The provided context is used for the preparation of the statement, not for the
    * execution of the statement.
@@ -7953,11 +7002,14 @@ namespace sql {
    * an existing statement.
    * 
    * Example:
-   *  updateMoney, err := db.Prepare("UPDATE balance SET money=money+? WHERE id=?")
-   *  ...
-   *  tx, err := db.Begin()
-   *  ...
-   *  res, err := tx.Stmt(updateMoney).Exec(123.45, 98293203)
+   * 
+   * ```
+   * 	updateMoney, err := db.Prepare("UPDATE balance SET money=money+? WHERE id=?")
+   * 	...
+   * 	tx, err := db.Begin()
+   * 	...
+   * 	res, err := tx.Stmt(updateMoney).Exec(123.45, 98293203)
+   * ```
    * 
    * The returned statement operates within the transaction and will be closed
    * when the transaction has been committed or rolled back.
@@ -8024,17 +7076,6 @@ namespace sql {
    */
   queryRow(query: string, ...args: any[]): (Row | undefined)
  }
- /**
-  * Stmt is a prepared statement.
-  * A Stmt is safe for concurrent use by multiple goroutines.
-  * 
-  * If a Stmt is prepared on a Tx or Conn, it will be bound to a single
-  * underlying connection forever. If the Tx or Conn closes, the Stmt will
-  * become unusable and all operations will return an error.
-  * If a Stmt is prepared on a DB, it will remain usable for the lifetime of the
-  * DB. When the Stmt needs to execute on a new underlying connection, it will
-  * prepare itself on the new connection automatically.
-  */
  interface Stmt {
  }
  interface Stmt {
@@ -8093,8 +7134,10 @@ namespace sql {
    * 
    * Example usage:
    * 
-   *  var name string
-   *  err := nameByUseridStmt.QueryRow(id).Scan(&name)
+   * ```
+   * 	var name string
+   * 	err := nameByUseridStmt.QueryRow(id).Scan(&name)
+   * ```
    * 
    * QueryRow uses context.Background internally; to specify the context, use
    * QueryRowContext.
@@ -8107,10 +7150,6 @@ namespace sql {
    */
   close(): void
  }
- /**
-  * Rows is the result of a query. Its cursor starts before the first row
-  * of the result set. Use Next to advance from row to row.
-  */
  interface Rows {
  }
  interface Rows {
@@ -8168,16 +7207,16 @@ namespace sql {
    * common Go types and special types provided by the sql package:
    * 
    * ```
-   *    *string
-   *    *[]byte
-   *    *int, *int8, *int16, *int32, *int64
-   *    *uint, *uint8, *uint16, *uint32, *uint64
-   *    *bool
-   *    *float32, *float64
-   *    *interface{}
-   *    *RawBytes
-   *    *Rows (cursor value)
-   *    any type implementing Scanner (see Scanner docs)
+   * 	*string
+   * 	*[]byte
+   * 	*int, *int8, *int16, *int32, *int64
+   * 	*uint, *uint8, *uint16, *uint32, *uint64
+   * 	*bool
+   * 	*float32, *float64
+   * 	*interface{}
+   * 	*RawBytes
+   * 	*Rows (cursor value)
+   * 	any type implementing Scanner (see Scanner docs)
    * ```
    * 
    * In the most simple case, if the type of the value from the source
@@ -8221,7 +7260,7 @@ namespace sql {
    * select query will close any cursor *Rows if the parent *Rows is closed.
    * 
    * If any of the first arguments implementing Scanner returns an error,
-   * that error will be wrapped in the returned error
+   * that error will be wrapped in the returned error.
    */
   scan(...dest: any[]): void
  }
@@ -8234,9 +7273,6 @@ namespace sql {
    */
   close(): void
  }
- /**
-  * A Result summarizes an executed SQL command.
-  */
  interface Result {
   /**
    * LastInsertId returns the integer generated by the database
@@ -8261,11 +7297,28 @@ namespace sql {
  * 
  * The implementation is sufficient for HTTP (RFC 2388) and the multipart
  * bodies generated by popular browsers.
+ * 
+ * # Limits
+ * 
+ * To protect against malicious inputs, this package sets limits on the size
+ * of the MIME data it processes.
+ * 
+ * Reader.NextPart and Reader.NextRawPart limit the number of headers in a
+ * part to 10000 and Reader.ReadForm limits the total number of headers in all
+ * FileHeaders to 10000.
+ * These limits may be adjusted with the GODEBUG=multipartmaxheaders=<values>
+ * setting.
+ * 
+ * Reader.ReadForm further limits the number of parts in a form to 1000.
+ * This limit may be adjusted with the GODEBUG=multipartmaxparts=<value>
+ * setting.
+ */
+/**
+ * Copyright 2023 The Go Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style
+ * license that can be found in the LICENSE file.
  */
 namespace multipart {
- /**
-  * A FileHeader describes a file part of a multipart request.
-  */
  interface FileHeader {
   filename: string
   header: textproto.MIMEHeader
@@ -8399,14 +7452,6 @@ namespace http {
  import mathrand = rand
  // @ts-ignore
  import urlpkg = url
- /**
-  * A Request represents an HTTP request received by a server
-  * or to be sent by a client.
-  * 
-  * The field semantics differ slightly between client and server
-  * usage. In addition to the notes on the fields below, see the
-  * documentation for Request.Write and RoundTripper.
-  */
  interface Request {
   /**
    * Method specifies the HTTP method (GET, POST, PUT, etc.).
@@ -8627,7 +7672,7 @@ namespace http {
    * otherwise it leaves the field nil.
    * This field is ignored by the HTTP client.
    */
-  tls?: any
+  tls?: tls.ConnectionState
   /**
    * Cancel is an optional channel whose closure indicates that the client
    * request should be regarded as canceled. Not all implementations of
@@ -8650,7 +7695,7 @@ namespace http {
  interface Request {
   /**
    * Context returns the request's context. To change the context, use
-   * WithContext.
+   * Clone or WithContext.
    * 
    * The returned context is always non-nil; it defaults to the
    * background context.
@@ -8673,9 +7718,7 @@ namespace http {
    * sending the request, and reading the response headers and body.
    * 
    * To create a new request with a context, use NewRequestWithContext.
-   * To change the context of a request, such as an incoming request you
-   * want to modify before sending back out, use Request.Clone. Between
-   * those two uses, it's rare to need WithContext.
+   * To make a deep copy of a request with a new context, use Request.Clone.
    */
   withContext(ctx: context.Context): (Request | undefined)
  }
@@ -8755,6 +7798,7 @@ namespace http {
   /**
    * Write writes an HTTP/1.1 request, which is the header and body, in wire format.
    * This method consults the following fields of the request:
+   * 
    * ```
    * 	Host
    * 	URL
@@ -8796,11 +7840,13 @@ namespace http {
    * Basic Authentication with the provided username and password.
    * 
    * With HTTP Basic Authentication the provided username and password
-   * are not encrypted.
+   * are not encrypted. It should generally only be used in an HTTPS
+   * request.
    * 
-   * Some protocols may impose additional requirements on pre-escaping the
-   * username and password. For instance, when used with OAuth2, both arguments
-   * must be URL encoded first with url.QueryEscape.
+   * The username may not contain a colon. Some protocols may impose
+   * additional requirements on pre-escaping the username and
+   * password. For instance, when used with OAuth2, both arguments must
+   * be URL encoded first with url.QueryEscape.
    */
   setBasicAuth(username: string): void
  }
@@ -8869,13 +7915,6 @@ namespace http {
    */
   formFile(key: string): [multipart.File, (multipart.FileHeader | undefined)]
  }
- /**
-  * A ResponseWriter interface is used by an HTTP handler to
-  * construct an HTTP response.
-  * 
-  * A ResponseWriter may not be used after the Handler.ServeHTTP method
-  * has returned.
-  */
  interface ResponseWriter {
   /**
    * Header returns the header map that will be sent by
@@ -8883,8 +7922,8 @@ namespace http {
    * Handlers can set HTTP trailers.
    * 
    * Changing the header map after a call to WriteHeader (or
-   * Write) has no effect unless the modified headers are
-   * trailers.
+   * Write) has no effect unless the HTTP status code was of the
+   * 1xx class or the modified headers are trailers.
    * 
    * There are two ways to set Trailers. The preferred way is to
    * predeclare in the headers which trailers you will later
@@ -8931,20 +7970,21 @@ namespace http {
    * If WriteHeader is not called explicitly, the first call to Write
    * will trigger an implicit WriteHeader(http.StatusOK).
    * Thus explicit calls to WriteHeader are mainly used to
-   * send error codes.
+   * send error codes or 1xx informational responses.
    * 
    * The provided code must be a valid HTTP 1xx-5xx status code.
-   * Only one header may be written. Go does not currently
-   * support sending user-defined 1xx informational headers,
-   * with the exception of 100-continue response header that the
-   * Server sends automatically when the Request.Body is read.
+   * Any number of 1xx headers may be written, followed by at most
+   * one 2xx-5xx header. 1xx headers are sent immediately, but 2xx-5xx
+   * headers may be buffered. Use the Flusher interface to send
+   * buffered data. The header map is cleared when 2xx-5xx headers are
+   * sent, but not with 1xx headers.
+   * 
+   * The server will automatically send a 100 (Continue) header
+   * on the first read from the request body if the request has
+   * an "Expect: 100-continue" header.
    */
   writeHeader(statusCode: number): void
  }
- /**
-  * A Server defines parameters for running an HTTP server.
-  * The zero value for Server is a valid configuration.
-  */
  interface Server {
   /**
    * Addr optionally specifies the TCP address for the server to listen on,
@@ -8955,6 +7995,11 @@ namespace http {
   addr: string
   handler: Handler // handler to invoke, http.DefaultServeMux if nil
   /**
+   * DisableGeneralOptionsHandler, if true, passes "OPTIONS *" requests to the Handler,
+   * otherwise responds with 200 OK and Content-Length: 0.
+   */
+  disableGeneralOptionsHandler: boolean
+  /**
    * TLSConfig optionally provides a TLS configuration for use
    * by ServeTLS and ListenAndServeTLS. Note that this value is
    * cloned by ServeTLS and ListenAndServeTLS, so it's not
@@ -8963,7 +8008,7 @@ namespace http {
    * SetSessionTicketKeys, use Server.Serve with a TLS Listener
    * instead.
    */
-  tlsConfig?: any
+  tlsConfig?: tls.Config
   /**
    * ReadTimeout is the maximum duration for reading the entire
    * request, including the body. A zero or negative value means
@@ -9031,7 +8076,7 @@ namespace http {
    * underlying FileSystem errors.
    * If nil, logging is done via the log package's standard logger.
    */
-  errorLog?: any
+  errorLog?: log.Logger
   /**
    * BaseContext optionally specifies a function that returns
    * the base context for incoming requests on this server.
@@ -9192,14 +8237,86 @@ namespace http {
  * Note that the examples in this package assume a Unix system.
  * They may not run on Windows, and they do not run in the Go Playground
  * used by golang.org and godoc.org.
+ * 
+ * # Executables in the current directory
+ * 
+ * The functions Command and LookPath look for a program
+ * in the directories listed in the current path, following the
+ * conventions of the host operating system.
+ * Operating systems have for decades included the current
+ * directory in this search, sometimes implicitly and sometimes
+ * configured explicitly that way by default.
+ * Modern practice is that including the current directory
+ * is usually unexpected and often leads to security problems.
+ * 
+ * To avoid those security problems, as of Go 1.19, this package will not resolve a program
+ * using an implicit or explicit path entry relative to the current directory.
+ * That is, if you run exec.LookPath("go"), it will not successfully return
+ * ./go on Unix nor .\go.exe on Windows, no matter how the path is configured.
+ * Instead, if the usual path algorithms would result in that answer,
+ * these functions return an error err satisfying errors.Is(err, ErrDot).
+ * 
+ * For example, consider these two program snippets:
+ * 
+ * ```
+ * 	path, err := exec.LookPath("prog")
+ * 	if err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * 	use(path)
+ * ```
+ * 
+ * and
+ * 
+ * ```
+ * 	cmd := exec.Command("prog")
+ * 	if err := cmd.Run(); err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * ```
+ * 
+ * These will not find and run ./prog or .\prog.exe,
+ * no matter how the current path is configured.
+ * 
+ * Code that always wants to run a program from the current directory
+ * can be rewritten to say "./prog" instead of "prog".
+ * 
+ * Code that insists on including results from relative path entries
+ * can instead override the error using an errors.Is check:
+ * 
+ * ```
+ * 	path, err := exec.LookPath("prog")
+ * 	if errors.Is(err, exec.ErrDot) {
+ * 		err = nil
+ * 	}
+ * 	if err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * 	use(path)
+ * ```
+ * 
+ * and
+ * 
+ * ```
+ * 	cmd := exec.Command("prog")
+ * 	if errors.Is(cmd.Err, exec.ErrDot) {
+ * 		cmd.Err = nil
+ * 	}
+ * 	if err := cmd.Run(); err != nil {
+ * 		log.Fatal(err)
+ * 	}
+ * ```
+ * 
+ * Setting the environment variable GODEBUG=execerrdot=0
+ * disables generation of ErrDot entirely, temporarily restoring the pre-Go 1.19
+ * behavior for programs that are unable to apply more targeted fixes.
+ * A future version of Go may remove support for this variable.
+ * 
+ * Before adding such overrides, make sure you understand the
+ * security implications of doing so.
+ * See https://go.dev/blog/path-security for more information.
  */
 namespace exec {
- /**
-  * Cmd represents an external command being prepared or run.
-  * 
-  * A Cmd cannot be reused after calling its Run, Output or CombinedOutput
-  * methods.
-  */
  interface Cmd {
   /**
    * Path is the path of the command to run.
@@ -9245,7 +8362,8 @@ namespace exec {
    * goroutine reads from Stdin and delivers that data to the command
    * over a pipe. In this case, Wait does not complete until the goroutine
    * stops copying, either because it has reached the end of Stdin
-   * (EOF or a read error) or because writing to the pipe returned an error.
+   * (EOF or a read error), or because writing to the pipe returned an error,
+   * or because a nonzero WaitDelay was set and expired.
    */
   stdin: io.Reader
   /**
@@ -9260,7 +8378,8 @@ namespace exec {
    * Otherwise, during the execution of the command a separate goroutine
    * reads from the process over a pipe and delivers that data to the
    * corresponding Writer. In this case, Wait does not complete until the
-   * goroutine reaches EOF or encounters an error.
+   * goroutine reaches EOF or encounters an error or a nonzero WaitDelay
+   * expires.
    * 
    * If Stdout and Stderr are the same writer, and have a type that can
    * be compared with ==, at most one goroutine at a time will call Write.
@@ -9285,10 +8404,68 @@ namespace exec {
    */
   process?: os.Process
   /**
-   * ProcessState contains information about an exited process,
-   * available after a call to Wait or Run.
+   * ProcessState contains information about an exited process.
+   * If the process was started successfully, Wait or Run will
+   * populate its ProcessState when the command completes.
    */
   processState?: os.ProcessState
+  err: Error // LookPath error, if any.
+  /**
+   * If Cancel is non-nil, the command must have been created with
+   * CommandContext and Cancel will be called when the command's
+   * Context is done. By default, CommandContext sets Cancel to
+   * call the Kill method on the command's Process.
+   * 
+   * Typically a custom Cancel will send a signal to the command's
+   * Process, but it may instead take other actions to initiate cancellation,
+   * such as closing a stdin or stdout pipe or sending a shutdown request on a
+   * network socket.
+   * 
+   * If the command exits with a success status after Cancel is
+   * called, and Cancel does not return an error equivalent to
+   * os.ErrProcessDone, then Wait and similar methods will return a non-nil
+   * error: either an error wrapping the one returned by Cancel,
+   * or the error from the Context.
+   * (If the command exits with a non-success status, or Cancel
+   * returns an error that wraps os.ErrProcessDone, Wait and similar methods
+   * continue to return the command's usual exit status.)
+   * 
+   * If Cancel is set to nil, nothing will happen immediately when the command's
+   * Context is done, but a nonzero WaitDelay will still take effect. That may
+   * be useful, for example, to work around deadlocks in commands that do not
+   * support shutdown signals but are expected to always finish quickly.
+   * 
+   * Cancel will not be called if Start returns a non-nil error.
+   */
+  cancel: () => void
+  /**
+   * If WaitDelay is non-zero, it bounds the time spent waiting on two sources
+   * of unexpected delay in Wait: a child process that fails to exit after the
+   * associated Context is canceled, and a child process that exits but leaves
+   * its I/O pipes unclosed.
+   * 
+   * The WaitDelay timer starts when either the associated Context is done or a
+   * call to Wait observes that the child process has exited, whichever occurs
+   * first. When the delay has elapsed, the command shuts down the child process
+   * and/or its I/O pipes.
+   * 
+   * If the child process has failed to exit — perhaps because it ignored or
+   * failed to receive a shutdown signal from a Cancel function, or because no
+   * Cancel function was set — then it will be terminated using os.Process.Kill.
+   * 
+   * Then, if the I/O pipes communicating with the child process are still open,
+   * those pipes are closed in order to unblock any goroutines currently blocked
+   * on Read or Write calls.
+   * 
+   * If pipes are closed due to WaitDelay, no Cancel call has occurred,
+   * and the command has otherwise exited with a successful status, Wait and
+   * similar methods will return ErrWaitDelay instead of nil.
+   * 
+   * If WaitDelay is zero (the default), I/O pipes will be read until EOF,
+   * which might not occur until orphaned subprocesses of the command have
+   * also closed their descriptors for the pipes.
+   */
+  waitDelay: time.Duration
  }
  interface Cmd {
   /**
@@ -9323,8 +8500,8 @@ namespace exec {
    * 
    * If Start returns successfully, the c.Process field will be set.
    * 
-   * The Wait method will return the exit code and release associated resources
-   * once the command exits.
+   * After a successful call to Start the Wait method must be called in
+   * order to release associated system resources.
    */
   start(): void
  }
@@ -9402,6 +8579,66 @@ namespace exec {
    */
   stderrPipe(): io.ReadCloser
  }
+ interface Cmd {
+  /**
+   * Environ returns a copy of the environment in which the command would be run
+   * as it is currently configured.
+   */
+  environ(): Array<string>
+ }
+}
+
+/**
+ * Package jwt is a Go implementation of JSON Web Tokens: http://self-issued.info/docs/draft-jones-json-web-token.html
+ * 
+ * See README.md for more info.
+ */
+namespace jwt {
+ interface MapClaims extends _TygojaDict{}
+ interface MapClaims {
+  /**
+   * VerifyAudience Compares the aud claim against cmp.
+   * If required is false, this method will return true if the value matches or is unset
+   */
+  verifyAudience(cmp: string, req: boolean): boolean
+ }
+ interface MapClaims {
+  /**
+   * VerifyExpiresAt compares the exp claim against cmp (cmp <= exp).
+   * If req is false, it will return true, if exp is unset.
+   */
+  verifyExpiresAt(cmp: number, req: boolean): boolean
+ }
+ interface MapClaims {
+  /**
+   * VerifyIssuedAt compares the exp claim against cmp (cmp >= iat).
+   * If req is false, it will return true, if iat is unset.
+   */
+  verifyIssuedAt(cmp: number, req: boolean): boolean
+ }
+ interface MapClaims {
+  /**
+   * VerifyNotBefore compares the nbf claim against cmp (cmp >= nbf).
+   * If req is false, it will return true, if nbf is unset.
+   */
+  verifyNotBefore(cmp: number, req: boolean): boolean
+ }
+ interface MapClaims {
+  /**
+   * VerifyIssuer compares the iss claim against cmp.
+   * If required is false, this method will return true if the value matches or is unset
+   */
+  verifyIssuer(cmp: string, req: boolean): boolean
+ }
+ interface MapClaims {
+  /**
+   * Valid validates time based claims "exp, iat, nbf".
+   * There is no accounting for clock skew.
+   * As well, if any of the above claims are not in the token, it will still
+   * be considered a valid claim.
+   */
+  valid(): void
+ }
 }
 
 /**
@@ -9460,11 +8697,6 @@ namespace exec {
  * https://opencensus.io/quickstart/go/metrics.
  */
 namespace blob {
- /**
-  * Reader reads bytes from a blob.
-  * It implements io.ReadSeekCloser, and must be closed after
-  * reads are finished.
-  */
  interface Reader {
  }
  interface Reader {
@@ -9523,9 +8755,6 @@ namespace blob {
    */
   writeTo(w: io.Writer): number
  }
- /**
-  * Attributes contains attributes about a blob.
-  */
  interface Attributes {
   /**
    * CacheControl specifies caching attributes that services may use
@@ -9595,9 +8824,6 @@ namespace blob {
   as(i: {
    }): boolean
  }
- /**
-  * ListObject represents a single blob returned from List.
-  */
  interface ListObject {
   /**
    * Key is the key for this blob.
@@ -9640,9 +8866,6 @@ namespace blob {
  * like datetime, json, etc.
  */
 namespace types {
- /**
-  * JsonArray defines a slice that is safe for json and db read/write.
-  */
  interface JsonArray<T> extends Array<T>{}
  interface JsonArray<T> {
   /**
@@ -9654,7 +8877,7 @@ namespace types {
   /**
    * Value implements the [driver.Valuer] interface.
    */
-  value(): any
+  value(): driver.Value
  }
  interface JsonArray<T> {
   /**
@@ -9663,9 +8886,6 @@ namespace types {
    */
   scan(value: any): void
  }
- /**
-  * JsonMap defines a map that is safe for json and db read/write.
-  */
  interface JsonMap extends _TygojaDict{}
  interface JsonMap {
   /**
@@ -9695,7 +8915,7 @@ namespace types {
   /**
    * Value implements the [driver.Valuer] interface.
    */
-  value(): any
+  value(): driver.Value
  }
  interface JsonMap {
   /**
@@ -9713,9 +8933,6 @@ namespace types {
 namespace schema {
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * Schema defines a dynamic db schema as a slice of `SchemaField`s.
-  */
  interface Schema {
  }
  interface Schema {
@@ -9801,7 +9018,7 @@ namespace schema {
   /**
    * Value implements the [driver.Valuer] interface.
    */
-  value(): any
+  value(): driver.Value
  }
  interface Schema {
   /**
@@ -9816,8 +9033,8 @@ namespace schema {
  * Package models implements all PocketBase DB models and DTOs.
  */
 namespace models {
- type _subsphMR = BaseModel
- interface Admin extends _subsphMR {
+ type _subgFXFz = BaseModel
+ interface Admin extends _subgFXFz {
   avatar: number
   email: string
   tokenKey: string
@@ -9852,8 +9069,8 @@ namespace models {
  }
  // @ts-ignore
  import validation = ozzo_validation
- type _subtqXoq = BaseModel
- interface Collection extends _subtqXoq {
+ type _subvPysM = BaseModel
+ interface Collection extends _subvPysM {
   name: string
   type: string
   system: boolean
@@ -9946,8 +9163,8 @@ namespace models {
    */
   setOptions(typedOptions: any): void
  }
- type _subCGuDP = BaseModel
- interface ExternalAuth extends _subCGuDP {
+ type _subqAbDb = BaseModel
+ interface ExternalAuth extends _subqAbDb {
   collectionId: string
   recordId: string
   provider: string
@@ -9956,8 +9173,8 @@ namespace models {
  interface ExternalAuth {
   tableName(): string
  }
- type _subiLaFP = BaseModel
- interface Record extends _subiLaFP {
+ type _suboetKO = BaseModel
+ interface Record extends _suboetKO {
  }
  interface Record {
   /**
@@ -10335,10 +9552,6 @@ namespace models {
    */
   setPassword(password: string): void
  }
- /**
-  * RequestInfo defines a HTTP request data struct, usually used
-  * as part of the `@request.*` filter resolver.
-  */
  interface RequestInfo {
   method: string
   query: _TygojaDict
@@ -10352,6 +9565,109 @@ namespace models {
    * HasModifierDataKeys loosely checks if the current struct has any modifier Data keys.
    */
   hasModifierDataKeys(): boolean
+ }
+}
+
+namespace auth {
+ interface AuthUser {
+  id: string
+  name: string
+  username: string
+  email: string
+  avatarUrl: string
+  rawUser: _TygojaDict
+  accessToken: string
+  refreshToken: string
+ }
+ interface Provider {
+  /**
+   * Scopes returns the context associated with the provider (if any).
+   */
+  context(): context.Context
+  /**
+   * SetContext assigns the specified context to the current provider.
+   */
+  setContext(ctx: context.Context): void
+  /**
+   * Scopes returns the provider access permissions that will be requested.
+   */
+  scopes(): Array<string>
+  /**
+   * SetScopes sets the provider access permissions that will be requested later.
+   */
+  setScopes(scopes: Array<string>): void
+  /**
+   * ClientId returns the provider client's app ID.
+   */
+  clientId(): string
+  /**
+   * SetClientId sets the provider client's ID.
+   */
+  setClientId(clientId: string): void
+  /**
+   * ClientSecret returns the provider client's app secret.
+   */
+  clientSecret(): string
+  /**
+   * SetClientSecret sets the provider client's app secret.
+   */
+  setClientSecret(secret: string): void
+  /**
+   * RedirectUrl returns the end address to redirect the user
+   * going through the OAuth flow.
+   */
+  redirectUrl(): string
+  /**
+   * SetRedirectUrl sets the provider's RedirectUrl.
+   */
+  setRedirectUrl(url: string): void
+  /**
+   * AuthUrl returns the provider's authorization service url.
+   */
+  authUrl(): string
+  /**
+   * SetAuthUrl sets the provider's AuthUrl.
+   */
+  setAuthUrl(url: string): void
+  /**
+   * TokenUrl returns the provider's token exchange service url.
+   */
+  tokenUrl(): string
+  /**
+   * SetTokenUrl sets the provider's TokenUrl.
+   */
+  setTokenUrl(url: string): void
+  /**
+   * UserApiUrl returns the provider's user info api url.
+   */
+  userApiUrl(): string
+  /**
+   * SetUserApiUrl sets the provider's UserApiUrl.
+   */
+  setUserApiUrl(url: string): void
+  /**
+   * Client returns an http client using the provided token.
+   */
+  client(token: oauth2.Token): (any | undefined)
+  /**
+   * BuildAuthUrl returns a URL to the provider's consent page
+   * that asks for permissions for the required scopes explicitly.
+   */
+  buildAuthUrl(state: string, ...opts: oauth2.AuthCodeOption[]): string
+  /**
+   * FetchToken converts an authorization code to token.
+   */
+  fetchToken(code: string, ...opts: oauth2.AuthCodeOption[]): (oauth2.Token | undefined)
+  /**
+   * FetchRawUserData requests and marshalizes into `result` the
+   * the OAuth user api response.
+   */
+  fetchRawUserData(token: oauth2.Token): string
+  /**
+   * FetchAuthUser is similar to FetchRawUserData, but normalizes and
+   * marshalizes the user api response into a standardized AuthUser struct.
+   */
+  fetchAuthUser(token: oauth2.Token): (AuthUser | undefined)
  }
 }
 
@@ -10396,10 +9712,6 @@ namespace models {
  * Learn more at https://echo.labstack.com
  */
 namespace echo {
- /**
-  * Context represents the context of the current HTTP request. It holds request and
-  * response objects, path, path parameters, data and registered handler.
-  */
  interface Context {
   /**
    * Request returns `*http.Request`.
@@ -10646,13 +9958,6 @@ namespace echo {
  }
  // @ts-ignore
  import stdContext = context
- /**
-  * Echo is the top-level framework instance.
-  * 
-  * Goroutine safety: Do not mutate Echo instance fields after server has started. Accessing these
-  * fields from handlers/middlewares and changing field values at the same time leads to data-races.
-  * Same rule applies to adding new routes after server has been started - Adding a route is not Goroutine safe action.
-  */
  interface Echo {
   /**
    * NewContextFunc allows using custom context implementations, instead of default *echo.context
@@ -10681,13 +9986,7 @@ namespace echo {
    */
   onAddRoute: (host: string, route: Routable) => void
  }
- /**
-  * HandlerFunc defines a function to serve HTTP requests.
-  */
  interface HandlerFunc {(c: Context): void }
- /**
-  * MiddlewareFunc defines a function to process middleware.
-  */
  interface MiddlewareFunc {(next: HandlerFunc): HandlerFunc }
  interface Echo {
   /**
@@ -10930,121 +10229,9 @@ namespace echo {
  }
 }
 
-namespace auth {
- /**
-  * AuthUser defines a standardized oauth2 user data structure.
-  */
- interface AuthUser {
-  id: string
-  name: string
-  username: string
-  email: string
-  avatarUrl: string
-  rawUser: _TygojaDict
-  accessToken: string
-  refreshToken: string
- }
- /**
-  * Provider defines a common interface for an OAuth2 client.
-  */
- interface Provider {
-  /**
-   * Scopes returns the context associated with the provider (if any).
-   */
-  context(): context.Context
-  /**
-   * SetContext assigns the specified context to the current provider.
-   */
-  setContext(ctx: context.Context): void
-  /**
-   * Scopes returns the provider access permissions that will be requested.
-   */
-  scopes(): Array<string>
-  /**
-   * SetScopes sets the provider access permissions that will be requested later.
-   */
-  setScopes(scopes: Array<string>): void
-  /**
-   * ClientId returns the provider client's app ID.
-   */
-  clientId(): string
-  /**
-   * SetClientId sets the provider client's ID.
-   */
-  setClientId(clientId: string): void
-  /**
-   * ClientSecret returns the provider client's app secret.
-   */
-  clientSecret(): string
-  /**
-   * SetClientSecret sets the provider client's app secret.
-   */
-  setClientSecret(secret: string): void
-  /**
-   * RedirectUrl returns the end address to redirect the user
-   * going through the OAuth flow.
-   */
-  redirectUrl(): string
-  /**
-   * SetRedirectUrl sets the provider's RedirectUrl.
-   */
-  setRedirectUrl(url: string): void
-  /**
-   * AuthUrl returns the provider's authorization service url.
-   */
-  authUrl(): string
-  /**
-   * SetAuthUrl sets the provider's AuthUrl.
-   */
-  setAuthUrl(url: string): void
-  /**
-   * TokenUrl returns the provider's token exchange service url.
-   */
-  tokenUrl(): string
-  /**
-   * SetTokenUrl sets the provider's TokenUrl.
-   */
-  setTokenUrl(url: string): void
-  /**
-   * UserApiUrl returns the provider's user info api url.
-   */
-  userApiUrl(): string
-  /**
-   * SetUserApiUrl sets the provider's UserApiUrl.
-   */
-  setUserApiUrl(url: string): void
-  /**
-   * Client returns an http client using the provided token.
-   */
-  client(token: oauth2.Token): (any | undefined)
-  /**
-   * BuildAuthUrl returns a URL to the provider's consent page
-   * that asks for permissions for the required scopes explicitly.
-   */
-  buildAuthUrl(state: string, ...opts: oauth2.AuthCodeOption[]): string
-  /**
-   * FetchToken converts an authorization code to token.
-   */
-  fetchToken(code: string, ...opts: oauth2.AuthCodeOption[]): (oauth2.Token | undefined)
-  /**
-   * FetchRawUserData requests and marshalizes into `result` the
-   * the OAuth user api response.
-   */
-  fetchRawUserData(token: oauth2.Token): string
-  /**
-   * FetchAuthUser is similar to FetchRawUserData, but normalizes and
-   * marshalizes the user api response into a standardized AuthUser struct.
-   */
-  fetchAuthUser(token: oauth2.Token): (AuthUser | undefined)
- }
-}
-
 namespace settings {
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * Settings defines common app configuration options.
-  */
  interface Settings {
   meta: MetaConfig
   logs: LogsConfig
@@ -11178,11 +10365,6 @@ namespace daos {
    */
   saveAdmin(admin: models.Admin): void
  }
- /**
-  * Dao handles various db operations.
-  * 
-  * You can think of Dao as a repository and service layer in one.
-  */
  interface Dao {
   /**
    * MaxLockRetries specifies the default max "database is locked" auto retry attempts.
@@ -11472,42 +10654,37 @@ namespace daos {
    * FindRecordsByFilter returns limit number of records matching the
    * provided string filter.
    * 
-   * NB! Use the last "params" argument to bind untrusted user variables!
-   * 
    * The sort argument is optional and can be empty string OR the same format
    * used in the web APIs, eg. "-created,title".
    * 
    * If the limit argument is <= 0, no limit is applied to the query and
    * all matching records are returned.
    * 
+   * NB! Don't put untrusted user input in the filter string as it
+   * practically would allow the users to inject their own custom filter.
+   * 
    * Example:
    * 
    * ```
-   * 	dao.FindRecordsByFilter(
-   * 		"posts",
-   * 		"title ~ {:title} && visible = {:visible}",
-   * 		"-created",
-   * 		10,
-   * 		0,
-   * 		dbx.Params{"title": "lorem ipsum", "visible": true}
-   * 	)
+   * 	dao.FindRecordsByFilter("posts", "title ~ 'lorem ipsum' && visible = true", "-created", 10)
    * ```
    */
-  findRecordsByFilter(collectionNameOrId: string, filter: string, sort: string, limit: number, offset: number, ...params: dbx.Params[]): Array<(models.Record | undefined)>
+  findRecordsByFilter(collectionNameOrId: string, filter: string, sort: string, limit: number): Array<(models.Record | undefined)>
  }
  interface Dao {
   /**
    * FindFirstRecordByFilter returns the first available record matching the provided filter.
    * 
-   * NB! Use the last params argument to bind untrusted user variables!
+   * NB! Don't put untrusted user input in the filter string as it
+   * practically would allow the users to inject their own custom filter.
    * 
    * Example:
    * 
    * ```
-   * 	dao.FindFirstRecordByFilter("posts", "slug={:slug} && status='public'", dbx.Params{"slug": "test"})
+   * 	dao.FindFirstRecordByFilter("posts", "slug='test'")
    * ```
    */
-  findFirstRecordByFilter(collectionNameOrId: string, filter: string, ...params: dbx.Params[]): (models.Record | undefined)
+  findFirstRecordByFilter(collectionNameOrId: string, filter: string): (models.Record | undefined)
  }
  interface Dao {
   /**
@@ -11769,15 +10946,1070 @@ namespace daos {
  }
 }
 
+namespace migrate {
+ interface MigrationsList {
+ }
+ interface MigrationsList {
+  /**
+   * Item returns a single migration from the list by its index.
+   */
+  item(index: number): (Migration | undefined)
+ }
+ interface MigrationsList {
+  /**
+   * Items returns the internal migrations list slice.
+   */
+  items(): Array<(Migration | undefined)>
+ }
+ interface MigrationsList {
+  /**
+   * Register adds new migration definition to the list.
+   * 
+   * If `optFilename` is not provided, it will try to get the name from its .go file.
+   * 
+   * The list will be sorted automatically based on the migrations file name.
+   */
+  register(up: (db: dbx.Builder) => void, down: (db: dbx.Builder) => void, ...optFilename: string[]): void
+ }
+}
+
+/**
+ * Package cobra is a commander providing a simple interface to create powerful modern CLI interfaces.
+ * In addition to providing an interface, Cobra simultaneously provides a controller to organize your application code.
+ */
+namespace cobra {
+ interface Command {
+  /**
+   * GenBashCompletion generates bash completion file and writes to the passed writer.
+   */
+  genBashCompletion(w: io.Writer): void
+ }
+ interface Command {
+  /**
+   * GenBashCompletionFile generates bash completion file.
+   */
+  genBashCompletionFile(filename: string): void
+ }
+ interface Command {
+  /**
+   * GenBashCompletionFileV2 generates Bash completion version 2.
+   */
+  genBashCompletionFileV2(filename: string, includeDesc: boolean): void
+ }
+ interface Command {
+  /**
+   * GenBashCompletionV2 generates Bash completion file version 2
+   * and writes it to the passed writer.
+   */
+  genBashCompletionV2(w: io.Writer, includeDesc: boolean): void
+ }
+ // @ts-ignore
+ import flag = pflag
+ interface Command {
+  /**
+   * Use is the one-line usage message.
+   * Recommended syntax is as follows:
+   * ```
+   *   [ ] identifies an optional argument. Arguments that are not enclosed in brackets are required.
+   *   ... indicates that you can specify multiple values for the previous argument.
+   *   |   indicates mutually exclusive information. You can use the argument to the left of the separator or the
+   *       argument to the right of the separator. You cannot use both arguments in a single use of the command.
+   *   { } delimits a set of mutually exclusive arguments when one of the arguments is required. If the arguments are
+   *       optional, they are enclosed in brackets ([ ]).
+   * ```
+   * Example: add [-F file | -D dir]... [-f format] profile
+   */
+  use: string
+  /**
+   * Aliases is an array of aliases that can be used instead of the first word in Use.
+   */
+  aliases: Array<string>
+  /**
+   * SuggestFor is an array of command names for which this command will be suggested -
+   * similar to aliases but only suggests.
+   */
+  suggestFor: Array<string>
+  /**
+   * Short is the short description shown in the 'help' output.
+   */
+  short: string
+  /**
+   * The group id under which this subcommand is grouped in the 'help' output of its parent.
+   */
+  groupID: string
+  /**
+   * Long is the long message shown in the 'help <this-command>' output.
+   */
+  long: string
+  /**
+   * Example is examples of how to use the command.
+   */
+  example: string
+  /**
+   * ValidArgs is list of all valid non-flag arguments that are accepted in shell completions
+   */
+  validArgs: Array<string>
+  /**
+   * ValidArgsFunction is an optional function that provides valid non-flag arguments for shell completion.
+   * It is a dynamic version of using ValidArgs.
+   * Only one of ValidArgs and ValidArgsFunction can be used for a command.
+   */
+  validArgsFunction: (cmd: Command, args: Array<string>, toComplete: string) => [Array<string>, ShellCompDirective]
+  /**
+   * Expected arguments
+   */
+  args: PositionalArgs
+  /**
+   * ArgAliases is List of aliases for ValidArgs.
+   * These are not suggested to the user in the shell completion,
+   * but accepted if entered manually.
+   */
+  argAliases: Array<string>
+  /**
+   * BashCompletionFunction is custom bash functions used by the legacy bash autocompletion generator.
+   * For portability with other shells, it is recommended to instead use ValidArgsFunction
+   */
+  bashCompletionFunction: string
+  /**
+   * Deprecated defines, if this command is deprecated and should print this string when used.
+   */
+  deprecated: string
+  /**
+   * Annotations are key/value pairs that can be used by applications to identify or
+   * group commands.
+   */
+  annotations: _TygojaDict
+  /**
+   * Version defines the version for this command. If this value is non-empty and the command does not
+   * define a "version" flag, a "version" boolean flag will be added to the command and, if specified,
+   * will print content of the "Version" variable. A shorthand "v" flag will also be added if the
+   * command does not define one.
+   */
+  version: string
+  /**
+   * The *Run functions are executed in the following order:
+   * ```
+   *   * PersistentPreRun()
+   *   * PreRun()
+   *   * Run()
+   *   * PostRun()
+   *   * PersistentPostRun()
+   * ```
+   * All functions get the same args, the arguments after the command name.
+   * 
+   * PersistentPreRun: children of this command will inherit and execute.
+   */
+  persistentPreRun: (cmd: Command, args: Array<string>) => void
+  /**
+   * PersistentPreRunE: PersistentPreRun but returns an error.
+   */
+  persistentPreRunE: (cmd: Command, args: Array<string>) => void
+  /**
+   * PreRun: children of this command will not inherit.
+   */
+  preRun: (cmd: Command, args: Array<string>) => void
+  /**
+   * PreRunE: PreRun but returns an error.
+   */
+  preRunE: (cmd: Command, args: Array<string>) => void
+  /**
+   * Run: Typically the actual work function. Most commands will only implement this.
+   */
+  run: (cmd: Command, args: Array<string>) => void
+  /**
+   * RunE: Run but returns an error.
+   */
+  runE: (cmd: Command, args: Array<string>) => void
+  /**
+   * PostRun: run after the Run command.
+   */
+  postRun: (cmd: Command, args: Array<string>) => void
+  /**
+   * PostRunE: PostRun but returns an error.
+   */
+  postRunE: (cmd: Command, args: Array<string>) => void
+  /**
+   * PersistentPostRun: children of this command will inherit and execute after PostRun.
+   */
+  persistentPostRun: (cmd: Command, args: Array<string>) => void
+  /**
+   * PersistentPostRunE: PersistentPostRun but returns an error.
+   */
+  persistentPostRunE: (cmd: Command, args: Array<string>) => void
+  /**
+   * FParseErrWhitelist flag parse errors to be ignored
+   */
+  fParseErrWhitelist: FParseErrWhitelist
+  /**
+   * CompletionOptions is a set of options to control the handling of shell completion
+   */
+  completionOptions: CompletionOptions
+  /**
+   * TraverseChildren parses flags on all parents before executing child command.
+   */
+  traverseChildren: boolean
+  /**
+   * Hidden defines, if this command is hidden and should NOT show up in the list of available commands.
+   */
+  hidden: boolean
+  /**
+   * SilenceErrors is an option to quiet errors down stream.
+   */
+  silenceErrors: boolean
+  /**
+   * SilenceUsage is an option to silence usage when an error occurs.
+   */
+  silenceUsage: boolean
+  /**
+   * DisableFlagParsing disables the flag parsing.
+   * If this is true all flags will be passed to the command as arguments.
+   */
+  disableFlagParsing: boolean
+  /**
+   * DisableAutoGenTag defines, if gen tag ("Auto generated by spf13/cobra...")
+   * will be printed by generating docs for this command.
+   */
+  disableAutoGenTag: boolean
+  /**
+   * DisableFlagsInUseLine will disable the addition of [flags] to the usage
+   * line of a command when printing help or generating docs
+   */
+  disableFlagsInUseLine: boolean
+  /**
+   * DisableSuggestions disables the suggestions based on Levenshtein distance
+   * that go along with 'unknown command' messages.
+   */
+  disableSuggestions: boolean
+  /**
+   * SuggestionsMinimumDistance defines minimum levenshtein distance to display suggestions.
+   * Must be > 0.
+   */
+  suggestionsMinimumDistance: number
+ }
+ interface Command {
+  /**
+   * Context returns underlying command context. If command was executed
+   * with ExecuteContext or the context was set with SetContext, the
+   * previously set context will be returned. Otherwise, nil is returned.
+   * 
+   * Notice that a call to Execute and ExecuteC will replace a nil context of
+   * a command with a context.Background, so a background context will be
+   * returned by Context after one of these functions has been called.
+   */
+  context(): context.Context
+ }
+ interface Command {
+  /**
+   * SetContext sets context for the command. This context will be overwritten by
+   * Command.ExecuteContext or Command.ExecuteContextC.
+   */
+  setContext(ctx: context.Context): void
+ }
+ interface Command {
+  /**
+   * SetArgs sets arguments for the command. It is set to os.Args[1:] by default, if desired, can be overridden
+   * particularly useful when testing.
+   */
+  setArgs(a: Array<string>): void
+ }
+ interface Command {
+  /**
+   * SetOutput sets the destination for usage and error messages.
+   * If output is nil, os.Stderr is used.
+   * Deprecated: Use SetOut and/or SetErr instead
+   */
+  setOutput(output: io.Writer): void
+ }
+ interface Command {
+  /**
+   * SetOut sets the destination for usage messages.
+   * If newOut is nil, os.Stdout is used.
+   */
+  setOut(newOut: io.Writer): void
+ }
+ interface Command {
+  /**
+   * SetErr sets the destination for error messages.
+   * If newErr is nil, os.Stderr is used.
+   */
+  setErr(newErr: io.Writer): void
+ }
+ interface Command {
+  /**
+   * SetIn sets the source for input data
+   * If newIn is nil, os.Stdin is used.
+   */
+  setIn(newIn: io.Reader): void
+ }
+ interface Command {
+  /**
+   * SetUsageFunc sets usage function. Usage can be defined by application.
+   */
+  setUsageFunc(f: (_arg0: Command) => void): void
+ }
+ interface Command {
+  /**
+   * SetUsageTemplate sets usage template. Can be defined by Application.
+   */
+  setUsageTemplate(s: string): void
+ }
+ interface Command {
+  /**
+   * SetFlagErrorFunc sets a function to generate an error when flag parsing
+   * fails.
+   */
+  setFlagErrorFunc(f: (_arg0: Command, _arg1: Error) => void): void
+ }
+ interface Command {
+  /**
+   * SetHelpFunc sets help function. Can be defined by Application.
+   */
+  setHelpFunc(f: (_arg0: Command, _arg1: Array<string>) => void): void
+ }
+ interface Command {
+  /**
+   * SetHelpCommand sets help command.
+   */
+  setHelpCommand(cmd: Command): void
+ }
+ interface Command {
+  /**
+   * SetHelpCommandGroupID sets the group id of the help command.
+   */
+  setHelpCommandGroupID(groupID: string): void
+ }
+ interface Command {
+  /**
+   * SetCompletionCommandGroupID sets the group id of the completion command.
+   */
+  setCompletionCommandGroupID(groupID: string): void
+ }
+ interface Command {
+  /**
+   * SetHelpTemplate sets help template to be used. Application can use it to set custom template.
+   */
+  setHelpTemplate(s: string): void
+ }
+ interface Command {
+  /**
+   * SetVersionTemplate sets version template to be used. Application can use it to set custom template.
+   */
+  setVersionTemplate(s: string): void
+ }
+ interface Command {
+  /**
+   * SetGlobalNormalizationFunc sets a normalization function to all flag sets and also to child commands.
+   * The user should not have a cyclic dependency on commands.
+   */
+  setGlobalNormalizationFunc(n: (f: flag.FlagSet, name: string) => flag.NormalizedName): void
+ }
+ interface Command {
+  /**
+   * OutOrStdout returns output to stdout.
+   */
+  outOrStdout(): io.Writer
+ }
+ interface Command {
+  /**
+   * OutOrStderr returns output to stderr
+   */
+  outOrStderr(): io.Writer
+ }
+ interface Command {
+  /**
+   * ErrOrStderr returns output to stderr
+   */
+  errOrStderr(): io.Writer
+ }
+ interface Command {
+  /**
+   * InOrStdin returns input to stdin
+   */
+  inOrStdin(): io.Reader
+ }
+ interface Command {
+  /**
+   * UsageFunc returns either the function set by SetUsageFunc for this command
+   * or a parent, or it returns a default usage function.
+   */
+  usageFunc(): (_arg0: Command) => void
+ }
+ interface Command {
+  /**
+   * Usage puts out the usage for the command.
+   * Used when a user provides invalid input.
+   * Can be defined by user by overriding UsageFunc.
+   */
+  usage(): void
+ }
+ interface Command {
+  /**
+   * HelpFunc returns either the function set by SetHelpFunc for this command
+   * or a parent, or it returns a function with default help behavior.
+   */
+  helpFunc(): (_arg0: Command, _arg1: Array<string>) => void
+ }
+ interface Command {
+  /**
+   * Help puts out the help for the command.
+   * Used when a user calls help [command].
+   * Can be defined by user by overriding HelpFunc.
+   */
+  help(): void
+ }
+ interface Command {
+  /**
+   * UsageString returns usage string.
+   */
+  usageString(): string
+ }
+ interface Command {
+  /**
+   * FlagErrorFunc returns either the function set by SetFlagErrorFunc for this
+   * command or a parent, or it returns a function which returns the original
+   * error.
+   */
+  flagErrorFunc(): (_arg0: Command, _arg1: Error) => void
+ }
+ interface Command {
+  /**
+   * UsagePadding return padding for the usage.
+   */
+  usagePadding(): number
+ }
+ interface Command {
+  /**
+   * CommandPathPadding return padding for the command path.
+   */
+  commandPathPadding(): number
+ }
+ interface Command {
+  /**
+   * NamePadding returns padding for the name.
+   */
+  namePadding(): number
+ }
+ interface Command {
+  /**
+   * UsageTemplate returns usage template for the command.
+   */
+  usageTemplate(): string
+ }
+ interface Command {
+  /**
+   * HelpTemplate return help template for the command.
+   */
+  helpTemplate(): string
+ }
+ interface Command {
+  /**
+   * VersionTemplate return version template for the command.
+   */
+  versionTemplate(): string
+ }
+ interface Command {
+  /**
+   * Find the target command given the args and command tree
+   * Meant to be run on the highest node. Only searches down.
+   */
+  find(args: Array<string>): [(Command | undefined), Array<string>]
+ }
+ interface Command {
+  /**
+   * Traverse the command tree to find the command, and parse args for
+   * each parent.
+   */
+  traverse(args: Array<string>): [(Command | undefined), Array<string>]
+ }
+ interface Command {
+  /**
+   * SuggestionsFor provides suggestions for the typedName.
+   */
+  suggestionsFor(typedName: string): Array<string>
+ }
+ interface Command {
+  /**
+   * VisitParents visits all parents of the command and invokes fn on each parent.
+   */
+  visitParents(fn: (_arg0: Command) => void): void
+ }
+ interface Command {
+  /**
+   * Root finds root command.
+   */
+  root(): (Command | undefined)
+ }
+ interface Command {
+  /**
+   * ArgsLenAtDash will return the length of c.Flags().Args at the moment
+   * when a -- was found during args parsing.
+   */
+  argsLenAtDash(): number
+ }
+ interface Command {
+  /**
+   * ExecuteContext is the same as Execute(), but sets the ctx on the command.
+   * Retrieve ctx by calling cmd.Context() inside your *Run lifecycle or ValidArgs
+   * functions.
+   */
+  executeContext(ctx: context.Context): void
+ }
+ interface Command {
+  /**
+   * Execute uses the args (os.Args[1:] by default)
+   * and run through the command tree finding appropriate matches
+   * for commands and then corresponding flags.
+   */
+  execute(): void
+ }
+ interface Command {
+  /**
+   * ExecuteContextC is the same as ExecuteC(), but sets the ctx on the command.
+   * Retrieve ctx by calling cmd.Context() inside your *Run lifecycle or ValidArgs
+   * functions.
+   */
+  executeContextC(ctx: context.Context): (Command | undefined)
+ }
+ interface Command {
+  /**
+   * ExecuteC executes the command.
+   */
+  executeC(): (Command | undefined)
+ }
+ interface Command {
+  validateArgs(args: Array<string>): void
+ }
+ interface Command {
+  /**
+   * ValidateRequiredFlags validates all required flags are present and returns an error otherwise
+   */
+  validateRequiredFlags(): void
+ }
+ interface Command {
+  /**
+   * InitDefaultHelpFlag adds default help flag to c.
+   * It is called automatically by executing the c or by calling help and usage.
+   * If c already has help flag, it will do nothing.
+   */
+  initDefaultHelpFlag(): void
+ }
+ interface Command {
+  /**
+   * InitDefaultVersionFlag adds default version flag to c.
+   * It is called automatically by executing the c.
+   * If c already has a version flag, it will do nothing.
+   * If c.Version is empty, it will do nothing.
+   */
+  initDefaultVersionFlag(): void
+ }
+ interface Command {
+  /**
+   * InitDefaultHelpCmd adds default help command to c.
+   * It is called automatically by executing the c or by calling help and usage.
+   * If c already has help command or c has no subcommands, it will do nothing.
+   */
+  initDefaultHelpCmd(): void
+ }
+ interface Command {
+  /**
+   * ResetCommands delete parent, subcommand and help command from c.
+   */
+  resetCommands(): void
+ }
+ interface Command {
+  /**
+   * Commands returns a sorted slice of child commands.
+   */
+  commands(): Array<(Command | undefined)>
+ }
+ interface Command {
+  /**
+   * AddCommand adds one or more commands to this parent command.
+   */
+  addCommand(...cmds: (Command | undefined)[]): void
+ }
+ interface Command {
+  /**
+   * Groups returns a slice of child command groups.
+   */
+  groups(): Array<(Group | undefined)>
+ }
+ interface Command {
+  /**
+   * AllChildCommandsHaveGroup returns if all subcommands are assigned to a group
+   */
+  allChildCommandsHaveGroup(): boolean
+ }
+ interface Command {
+  /**
+   * ContainsGroup return if groupID exists in the list of command groups.
+   */
+  containsGroup(groupID: string): boolean
+ }
+ interface Command {
+  /**
+   * AddGroup adds one or more command groups to this parent command.
+   */
+  addGroup(...groups: (Group | undefined)[]): void
+ }
+ interface Command {
+  /**
+   * RemoveCommand removes one or more commands from a parent command.
+   */
+  removeCommand(...cmds: (Command | undefined)[]): void
+ }
+ interface Command {
+  /**
+   * Print is a convenience method to Print to the defined output, fallback to Stderr if not set.
+   */
+  print(...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * Println is a convenience method to Println to the defined output, fallback to Stderr if not set.
+   */
+  println(...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * Printf is a convenience method to Printf to the defined output, fallback to Stderr if not set.
+   */
+  printf(format: string, ...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * PrintErr is a convenience method to Print to the defined Err output, fallback to Stderr if not set.
+   */
+  printErr(...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * PrintErrln is a convenience method to Println to the defined Err output, fallback to Stderr if not set.
+   */
+  printErrln(...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * PrintErrf is a convenience method to Printf to the defined Err output, fallback to Stderr if not set.
+   */
+  printErrf(format: string, ...i: {
+   }[]): void
+ }
+ interface Command {
+  /**
+   * CommandPath returns the full path to this command.
+   */
+  commandPath(): string
+ }
+ interface Command {
+  /**
+   * UseLine puts out the full usage for a given command (including parents).
+   */
+  useLine(): string
+ }
+ interface Command {
+  /**
+   * DebugFlags used to determine which flags have been assigned to which commands
+   * and which persist.
+   */
+  debugFlags(): void
+ }
+ interface Command {
+  /**
+   * Name returns the command's name: the first word in the use line.
+   */
+  name(): string
+ }
+ interface Command {
+  /**
+   * HasAlias determines if a given string is an alias of the command.
+   */
+  hasAlias(s: string): boolean
+ }
+ interface Command {
+  /**
+   * CalledAs returns the command name or alias that was used to invoke
+   * this command or an empty string if the command has not been called.
+   */
+  calledAs(): string
+ }
+ interface Command {
+  /**
+   * NameAndAliases returns a list of the command name and all aliases
+   */
+  nameAndAliases(): string
+ }
+ interface Command {
+  /**
+   * HasExample determines if the command has example.
+   */
+  hasExample(): boolean
+ }
+ interface Command {
+  /**
+   * Runnable determines if the command is itself runnable.
+   */
+  runnable(): boolean
+ }
+ interface Command {
+  /**
+   * HasSubCommands determines if the command has children commands.
+   */
+  hasSubCommands(): boolean
+ }
+ interface Command {
+  /**
+   * IsAvailableCommand determines if a command is available as a non-help command
+   * (this includes all non deprecated/hidden commands).
+   */
+  isAvailableCommand(): boolean
+ }
+ interface Command {
+  /**
+   * IsAdditionalHelpTopicCommand determines if a command is an additional
+   * help topic command; additional help topic command is determined by the
+   * fact that it is NOT runnable/hidden/deprecated, and has no sub commands that
+   * are runnable/hidden/deprecated.
+   * Concrete example: https://github.com/spf13/cobra/issues/393#issuecomment-282741924.
+   */
+  isAdditionalHelpTopicCommand(): boolean
+ }
+ interface Command {
+  /**
+   * HasHelpSubCommands determines if a command has any available 'help' sub commands
+   * that need to be shown in the usage/help default template under 'additional help
+   * topics'.
+   */
+  hasHelpSubCommands(): boolean
+ }
+ interface Command {
+  /**
+   * HasAvailableSubCommands determines if a command has available sub commands that
+   * need to be shown in the usage/help default template under 'available commands'.
+   */
+  hasAvailableSubCommands(): boolean
+ }
+ interface Command {
+  /**
+   * HasParent determines if the command is a child command.
+   */
+  hasParent(): boolean
+ }
+ interface Command {
+  /**
+   * GlobalNormalizationFunc returns the global normalization function or nil if it doesn't exist.
+   */
+  globalNormalizationFunc(): (f: flag.FlagSet, name: string) => flag.NormalizedName
+ }
+ interface Command {
+  /**
+   * Flags returns the complete FlagSet that applies
+   * to this command (local and persistent declared here and by all parents).
+   */
+  flags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * LocalNonPersistentFlags are flags specific to this command which will NOT persist to subcommands.
+   */
+  localNonPersistentFlags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * LocalFlags returns the local FlagSet specifically set in the current command.
+   */
+  localFlags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * InheritedFlags returns all flags which were inherited from parent commands.
+   */
+  inheritedFlags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * NonInheritedFlags returns all flags which were not inherited from parent commands.
+   */
+  nonInheritedFlags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * PersistentFlags returns the persistent FlagSet specifically set in the current command.
+   */
+  persistentFlags(): (flag.FlagSet | undefined)
+ }
+ interface Command {
+  /**
+   * ResetFlags deletes all flags from command.
+   */
+  resetFlags(): void
+ }
+ interface Command {
+  /**
+   * HasFlags checks if the command contains any flags (local plus persistent from the entire structure).
+   */
+  hasFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasPersistentFlags checks if the command contains persistent flags.
+   */
+  hasPersistentFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasLocalFlags checks if the command has flags specifically declared locally.
+   */
+  hasLocalFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasInheritedFlags checks if the command has flags inherited from its parent command.
+   */
+  hasInheritedFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasAvailableFlags checks if the command contains any flags (local plus persistent from the entire
+   * structure) which are not hidden or deprecated.
+   */
+  hasAvailableFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasAvailablePersistentFlags checks if the command contains persistent flags which are not hidden or deprecated.
+   */
+  hasAvailablePersistentFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasAvailableLocalFlags checks if the command has flags specifically declared locally which are not hidden
+   * or deprecated.
+   */
+  hasAvailableLocalFlags(): boolean
+ }
+ interface Command {
+  /**
+   * HasAvailableInheritedFlags checks if the command has flags inherited from its parent command which are
+   * not hidden or deprecated.
+   */
+  hasAvailableInheritedFlags(): boolean
+ }
+ interface Command {
+  /**
+   * Flag climbs up the command tree looking for matching flag.
+   */
+  flag(name: string): (flag.Flag | undefined)
+ }
+ interface Command {
+  /**
+   * ParseFlags parses persistent flag tree and local flags.
+   */
+  parseFlags(args: Array<string>): void
+ }
+ interface Command {
+  /**
+   * Parent returns a commands parent command.
+   */
+  parent(): (Command | undefined)
+ }
+ interface Command {
+  /**
+   * RegisterFlagCompletionFunc should be called to register a function to provide completion for a flag.
+   */
+  registerFlagCompletionFunc(flagName: string, f: (cmd: Command, args: Array<string>, toComplete: string) => [Array<string>, ShellCompDirective]): void
+ }
+ interface Command {
+  /**
+   * InitDefaultCompletionCmd adds a default 'completion' command to c.
+   * This function will do nothing if any of the following is true:
+   * 1- the feature has been explicitly disabled by the program,
+   * 2- c has no subcommands (to avoid creating one),
+   * 3- c already has a 'completion' command provided by the program.
+   */
+  initDefaultCompletionCmd(): void
+ }
+ interface Command {
+  /**
+   * GenFishCompletion generates fish completion file and writes to the passed writer.
+   */
+  genFishCompletion(w: io.Writer, includeDesc: boolean): void
+ }
+ interface Command {
+  /**
+   * GenFishCompletionFile generates fish completion file.
+   */
+  genFishCompletionFile(filename: string, includeDesc: boolean): void
+ }
+ interface Command {
+  /**
+   * MarkFlagsRequiredTogether marks the given flags with annotations so that Cobra errors
+   * if the command is invoked with a subset (but not all) of the given flags.
+   */
+  markFlagsRequiredTogether(...flagNames: string[]): void
+ }
+ interface Command {
+  /**
+   * MarkFlagsMutuallyExclusive marks the given flags with annotations so that Cobra errors
+   * if the command is invoked with more than one flag from the given set of flags.
+   */
+  markFlagsMutuallyExclusive(...flagNames: string[]): void
+ }
+ interface Command {
+  /**
+   * ValidateFlagGroups validates the mutuallyExclusive/requiredAsGroup logic and returns the
+   * first error encountered.
+   */
+  validateFlagGroups(): void
+ }
+ interface Command {
+  /**
+   * GenPowerShellCompletionFile generates powershell completion file without descriptions.
+   */
+  genPowerShellCompletionFile(filename: string): void
+ }
+ interface Command {
+  /**
+   * GenPowerShellCompletion generates powershell completion file without descriptions
+   * and writes it to the passed writer.
+   */
+  genPowerShellCompletion(w: io.Writer): void
+ }
+ interface Command {
+  /**
+   * GenPowerShellCompletionFileWithDesc generates powershell completion file with descriptions.
+   */
+  genPowerShellCompletionFileWithDesc(filename: string): void
+ }
+ interface Command {
+  /**
+   * GenPowerShellCompletionWithDesc generates powershell completion file with descriptions
+   * and writes it to the passed writer.
+   */
+  genPowerShellCompletionWithDesc(w: io.Writer): void
+ }
+ interface Command {
+  /**
+   * MarkFlagRequired instructs the various shell completion implementations to
+   * prioritize the named flag when performing completion,
+   * and causes your command to report an error if invoked without the flag.
+   */
+  markFlagRequired(name: string): void
+ }
+ interface Command {
+  /**
+   * MarkPersistentFlagRequired instructs the various shell completion implementations to
+   * prioritize the named persistent flag when performing completion,
+   * and causes your command to report an error if invoked without the flag.
+   */
+  markPersistentFlagRequired(name: string): void
+ }
+ interface Command {
+  /**
+   * MarkFlagFilename instructs the various shell completion implementations to
+   * limit completions for the named flag to the specified file extensions.
+   */
+  markFlagFilename(name: string, ...extensions: string[]): void
+ }
+ interface Command {
+  /**
+   * MarkFlagCustom adds the BashCompCustom annotation to the named flag, if it exists.
+   * The bash completion script will call the bash function f for the flag.
+   * 
+   * This will only work for bash completion.
+   * It is recommended to instead use c.RegisterFlagCompletionFunc(...) which allows
+   * to register a Go function which will work across all shells.
+   */
+  markFlagCustom(name: string, f: string): void
+ }
+ interface Command {
+  /**
+   * MarkPersistentFlagFilename instructs the various shell completion
+   * implementations to limit completions for the named persistent flag to the
+   * specified file extensions.
+   */
+  markPersistentFlagFilename(name: string, ...extensions: string[]): void
+ }
+ interface Command {
+  /**
+   * MarkFlagDirname instructs the various shell completion implementations to
+   * limit completions for the named flag to directory names.
+   */
+  markFlagDirname(name: string): void
+ }
+ interface Command {
+  /**
+   * MarkPersistentFlagDirname instructs the various shell completion
+   * implementations to limit completions for the named persistent flag to
+   * directory names.
+   */
+  markPersistentFlagDirname(name: string): void
+ }
+ interface Command {
+  /**
+   * GenZshCompletionFile generates zsh completion file including descriptions.
+   */
+  genZshCompletionFile(filename: string): void
+ }
+ interface Command {
+  /**
+   * GenZshCompletion generates zsh completion file including descriptions
+   * and writes it to the passed writer.
+   */
+  genZshCompletion(w: io.Writer): void
+ }
+ interface Command {
+  /**
+   * GenZshCompletionFileNoDesc generates zsh completion file without descriptions.
+   */
+  genZshCompletionFileNoDesc(filename: string): void
+ }
+ interface Command {
+  /**
+   * GenZshCompletionNoDesc generates zsh completion file without descriptions
+   * and writes it to the passed writer.
+   */
+  genZshCompletionNoDesc(w: io.Writer): void
+ }
+ interface Command {
+  /**
+   * MarkZshCompPositionalArgumentFile only worked for zsh and its behavior was
+   * not consistent with Bash completion. It has therefore been disabled.
+   * Instead, when no other completion is specified, file completion is done by
+   * default for every argument. One can disable file completion on a per-argument
+   * basis by using ValidArgsFunction and ShellCompDirectiveNoFileComp.
+   * To achieve file extension filtering, one can use ValidArgsFunction and
+   * ShellCompDirectiveFilterFileExt.
+   * 
+   * Deprecated
+   */
+  markZshCompPositionalArgumentFile(argPosition: number, ...patterns: string[]): void
+ }
+ interface Command {
+  /**
+   * MarkZshCompPositionalArgumentWords only worked for zsh. It has therefore
+   * been disabled.
+   * To achieve the same behavior across all shells, one can use
+   * ValidArgs (for the first argument only) or ValidArgsFunction for
+   * any argument (can include the first one also).
+   * 
+   * Deprecated
+   */
+  markZshCompPositionalArgumentWords(argPosition: number, ...words: string[]): void
+ }
+}
+
 /**
  * Package core is the backbone of PocketBase.
  * 
  * It defines the main PocketBase App interface and its base implementation.
  */
 namespace core {
- /**
-  * App defines the main PocketBase app interface.
-  */
  interface App {
   /**
    * Deprecated:
@@ -11881,7 +12113,7 @@ namespace core {
    */
   resetBootstrapState(): void
   /**
-   * CreateBackup creates a new backup of the current app pb_data directory.
+   * CreateBackup creates a new backup of the current app .data directory.
    * 
    * Backups can be stored on S3 if it is configured in app.Settings().Backups.
    * 
@@ -11894,7 +12126,7 @@ namespace core {
    * the current running application process.
    * 
    * The safely perform the restore it is recommended to have free disk space
-   * for at least 2x the size of the restored pb_data backup.
+   * for at least 2x the size of the restored .data backup.
    * 
    * Please refer to the godoc of the specific core.App implementation
    * for details on the restore procedures.
@@ -12641,1070 +12873,20 @@ namespace core {
  }
 }
 
-namespace migrate {
- /**
-  * MigrationsList defines a list with migration definitions
-  */
- interface MigrationsList {
- }
- interface MigrationsList {
-  /**
-   * Item returns a single migration from the list by its index.
-   */
-  item(index: number): (Migration | undefined)
- }
- interface MigrationsList {
-  /**
-   * Items returns the internal migrations list slice.
-   */
-  items(): Array<(Migration | undefined)>
- }
- interface MigrationsList {
-  /**
-   * Register adds new migration definition to the list.
-   * 
-   * If `optFilename` is not provided, it will try to get the name from its .go file.
-   * 
-   * The list will be sorted automatically based on the migrations file name.
-   */
-  register(up: (db: dbx.Builder) => void, down: (db: dbx.Builder) => void, ...optFilename: string[]): void
- }
-}
-
 /**
- * Package cobra is a commander providing a simple interface to create powerful modern CLI interfaces.
- * In addition to providing an interface, Cobra simultaneously provides a controller to organize your application code.
+ * Package io provides basic interfaces to I/O primitives.
+ * Its primary job is to wrap existing implementations of such primitives,
+ * such as those in package os, into shared public interfaces that
+ * abstract the functionality, plus some other related primitives.
+ * 
+ * Because these interfaces and primitives wrap lower-level operations with
+ * various implementations, unless otherwise informed clients should not
+ * assume they are safe for parallel execution.
  */
-namespace cobra {
- interface Command {
-  /**
-   * GenBashCompletion generates bash completion file and writes to the passed writer.
-   */
-  genBashCompletion(w: io.Writer): void
+namespace io {
+ interface ReadCloser {
  }
- interface Command {
-  /**
-   * GenBashCompletionFile generates bash completion file.
-   */
-  genBashCompletionFile(filename: string): void
- }
- interface Command {
-  /**
-   * GenBashCompletionFileV2 generates Bash completion version 2.
-   */
-  genBashCompletionFileV2(filename: string, includeDesc: boolean): void
- }
- interface Command {
-  /**
-   * GenBashCompletionV2 generates Bash completion file version 2
-   * and writes it to the passed writer.
-   */
-  genBashCompletionV2(w: io.Writer, includeDesc: boolean): void
- }
- // @ts-ignore
- import flag = pflag
- /**
-  * Command is just that, a command for your application.
-  * E.g.  'go run ...' - 'run' is the command. Cobra requires
-  * you to define the usage and description as part of your command
-  * definition to ensure usability.
-  */
- interface Command {
-  /**
-   * Use is the one-line usage message.
-   * Recommended syntax is as follows:
-   * ```
-   *   [ ] identifies an optional argument. Arguments that are not enclosed in brackets are required.
-   *   ... indicates that you can specify multiple values for the previous argument.
-   *   |   indicates mutually exclusive information. You can use the argument to the left of the separator or the
-   *       argument to the right of the separator. You cannot use both arguments in a single use of the command.
-   *   { } delimits a set of mutually exclusive arguments when one of the arguments is required. If the arguments are
-   *       optional, they are enclosed in brackets ([ ]).
-   * ```
-   * Example: add [-F file | -D dir]... [-f format] profile
-   */
-  use: string
-  /**
-   * Aliases is an array of aliases that can be used instead of the first word in Use.
-   */
-  aliases: Array<string>
-  /**
-   * SuggestFor is an array of command names for which this command will be suggested -
-   * similar to aliases but only suggests.
-   */
-  suggestFor: Array<string>
-  /**
-   * Short is the short description shown in the 'help' output.
-   */
-  short: string
-  /**
-   * The group id under which this subcommand is grouped in the 'help' output of its parent.
-   */
-  groupID: string
-  /**
-   * Long is the long message shown in the 'help <this-command>' output.
-   */
-  long: string
-  /**
-   * Example is examples of how to use the command.
-   */
-  example: string
-  /**
-   * ValidArgs is list of all valid non-flag arguments that are accepted in shell completions
-   */
-  validArgs: Array<string>
-  /**
-   * ValidArgsFunction is an optional function that provides valid non-flag arguments for shell completion.
-   * It is a dynamic version of using ValidArgs.
-   * Only one of ValidArgs and ValidArgsFunction can be used for a command.
-   */
-  validArgsFunction: (cmd: Command, args: Array<string>, toComplete: string) => [Array<string>, ShellCompDirective]
-  /**
-   * Expected arguments
-   */
-  args: PositionalArgs
-  /**
-   * ArgAliases is List of aliases for ValidArgs.
-   * These are not suggested to the user in the shell completion,
-   * but accepted if entered manually.
-   */
-  argAliases: Array<string>
-  /**
-   * BashCompletionFunction is custom bash functions used by the legacy bash autocompletion generator.
-   * For portability with other shells, it is recommended to instead use ValidArgsFunction
-   */
-  bashCompletionFunction: string
-  /**
-   * Deprecated defines, if this command is deprecated and should print this string when used.
-   */
-  deprecated: string
-  /**
-   * Annotations are key/value pairs that can be used by applications to identify or
-   * group commands.
-   */
-  annotations: _TygojaDict
-  /**
-   * Version defines the version for this command. If this value is non-empty and the command does not
-   * define a "version" flag, a "version" boolean flag will be added to the command and, if specified,
-   * will print content of the "Version" variable. A shorthand "v" flag will also be added if the
-   * command does not define one.
-   */
-  version: string
-  /**
-   * The *Run functions are executed in the following order:
-   * ```
-   *   * PersistentPreRun()
-   *   * PreRun()
-   *   * Run()
-   *   * PostRun()
-   *   * PersistentPostRun()
-   * ```
-   * All functions get the same args, the arguments after the command name.
-   * 
-   * PersistentPreRun: children of this command will inherit and execute.
-   */
-  persistentPreRun: (cmd: Command, args: Array<string>) => void
-  /**
-   * PersistentPreRunE: PersistentPreRun but returns an error.
-   */
-  persistentPreRunE: (cmd: Command, args: Array<string>) => void
-  /**
-   * PreRun: children of this command will not inherit.
-   */
-  preRun: (cmd: Command, args: Array<string>) => void
-  /**
-   * PreRunE: PreRun but returns an error.
-   */
-  preRunE: (cmd: Command, args: Array<string>) => void
-  /**
-   * Run: Typically the actual work function. Most commands will only implement this.
-   */
-  run: (cmd: Command, args: Array<string>) => void
-  /**
-   * RunE: Run but returns an error.
-   */
-  runE: (cmd: Command, args: Array<string>) => void
-  /**
-   * PostRun: run after the Run command.
-   */
-  postRun: (cmd: Command, args: Array<string>) => void
-  /**
-   * PostRunE: PostRun but returns an error.
-   */
-  postRunE: (cmd: Command, args: Array<string>) => void
-  /**
-   * PersistentPostRun: children of this command will inherit and execute after PostRun.
-   */
-  persistentPostRun: (cmd: Command, args: Array<string>) => void
-  /**
-   * PersistentPostRunE: PersistentPostRun but returns an error.
-   */
-  persistentPostRunE: (cmd: Command, args: Array<string>) => void
-  /**
-   * FParseErrWhitelist flag parse errors to be ignored
-   */
-  fParseErrWhitelist: FParseErrWhitelist
-  /**
-   * CompletionOptions is a set of options to control the handling of shell completion
-   */
-  completionOptions: CompletionOptions
-  /**
-   * TraverseChildren parses flags on all parents before executing child command.
-   */
-  traverseChildren: boolean
-  /**
-   * Hidden defines, if this command is hidden and should NOT show up in the list of available commands.
-   */
-  hidden: boolean
-  /**
-   * SilenceErrors is an option to quiet errors down stream.
-   */
-  silenceErrors: boolean
-  /**
-   * SilenceUsage is an option to silence usage when an error occurs.
-   */
-  silenceUsage: boolean
-  /**
-   * DisableFlagParsing disables the flag parsing.
-   * If this is true all flags will be passed to the command as arguments.
-   */
-  disableFlagParsing: boolean
-  /**
-   * DisableAutoGenTag defines, if gen tag ("Auto generated by spf13/cobra...")
-   * will be printed by generating docs for this command.
-   */
-  disableAutoGenTag: boolean
-  /**
-   * DisableFlagsInUseLine will disable the addition of [flags] to the usage
-   * line of a command when printing help or generating docs
-   */
-  disableFlagsInUseLine: boolean
-  /**
-   * DisableSuggestions disables the suggestions based on Levenshtein distance
-   * that go along with 'unknown command' messages.
-   */
-  disableSuggestions: boolean
-  /**
-   * SuggestionsMinimumDistance defines minimum levenshtein distance to display suggestions.
-   * Must be > 0.
-   */
-  suggestionsMinimumDistance: number
- }
- interface Command {
-  /**
-   * Context returns underlying command context. If command was executed
-   * with ExecuteContext or the context was set with SetContext, the
-   * previously set context will be returned. Otherwise, nil is returned.
-   * 
-   * Notice that a call to Execute and ExecuteC will replace a nil context of
-   * a command with a context.Background, so a background context will be
-   * returned by Context after one of these functions has been called.
-   */
-  context(): context.Context
- }
- interface Command {
-  /**
-   * SetContext sets context for the command. This context will be overwritten by
-   * Command.ExecuteContext or Command.ExecuteContextC.
-   */
-  setContext(ctx: context.Context): void
- }
- interface Command {
-  /**
-   * SetArgs sets arguments for the command. It is set to os.Args[1:] by default, if desired, can be overridden
-   * particularly useful when testing.
-   */
-  setArgs(a: Array<string>): void
- }
- interface Command {
-  /**
-   * SetOutput sets the destination for usage and error messages.
-   * If output is nil, os.Stderr is used.
-   * Deprecated: Use SetOut and/or SetErr instead
-   */
-  setOutput(output: io.Writer): void
- }
- interface Command {
-  /**
-   * SetOut sets the destination for usage messages.
-   * If newOut is nil, os.Stdout is used.
-   */
-  setOut(newOut: io.Writer): void
- }
- interface Command {
-  /**
-   * SetErr sets the destination for error messages.
-   * If newErr is nil, os.Stderr is used.
-   */
-  setErr(newErr: io.Writer): void
- }
- interface Command {
-  /**
-   * SetIn sets the source for input data
-   * If newIn is nil, os.Stdin is used.
-   */
-  setIn(newIn: io.Reader): void
- }
- interface Command {
-  /**
-   * SetUsageFunc sets usage function. Usage can be defined by application.
-   */
-  setUsageFunc(f: (_arg0: Command) => void): void
- }
- interface Command {
-  /**
-   * SetUsageTemplate sets usage template. Can be defined by Application.
-   */
-  setUsageTemplate(s: string): void
- }
- interface Command {
-  /**
-   * SetFlagErrorFunc sets a function to generate an error when flag parsing
-   * fails.
-   */
-  setFlagErrorFunc(f: (_arg0: Command, _arg1: Error) => void): void
- }
- interface Command {
-  /**
-   * SetHelpFunc sets help function. Can be defined by Application.
-   */
-  setHelpFunc(f: (_arg0: Command, _arg1: Array<string>) => void): void
- }
- interface Command {
-  /**
-   * SetHelpCommand sets help command.
-   */
-  setHelpCommand(cmd: Command): void
- }
- interface Command {
-  /**
-   * SetHelpCommandGroupID sets the group id of the help command.
-   */
-  setHelpCommandGroupID(groupID: string): void
- }
- interface Command {
-  /**
-   * SetCompletionCommandGroupID sets the group id of the completion command.
-   */
-  setCompletionCommandGroupID(groupID: string): void
- }
- interface Command {
-  /**
-   * SetHelpTemplate sets help template to be used. Application can use it to set custom template.
-   */
-  setHelpTemplate(s: string): void
- }
- interface Command {
-  /**
-   * SetVersionTemplate sets version template to be used. Application can use it to set custom template.
-   */
-  setVersionTemplate(s: string): void
- }
- interface Command {
-  /**
-   * SetGlobalNormalizationFunc sets a normalization function to all flag sets and also to child commands.
-   * The user should not have a cyclic dependency on commands.
-   */
-  setGlobalNormalizationFunc(n: (f: any, name: string) => any): void
- }
- interface Command {
-  /**
-   * OutOrStdout returns output to stdout.
-   */
-  outOrStdout(): io.Writer
- }
- interface Command {
-  /**
-   * OutOrStderr returns output to stderr
-   */
-  outOrStderr(): io.Writer
- }
- interface Command {
-  /**
-   * ErrOrStderr returns output to stderr
-   */
-  errOrStderr(): io.Writer
- }
- interface Command {
-  /**
-   * InOrStdin returns input to stdin
-   */
-  inOrStdin(): io.Reader
- }
- interface Command {
-  /**
-   * UsageFunc returns either the function set by SetUsageFunc for this command
-   * or a parent, or it returns a default usage function.
-   */
-  usageFunc(): (_arg0: Command) => void
- }
- interface Command {
-  /**
-   * Usage puts out the usage for the command.
-   * Used when a user provides invalid input.
-   * Can be defined by user by overriding UsageFunc.
-   */
-  usage(): void
- }
- interface Command {
-  /**
-   * HelpFunc returns either the function set by SetHelpFunc for this command
-   * or a parent, or it returns a function with default help behavior.
-   */
-  helpFunc(): (_arg0: Command, _arg1: Array<string>) => void
- }
- interface Command {
-  /**
-   * Help puts out the help for the command.
-   * Used when a user calls help [command].
-   * Can be defined by user by overriding HelpFunc.
-   */
-  help(): void
- }
- interface Command {
-  /**
-   * UsageString returns usage string.
-   */
-  usageString(): string
- }
- interface Command {
-  /**
-   * FlagErrorFunc returns either the function set by SetFlagErrorFunc for this
-   * command or a parent, or it returns a function which returns the original
-   * error.
-   */
-  flagErrorFunc(): (_arg0: Command, _arg1: Error) => void
- }
- interface Command {
-  /**
-   * UsagePadding return padding for the usage.
-   */
-  usagePadding(): number
- }
- interface Command {
-  /**
-   * CommandPathPadding return padding for the command path.
-   */
-  commandPathPadding(): number
- }
- interface Command {
-  /**
-   * NamePadding returns padding for the name.
-   */
-  namePadding(): number
- }
- interface Command {
-  /**
-   * UsageTemplate returns usage template for the command.
-   */
-  usageTemplate(): string
- }
- interface Command {
-  /**
-   * HelpTemplate return help template for the command.
-   */
-  helpTemplate(): string
- }
- interface Command {
-  /**
-   * VersionTemplate return version template for the command.
-   */
-  versionTemplate(): string
- }
- interface Command {
-  /**
-   * Find the target command given the args and command tree
-   * Meant to be run on the highest node. Only searches down.
-   */
-  find(args: Array<string>): [(Command | undefined), Array<string>]
- }
- interface Command {
-  /**
-   * Traverse the command tree to find the command, and parse args for
-   * each parent.
-   */
-  traverse(args: Array<string>): [(Command | undefined), Array<string>]
- }
- interface Command {
-  /**
-   * SuggestionsFor provides suggestions for the typedName.
-   */
-  suggestionsFor(typedName: string): Array<string>
- }
- interface Command {
-  /**
-   * VisitParents visits all parents of the command and invokes fn on each parent.
-   */
-  visitParents(fn: (_arg0: Command) => void): void
- }
- interface Command {
-  /**
-   * Root finds root command.
-   */
-  root(): (Command | undefined)
- }
- interface Command {
-  /**
-   * ArgsLenAtDash will return the length of c.Flags().Args at the moment
-   * when a -- was found during args parsing.
-   */
-  argsLenAtDash(): number
- }
- interface Command {
-  /**
-   * ExecuteContext is the same as Execute(), but sets the ctx on the command.
-   * Retrieve ctx by calling cmd.Context() inside your *Run lifecycle or ValidArgs
-   * functions.
-   */
-  executeContext(ctx: context.Context): void
- }
- interface Command {
-  /**
-   * Execute uses the args (os.Args[1:] by default)
-   * and run through the command tree finding appropriate matches
-   * for commands and then corresponding flags.
-   */
-  execute(): void
- }
- interface Command {
-  /**
-   * ExecuteContextC is the same as ExecuteC(), but sets the ctx on the command.
-   * Retrieve ctx by calling cmd.Context() inside your *Run lifecycle or ValidArgs
-   * functions.
-   */
-  executeContextC(ctx: context.Context): (Command | undefined)
- }
- interface Command {
-  /**
-   * ExecuteC executes the command.
-   */
-  executeC(): (Command | undefined)
- }
- interface Command {
-  validateArgs(args: Array<string>): void
- }
- interface Command {
-  /**
-   * ValidateRequiredFlags validates all required flags are present and returns an error otherwise
-   */
-  validateRequiredFlags(): void
- }
- interface Command {
-  /**
-   * InitDefaultHelpFlag adds default help flag to c.
-   * It is called automatically by executing the c or by calling help and usage.
-   * If c already has help flag, it will do nothing.
-   */
-  initDefaultHelpFlag(): void
- }
- interface Command {
-  /**
-   * InitDefaultVersionFlag adds default version flag to c.
-   * It is called automatically by executing the c.
-   * If c already has a version flag, it will do nothing.
-   * If c.Version is empty, it will do nothing.
-   */
-  initDefaultVersionFlag(): void
- }
- interface Command {
-  /**
-   * InitDefaultHelpCmd adds default help command to c.
-   * It is called automatically by executing the c or by calling help and usage.
-   * If c already has help command or c has no subcommands, it will do nothing.
-   */
-  initDefaultHelpCmd(): void
- }
- interface Command {
-  /**
-   * ResetCommands delete parent, subcommand and help command from c.
-   */
-  resetCommands(): void
- }
- interface Command {
-  /**
-   * Commands returns a sorted slice of child commands.
-   */
-  commands(): Array<(Command | undefined)>
- }
- interface Command {
-  /**
-   * AddCommand adds one or more commands to this parent command.
-   */
-  addCommand(...cmds: (Command | undefined)[]): void
- }
- interface Command {
-  /**
-   * Groups returns a slice of child command groups.
-   */
-  groups(): Array<(Group | undefined)>
- }
- interface Command {
-  /**
-   * AllChildCommandsHaveGroup returns if all subcommands are assigned to a group
-   */
-  allChildCommandsHaveGroup(): boolean
- }
- interface Command {
-  /**
-   * ContainsGroup return if groupID exists in the list of command groups.
-   */
-  containsGroup(groupID: string): boolean
- }
- interface Command {
-  /**
-   * AddGroup adds one or more command groups to this parent command.
-   */
-  addGroup(...groups: (Group | undefined)[]): void
- }
- interface Command {
-  /**
-   * RemoveCommand removes one or more commands from a parent command.
-   */
-  removeCommand(...cmds: (Command | undefined)[]): void
- }
- interface Command {
-  /**
-   * Print is a convenience method to Print to the defined output, fallback to Stderr if not set.
-   */
-  print(...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * Println is a convenience method to Println to the defined output, fallback to Stderr if not set.
-   */
-  println(...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * Printf is a convenience method to Printf to the defined output, fallback to Stderr if not set.
-   */
-  printf(format: string, ...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * PrintErr is a convenience method to Print to the defined Err output, fallback to Stderr if not set.
-   */
-  printErr(...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * PrintErrln is a convenience method to Println to the defined Err output, fallback to Stderr if not set.
-   */
-  printErrln(...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * PrintErrf is a convenience method to Printf to the defined Err output, fallback to Stderr if not set.
-   */
-  printErrf(format: string, ...i: {
-   }[]): void
- }
- interface Command {
-  /**
-   * CommandPath returns the full path to this command.
-   */
-  commandPath(): string
- }
- interface Command {
-  /**
-   * UseLine puts out the full usage for a given command (including parents).
-   */
-  useLine(): string
- }
- interface Command {
-  /**
-   * DebugFlags used to determine which flags have been assigned to which commands
-   * and which persist.
-   */
-  debugFlags(): void
- }
- interface Command {
-  /**
-   * Name returns the command's name: the first word in the use line.
-   */
-  name(): string
- }
- interface Command {
-  /**
-   * HasAlias determines if a given string is an alias of the command.
-   */
-  hasAlias(s: string): boolean
- }
- interface Command {
-  /**
-   * CalledAs returns the command name or alias that was used to invoke
-   * this command or an empty string if the command has not been called.
-   */
-  calledAs(): string
- }
- interface Command {
-  /**
-   * NameAndAliases returns a list of the command name and all aliases
-   */
-  nameAndAliases(): string
- }
- interface Command {
-  /**
-   * HasExample determines if the command has example.
-   */
-  hasExample(): boolean
- }
- interface Command {
-  /**
-   * Runnable determines if the command is itself runnable.
-   */
-  runnable(): boolean
- }
- interface Command {
-  /**
-   * HasSubCommands determines if the command has children commands.
-   */
-  hasSubCommands(): boolean
- }
- interface Command {
-  /**
-   * IsAvailableCommand determines if a command is available as a non-help command
-   * (this includes all non deprecated/hidden commands).
-   */
-  isAvailableCommand(): boolean
- }
- interface Command {
-  /**
-   * IsAdditionalHelpTopicCommand determines if a command is an additional
-   * help topic command; additional help topic command is determined by the
-   * fact that it is NOT runnable/hidden/deprecated, and has no sub commands that
-   * are runnable/hidden/deprecated.
-   * Concrete example: https://github.com/spf13/cobra/issues/393#issuecomment-282741924.
-   */
-  isAdditionalHelpTopicCommand(): boolean
- }
- interface Command {
-  /**
-   * HasHelpSubCommands determines if a command has any available 'help' sub commands
-   * that need to be shown in the usage/help default template under 'additional help
-   * topics'.
-   */
-  hasHelpSubCommands(): boolean
- }
- interface Command {
-  /**
-   * HasAvailableSubCommands determines if a command has available sub commands that
-   * need to be shown in the usage/help default template under 'available commands'.
-   */
-  hasAvailableSubCommands(): boolean
- }
- interface Command {
-  /**
-   * HasParent determines if the command is a child command.
-   */
-  hasParent(): boolean
- }
- interface Command {
-  /**
-   * GlobalNormalizationFunc returns the global normalization function or nil if it doesn't exist.
-   */
-  globalNormalizationFunc(): (f: any, name: string) => any
- }
- interface Command {
-  /**
-   * Flags returns the complete FlagSet that applies
-   * to this command (local and persistent declared here and by all parents).
-   */
-  flags(): (any | undefined)
- }
- interface Command {
-  /**
-   * LocalNonPersistentFlags are flags specific to this command which will NOT persist to subcommands.
-   */
-  localNonPersistentFlags(): (any | undefined)
- }
- interface Command {
-  /**
-   * LocalFlags returns the local FlagSet specifically set in the current command.
-   */
-  localFlags(): (any | undefined)
- }
- interface Command {
-  /**
-   * InheritedFlags returns all flags which were inherited from parent commands.
-   */
-  inheritedFlags(): (any | undefined)
- }
- interface Command {
-  /**
-   * NonInheritedFlags returns all flags which were not inherited from parent commands.
-   */
-  nonInheritedFlags(): (any | undefined)
- }
- interface Command {
-  /**
-   * PersistentFlags returns the persistent FlagSet specifically set in the current command.
-   */
-  persistentFlags(): (any | undefined)
- }
- interface Command {
-  /**
-   * ResetFlags deletes all flags from command.
-   */
-  resetFlags(): void
- }
- interface Command {
-  /**
-   * HasFlags checks if the command contains any flags (local plus persistent from the entire structure).
-   */
-  hasFlags(): boolean
- }
- interface Command {
-  /**
-   * HasPersistentFlags checks if the command contains persistent flags.
-   */
-  hasPersistentFlags(): boolean
- }
- interface Command {
-  /**
-   * HasLocalFlags checks if the command has flags specifically declared locally.
-   */
-  hasLocalFlags(): boolean
- }
- interface Command {
-  /**
-   * HasInheritedFlags checks if the command has flags inherited from its parent command.
-   */
-  hasInheritedFlags(): boolean
- }
- interface Command {
-  /**
-   * HasAvailableFlags checks if the command contains any flags (local plus persistent from the entire
-   * structure) which are not hidden or deprecated.
-   */
-  hasAvailableFlags(): boolean
- }
- interface Command {
-  /**
-   * HasAvailablePersistentFlags checks if the command contains persistent flags which are not hidden or deprecated.
-   */
-  hasAvailablePersistentFlags(): boolean
- }
- interface Command {
-  /**
-   * HasAvailableLocalFlags checks if the command has flags specifically declared locally which are not hidden
-   * or deprecated.
-   */
-  hasAvailableLocalFlags(): boolean
- }
- interface Command {
-  /**
-   * HasAvailableInheritedFlags checks if the command has flags inherited from its parent command which are
-   * not hidden or deprecated.
-   */
-  hasAvailableInheritedFlags(): boolean
- }
- interface Command {
-  /**
-   * Flag climbs up the command tree looking for matching flag.
-   */
-  flag(name: string): (any | undefined)
- }
- interface Command {
-  /**
-   * ParseFlags parses persistent flag tree and local flags.
-   */
-  parseFlags(args: Array<string>): void
- }
- interface Command {
-  /**
-   * Parent returns a commands parent command.
-   */
-  parent(): (Command | undefined)
- }
- interface Command {
-  /**
-   * RegisterFlagCompletionFunc should be called to register a function to provide completion for a flag.
-   */
-  registerFlagCompletionFunc(flagName: string, f: (cmd: Command, args: Array<string>, toComplete: string) => [Array<string>, ShellCompDirective]): void
- }
- interface Command {
-  /**
-   * InitDefaultCompletionCmd adds a default 'completion' command to c.
-   * This function will do nothing if any of the following is true:
-   * 1- the feature has been explicitly disabled by the program,
-   * 2- c has no subcommands (to avoid creating one),
-   * 3- c already has a 'completion' command provided by the program.
-   */
-  initDefaultCompletionCmd(): void
- }
- interface Command {
-  /**
-   * GenFishCompletion generates fish completion file and writes to the passed writer.
-   */
-  genFishCompletion(w: io.Writer, includeDesc: boolean): void
- }
- interface Command {
-  /**
-   * GenFishCompletionFile generates fish completion file.
-   */
-  genFishCompletionFile(filename: string, includeDesc: boolean): void
- }
- interface Command {
-  /**
-   * MarkFlagsRequiredTogether marks the given flags with annotations so that Cobra errors
-   * if the command is invoked with a subset (but not all) of the given flags.
-   */
-  markFlagsRequiredTogether(...flagNames: string[]): void
- }
- interface Command {
-  /**
-   * MarkFlagsMutuallyExclusive marks the given flags with annotations so that Cobra errors
-   * if the command is invoked with more than one flag from the given set of flags.
-   */
-  markFlagsMutuallyExclusive(...flagNames: string[]): void
- }
- interface Command {
-  /**
-   * ValidateFlagGroups validates the mutuallyExclusive/requiredAsGroup logic and returns the
-   * first error encountered.
-   */
-  validateFlagGroups(): void
- }
- interface Command {
-  /**
-   * GenPowerShellCompletionFile generates powershell completion file without descriptions.
-   */
-  genPowerShellCompletionFile(filename: string): void
- }
- interface Command {
-  /**
-   * GenPowerShellCompletion generates powershell completion file without descriptions
-   * and writes it to the passed writer.
-   */
-  genPowerShellCompletion(w: io.Writer): void
- }
- interface Command {
-  /**
-   * GenPowerShellCompletionFileWithDesc generates powershell completion file with descriptions.
-   */
-  genPowerShellCompletionFileWithDesc(filename: string): void
- }
- interface Command {
-  /**
-   * GenPowerShellCompletionWithDesc generates powershell completion file with descriptions
-   * and writes it to the passed writer.
-   */
-  genPowerShellCompletionWithDesc(w: io.Writer): void
- }
- interface Command {
-  /**
-   * MarkFlagRequired instructs the various shell completion implementations to
-   * prioritize the named flag when performing completion,
-   * and causes your command to report an error if invoked without the flag.
-   */
-  markFlagRequired(name: string): void
- }
- interface Command {
-  /**
-   * MarkPersistentFlagRequired instructs the various shell completion implementations to
-   * prioritize the named persistent flag when performing completion,
-   * and causes your command to report an error if invoked without the flag.
-   */
-  markPersistentFlagRequired(name: string): void
- }
- interface Command {
-  /**
-   * MarkFlagFilename instructs the various shell completion implementations to
-   * limit completions for the named flag to the specified file extensions.
-   */
-  markFlagFilename(name: string, ...extensions: string[]): void
- }
- interface Command {
-  /**
-   * MarkFlagCustom adds the BashCompCustom annotation to the named flag, if it exists.
-   * The bash completion script will call the bash function f for the flag.
-   * 
-   * This will only work for bash completion.
-   * It is recommended to instead use c.RegisterFlagCompletionFunc(...) which allows
-   * to register a Go function which will work across all shells.
-   */
-  markFlagCustom(name: string, f: string): void
- }
- interface Command {
-  /**
-   * MarkPersistentFlagFilename instructs the various shell completion
-   * implementations to limit completions for the named persistent flag to the
-   * specified file extensions.
-   */
-  markPersistentFlagFilename(name: string, ...extensions: string[]): void
- }
- interface Command {
-  /**
-   * MarkFlagDirname instructs the various shell completion implementations to
-   * limit completions for the named flag to directory names.
-   */
-  markFlagDirname(name: string): void
- }
- interface Command {
-  /**
-   * MarkPersistentFlagDirname instructs the various shell completion
-   * implementations to limit completions for the named persistent flag to
-   * directory names.
-   */
-  markPersistentFlagDirname(name: string): void
- }
- interface Command {
-  /**
-   * GenZshCompletionFile generates zsh completion file including descriptions.
-   */
-  genZshCompletionFile(filename: string): void
- }
- interface Command {
-  /**
-   * GenZshCompletion generates zsh completion file including descriptions
-   * and writes it to the passed writer.
-   */
-  genZshCompletion(w: io.Writer): void
- }
- interface Command {
-  /**
-   * GenZshCompletionFileNoDesc generates zsh completion file without descriptions.
-   */
-  genZshCompletionFileNoDesc(filename: string): void
- }
- interface Command {
-  /**
-   * GenZshCompletionNoDesc generates zsh completion file without descriptions
-   * and writes it to the passed writer.
-   */
-  genZshCompletionNoDesc(w: io.Writer): void
- }
- interface Command {
-  /**
-   * MarkZshCompPositionalArgumentFile only worked for zsh and its behavior was
-   * not consistent with Bash completion. It has therefore been disabled.
-   * Instead, when no other completion is specified, file completion is done by
-   * default for every argument. One can disable file completion on a per-argument
-   * basis by using ValidArgsFunction and ShellCompDirectiveNoFileComp.
-   * To achieve file extension filtering, one can use ValidArgsFunction and
-   * ShellCompDirectiveFilterFileExt.
-   * 
-   * Deprecated
-   */
-  markZshCompPositionalArgumentFile(argPosition: number, ...patterns: string[]): void
- }
- interface Command {
-  /**
-   * MarkZshCompPositionalArgumentWords only worked for zsh. It has therefore
-   * been disabled.
-   * To achieve the same behavior across all shells, one can use
-   * ValidArgs (for the first argument only) or ValidArgsFunction for
-   * any argument (can include the first one also).
-   * 
-   * Deprecated
-   */
-  markZshCompPositionalArgumentWords(argPosition: number, ...words: string[]): void
+ interface WriteCloser {
  }
 }
 
@@ -13732,37 +12914,13 @@ namespace cobra {
  * information.
  */
 namespace syscall {
- /**
-  * SysProcIDMap holds Container ID to Host ID mappings used for User Namespaces in Linux.
-  * See user_namespaces(7).
-  */
- interface SysProcIDMap {
-  containerID: number // Container ID.
-  hostID: number // Host ID.
-  size: number // Size.
- }
  // @ts-ignore
  import errorspkg = errors
- /**
-  * Credential holds user and group identities to be assumed
-  * by a child process started by StartProcess.
-  */
  interface Credential {
   uid: number // User ID.
   gid: number // Group ID.
   groups: Array<number> // Supplementary group IDs.
   noSetGroups: boolean // If true, don't set supplementary groups
- }
- /**
-  * A Signal is a number describing a process signal.
-  * It implements the os.Signal interface.
-  */
- interface Signal extends Number{}
- interface Signal {
-  signal(): void
- }
- interface Signal {
-  string(): string
  }
 }
 
@@ -13772,7 +12930,7 @@ namespace syscall {
  * The calendrical calculations always assume a Gregorian calendar, with
  * no leap seconds.
  * 
- * Monotonic Clocks
+ * # Monotonic Clocks
  * 
  * Operating systems provide both a “wall clock,” which is subject to
  * changes for clock synchronization, and a “monotonic clock,” which is
@@ -13813,7 +12971,7 @@ namespace syscall {
  * The canonical way to strip a monotonic clock reading is to use t = t.Round(0).
  * 
  * If Times t and u both contain monotonic clock readings, the operations
- * t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
+ * t.After(u), t.Before(u), t.Equal(u), t.Compare(u), and t.Sub(u) are carried out
  * using the monotonic clock readings alone, ignoring the wall clock
  * readings. If either t or u contains no monotonic clock reading, these
  * operations fall back to using the wall clock readings.
@@ -13831,6 +12989,10 @@ namespace syscall {
  * t.UnmarshalJSON, and t.UnmarshalText always create times with
  * no monotonic clock reading.
  * 
+ * The monotonic clock reading exists only in Time values. It is not
+ * a part of Duration values or the Unix times returned by t.Unix and
+ * friends.
+ * 
  * Note that the Go == operator compares not just the time instant but
  * also the Location and the monotonic clock reading. See the
  * documentation for the Time type for a discussion of equality
@@ -13841,9 +13003,6 @@ namespace syscall {
  * that difference will be visible when printing t.String() and u.String().
  */
 namespace time {
- /**
-  * A Month specifies a month of the year (January = 1, ...).
-  */
  interface Month extends Number{}
  interface Month {
   /**
@@ -13851,9 +13010,6 @@ namespace time {
    */
   string(): string
  }
- /**
-  * A Weekday specifies a day of the week (Sunday = 0, ...).
-  */
  interface Weekday extends Number{}
  interface Weekday {
   /**
@@ -13861,12 +13017,6 @@ namespace time {
    */
   string(): string
  }
- /**
-  * A Location maps time instants to the zone in use at that time.
-  * Typically, the Location represents the collection of time offsets
-  * in use in a geographical area. For many Locations the time offset varies
-  * depending on whether daylight savings time is in use at the time instant.
-  */
  interface Location {
  }
  interface Location {
@@ -13876,6 +13026,14 @@ namespace time {
    */
   string(): string
  }
+}
+
+/**
+ * Package fs defines basic interfaces to a file system.
+ * A file system can be provided by the host operating system
+ * but also by other packages.
+ */
+namespace fs {
 }
 
 /**
@@ -13898,6 +13056,12 @@ namespace time {
  * child and its children until the parent is canceled or the timer
  * fires. The go vet tool checks that CancelFuncs are used on all
  * control-flow paths.
+ * 
+ * The WithCancelCause function returns a CancelCauseFunc, which
+ * takes an error and records it as the cancellation cause. Calling
+ * Cause on the canceled context or any of its children retrieves
+ * the cause. If no cause is specified, Cause(ctx) returns the same
+ * value as ctx.Err().
  * 
  * Programs that use Contexts should follow these rules to keep interfaces
  * consistent across packages and enable static analysis tools to check context
@@ -13929,64 +13093,62 @@ namespace context {
 }
 
 /**
- * Package io provides basic interfaces to I/O primitives.
- * Its primary job is to wrap existing implementations of such primitives,
- * such as those in package os, into shared public interfaces that
- * abstract the functionality, plus some other related primitives.
+ * Package driver defines interfaces to be implemented by database
+ * drivers as used by package sql.
  * 
- * Because these interfaces and primitives wrap lower-level operations with
- * various implementations, unless otherwise informed clients should not
- * assume they are safe for parallel execution.
+ * Most code should use package sql.
+ * 
+ * The driver interface has evolved over time. Drivers should implement
+ * Connector and DriverContext interfaces.
+ * The Connector.Connect and Driver.Open methods should never return ErrBadConn.
+ * ErrBadConn should only be returned from Validator, SessionResetter, or
+ * a query method if the connection is already in an invalid (e.g. closed) state.
+ * 
+ * All Conn implementations should implement the following interfaces:
+ * Pinger, SessionResetter, and Validator.
+ * 
+ * If named parameters or context are supported, the driver's Conn should implement:
+ * ExecerContext, QueryerContext, ConnPrepareContext, and ConnBeginTx.
+ * 
+ * To support custom data types, implement NamedValueChecker. NamedValueChecker
+ * also allows queries to accept per-query options as a parameter by returning
+ * ErrRemoveArgument from CheckNamedValue.
+ * 
+ * If multiple result sets are supported, Rows should implement RowsNextResultSet.
+ * If the driver knows how to describe the types present in the returned result
+ * it should implement the following interfaces: RowsColumnTypeScanType,
+ * RowsColumnTypeDatabaseTypeName, RowsColumnTypeLength, RowsColumnTypeNullable,
+ * and RowsColumnTypePrecisionScale. A given row value may also return a Rows
+ * type, which may represent a database cursor value.
+ * 
+ * Before a connection is returned to the connection pool after use, IsValid is
+ * called if implemented. Before a connection is reused for another query,
+ * ResetSession is called if implemented. If a connection is never returned to the
+ * connection pool but immediately reused, then ResetSession is called prior to
+ * reuse but IsValid is not called.
  */
-namespace io {
- /**
-  * ReadCloser is the interface that groups the basic Read and Close methods.
-  */
- interface ReadCloser {
+namespace driver {
+ interface Value extends _TygojaAny{}
+ interface Driver {
+  /**
+   * Open returns a new connection to the database.
+   * The name is a string in a driver-specific format.
+   * 
+   * Open may return a cached connection (one previously
+   * closed), but doing so is unnecessary; the sql package
+   * maintains a pool of idle connections for efficient re-use.
+   * 
+   * The returned connection is only used by one goroutine at a
+   * time.
+   */
+  open(name: string): Conn
  }
- /**
-  * WriteCloser is the interface that groups the basic Write and Close methods.
-  */
- interface WriteCloser {
- }
-}
-
-/**
- * Package fs defines basic interfaces to a file system.
- * A file system can be provided by the host operating system
- * but also by other packages.
- */
-namespace fs {
 }
 
 /**
  * Package url parses URLs and implements query escaping.
  */
 namespace url {
- /**
-  * A URL represents a parsed URL (technically, a URI reference).
-  * 
-  * The general form represented is:
-  * 
-  * ```
-  * 	[scheme:][//[userinfo@]host][/]path[?query][#fragment]
-  * ```
-  * 
-  * URLs that do not start with a slash after the scheme are interpreted as:
-  * 
-  * ```
-  * 	scheme:opaque[?query][#fragment]
-  * ```
-  * 
-  * Note that the Path field is stored in decoded form: /%47%6f%2f becomes /Go/.
-  * A consequence is that it is impossible to tell which slashes in the Path were
-  * slashes in the raw URL and which were %2f. This distinction is rarely important,
-  * but when it is, the code should use RawPath, an optional field which only gets
-  * set if the default encoding is different from Path.
-  * 
-  * URL's String method uses the EscapedPath method to obtain the path. See the
-  * EscapedPath method for more details.
-  */
  interface URL {
   scheme: string
   opaque: string // encoded opaque data
@@ -13994,6 +13156,7 @@ namespace url {
   host: string // host or host:port
   path: string // path (relative paths may omit leading slash)
   rawPath: string // encoded path hint (see EscapedPath method)
+  omitHost: boolean // do not emit empty host (authority)
   forceQuery: boolean // append a query ('?') even if RawQuery is empty
   rawQuery: string // encoded query values, without '?'
   fragment: string // fragment for references, without '#'
@@ -14043,15 +13206,15 @@ namespace url {
    * 
    * In the second form, the following rules apply:
    * ```
-   * 	- if u.Scheme is empty, scheme: is omitted.
-   * 	- if u.User is nil, userinfo@ is omitted.
-   * 	- if u.Host is empty, host/ is omitted.
-   * 	- if u.Scheme and u.Host are empty and u.User is nil,
-   * 	   the entire scheme://userinfo@host/ is omitted.
-   * 	- if u.Host is non-empty and u.Path begins with a /,
-   * 	   the form host/path does not add its own /.
-   * 	- if u.RawQuery is empty, ?query is omitted.
-   * 	- if u.Fragment is empty, #fragment is omitted.
+   *   - if u.Scheme is empty, scheme: is omitted.
+   *   - if u.User is nil, userinfo@ is omitted.
+   *   - if u.Host is empty, host/ is omitted.
+   *   - if u.Scheme and u.Host are empty and u.User is nil,
+   *     the entire scheme://userinfo@host/ is omitted.
+   *   - if u.Host is non-empty and u.Path begins with a /,
+   *     the form host/path does not add its own /.
+   *   - if u.RawQuery is empty, ?query is omitted.
+   *   - if u.Fragment is empty, #fragment is omitted.
    * ```
    */
   string(): string
@@ -14063,12 +13226,6 @@ namespace url {
    */
   redacted(): string
  }
- /**
-  * Values maps a string key to a list of values.
-  * It is typically used for query parameters and form values.
-  * Unlike in the http.Header map, the keys in a Values map
-  * are case-sensitive.
-  */
  interface Values extends _TygojaDict{}
  interface Values {
   /**
@@ -14107,7 +13264,7 @@ namespace url {
  }
  interface Values {
   /**
-   * Encode encodes the values into ``URL encoded'' form
+   * Encode encodes the values into “URL encoded” form
    * ("bar=baz&foo=quux") sorted by key.
    */
   encode(): string
@@ -14176,6 +13333,14 @@ namespace url {
  interface URL {
   unmarshalBinary(text: string): void
  }
+ interface URL {
+  /**
+   * JoinPath returns a new URL with the provided path elements joined to
+   * any existing path and the resulting path cleaned of any ./ or ../ elements.
+   * Any sequences of multiple / characters will be reduced to a single /.
+   */
+  joinPath(...elem: string[]): (URL | undefined)
+ }
 }
 
 /**
@@ -14216,7 +13381,7 @@ namespace url {
  * 	}
  * ```
  * 
- * Name Resolution
+ * # Name Resolution
  * 
  * The method for resolving domain names, whether indirectly with functions like Dial
  * or directly with functions like LookupHost and LookupAddr, varies by operating system.
@@ -14242,7 +13407,7 @@ namespace url {
  * 
  * ```
  * 	export GODEBUG=netdns=go    # force pure Go resolver
- * 	export GODEBUG=netdns=cgo   # force cgo resolver
+ * 	export GODEBUG=netdns=cgo   # force native resolver (cgo, win32)
  * ```
  * 
  * The decision can also be forced while building the Go source tree
@@ -14255,14 +13420,10 @@ namespace url {
  * 
  * On Plan 9, the resolver always accesses /net/cs and /net/dns.
  * 
- * On Windows, the resolver always uses C library functions, such as GetAddrInfo and DnsQuery.
+ * On Windows, in Go 1.18.x and earlier, the resolver always used C
+ * library functions, such as GetAddrInfo and DnsQuery.
  */
 namespace net {
- /**
-  * Conn is a generic stream-oriented network connection.
-  * 
-  * Multiple goroutines may invoke methods on a Conn simultaneously.
-  */
  interface Conn {
   /**
    * Read reads data from the connection.
@@ -14328,11 +13489,6 @@ namespace net {
    */
   setWriteDeadline(t: time.Time): void
  }
- /**
-  * A Listener is a generic network listener for stream-oriented protocols.
-  * 
-  * Multiple goroutines may invoke methods on a Listener simultaneously.
-  */
  interface Listener {
   /**
    * Accept waits for and returns the next connection to the listener.
@@ -14347,6 +13503,696 @@ namespace net {
    * Addr returns the listener's network address.
    */
   addr(): Addr
+ }
+}
+
+/**
+ * Package sql provides a generic interface around SQL (or SQL-like)
+ * databases.
+ * 
+ * The sql package must be used in conjunction with a database driver.
+ * See https://golang.org/s/sqldrivers for a list of drivers.
+ * 
+ * Drivers that do not support context cancellation will not return until
+ * after the query is completed.
+ * 
+ * For usage examples, see the wiki page at
+ * https://golang.org/s/sqlwiki.
+ */
+namespace sql {
+ interface IsolationLevel extends Number{}
+ interface IsolationLevel {
+  /**
+   * String returns the name of the transaction isolation level.
+   */
+  string(): string
+ }
+ interface DBStats {
+  maxOpenConnections: number // Maximum number of open connections to the database.
+  /**
+   * Pool Status
+   */
+  openConnections: number // The number of established connections both in use and idle.
+  inUse: number // The number of connections currently in use.
+  idle: number // The number of idle connections.
+  /**
+   * Counters
+   */
+  waitCount: number // The total number of connections waited for.
+  waitDuration: time.Duration // The total time blocked waiting for a new connection.
+  maxIdleClosed: number // The total number of connections closed due to SetMaxIdleConns.
+  maxIdleTimeClosed: number // The total number of connections closed due to SetConnMaxIdleTime.
+  maxLifetimeClosed: number // The total number of connections closed due to SetConnMaxLifetime.
+ }
+ interface Conn {
+ }
+ interface Conn {
+  /**
+   * PingContext verifies the connection to the database is still alive.
+   */
+  pingContext(ctx: context.Context): void
+ }
+ interface Conn {
+  /**
+   * ExecContext executes a query without returning any rows.
+   * The args are for any placeholder parameters in the query.
+   */
+  execContext(ctx: context.Context, query: string, ...args: any[]): Result
+ }
+ interface Conn {
+  /**
+   * QueryContext executes a query that returns rows, typically a SELECT.
+   * The args are for any placeholder parameters in the query.
+   */
+  queryContext(ctx: context.Context, query: string, ...args: any[]): (Rows | undefined)
+ }
+ interface Conn {
+  /**
+   * QueryRowContext executes a query that is expected to return at most one row.
+   * QueryRowContext always returns a non-nil value. Errors are deferred until
+   * Row's Scan method is called.
+   * If the query selects no rows, the *Row's Scan will return ErrNoRows.
+   * Otherwise, the *Row's Scan scans the first selected row and discards
+   * the rest.
+   */
+  queryRowContext(ctx: context.Context, query: string, ...args: any[]): (Row | undefined)
+ }
+ interface Conn {
+  /**
+   * PrepareContext creates a prepared statement for later queries or executions.
+   * Multiple queries or executions may be run concurrently from the
+   * returned statement.
+   * The caller must call the statement's Close method
+   * when the statement is no longer needed.
+   * 
+   * The provided context is used for the preparation of the statement, not for the
+   * execution of the statement.
+   */
+  prepareContext(ctx: context.Context, query: string): (Stmt | undefined)
+ }
+ interface Conn {
+  /**
+   * Raw executes f exposing the underlying driver connection for the
+   * duration of f. The driverConn must not be used outside of f.
+   * 
+   * Once f returns and err is not driver.ErrBadConn, the Conn will continue to be usable
+   * until Conn.Close is called.
+   */
+  raw(f: (driverConn: any) => void): void
+ }
+ interface Conn {
+  /**
+   * BeginTx starts a transaction.
+   * 
+   * The provided context is used until the transaction is committed or rolled back.
+   * If the context is canceled, the sql package will roll back
+   * the transaction. Tx.Commit will return an error if the context provided to
+   * BeginTx is canceled.
+   * 
+   * The provided TxOptions is optional and may be nil if defaults should be used.
+   * If a non-default isolation level is used that the driver doesn't support,
+   * an error will be returned.
+   */
+  beginTx(ctx: context.Context, opts: TxOptions): (Tx | undefined)
+ }
+ interface Conn {
+  /**
+   * Close returns the connection to the connection pool.
+   * All operations after a Close will return with ErrConnDone.
+   * Close is safe to call concurrently with other operations and will
+   * block until all other operations finish. It may be useful to first
+   * cancel any used context and then call close directly after.
+   */
+  close(): void
+ }
+ interface ColumnType {
+ }
+ interface ColumnType {
+  /**
+   * Name returns the name or alias of the column.
+   */
+  name(): string
+ }
+ interface ColumnType {
+  /**
+   * Length returns the column type length for variable length column types such
+   * as text and binary field types. If the type length is unbounded the value will
+   * be math.MaxInt64 (any database limits will still apply).
+   * If the column type is not variable length, such as an int, or if not supported
+   * by the driver ok is false.
+   */
+  length(): [number, boolean]
+ }
+ interface ColumnType {
+  /**
+   * DecimalSize returns the scale and precision of a decimal type.
+   * If not applicable or if not supported ok is false.
+   */
+  decimalSize(): [number, boolean]
+ }
+ interface ColumnType {
+  /**
+   * ScanType returns a Go type suitable for scanning into using Rows.Scan.
+   * If a driver does not support this property ScanType will return
+   * the type of an empty interface.
+   */
+  scanType(): reflect.Type
+ }
+ interface ColumnType {
+  /**
+   * Nullable reports whether the column may be null.
+   * If a driver does not support this property ok will be false.
+   */
+  nullable(): boolean
+ }
+ interface ColumnType {
+  /**
+   * DatabaseTypeName returns the database system name of the column type. If an empty
+   * string is returned, then the driver type name is not supported.
+   * Consult your driver documentation for a list of driver data types. Length specifiers
+   * are not included.
+   * Common type names include "VARCHAR", "TEXT", "NVARCHAR", "DECIMAL", "BOOL",
+   * "INT", and "BIGINT".
+   */
+  databaseTypeName(): string
+ }
+ interface Row {
+ }
+ interface Row {
+  /**
+   * Scan copies the columns from the matched row into the values
+   * pointed at by dest. See the documentation on Rows.Scan for details.
+   * If more than one row matches the query,
+   * Scan uses the first row and discards the rest. If no row matches
+   * the query, Scan returns ErrNoRows.
+   */
+  scan(...dest: any[]): void
+ }
+ interface Row {
+  /**
+   * Err provides a way for wrapping packages to check for
+   * query errors without calling Scan.
+   * Err returns the error, if any, that was encountered while running the query.
+   * If this error is not nil, this error will also be returned from Scan.
+   */
+  err(): void
+ }
+}
+
+/**
+ * Package log implements a simple logging package. It defines a type, Logger,
+ * with methods for formatting output. It also has a predefined 'standard'
+ * Logger accessible through helper functions Print[f|ln], Fatal[f|ln], and
+ * Panic[f|ln], which are easier to use than creating a Logger manually.
+ * That logger writes to standard error and prints the date and time
+ * of each logged message.
+ * Every log message is output on a separate line: if the message being
+ * printed does not end in a newline, the logger will add one.
+ * The Fatal functions call os.Exit(1) after writing the log message.
+ * The Panic functions call panic after writing the log message.
+ */
+namespace log {
+ interface Logger {
+ }
+ interface Logger {
+  /**
+   * SetOutput sets the output destination for the logger.
+   */
+  setOutput(w: io.Writer): void
+ }
+ interface Logger {
+  /**
+   * Output writes the output for a logging event. The string s contains
+   * the text to print after the prefix specified by the flags of the
+   * Logger. A newline is appended if the last character of s is not
+   * already a newline. Calldepth is used to recover the PC and is
+   * provided for generality, although at the moment on all pre-defined
+   * paths it will be 2.
+   */
+  output(calldepth: number, s: string): void
+ }
+ interface Logger {
+  /**
+   * Printf calls l.Output to print to the logger.
+   * Arguments are handled in the manner of fmt.Printf.
+   */
+  printf(format: string, ...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Print calls l.Output to print to the logger.
+   * Arguments are handled in the manner of fmt.Print.
+   */
+  print(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Println calls l.Output to print to the logger.
+   * Arguments are handled in the manner of fmt.Println.
+   */
+  println(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Fatal is equivalent to l.Print() followed by a call to os.Exit(1).
+   */
+  fatal(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Fatalf is equivalent to l.Printf() followed by a call to os.Exit(1).
+   */
+  fatalf(format: string, ...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Fatalln is equivalent to l.Println() followed by a call to os.Exit(1).
+   */
+  fatalln(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Panic is equivalent to l.Print() followed by a call to panic().
+   */
+  panic(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Panicf is equivalent to l.Printf() followed by a call to panic().
+   */
+  panicf(format: string, ...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Panicln is equivalent to l.Println() followed by a call to panic().
+   */
+  panicln(...v: any[]): void
+ }
+ interface Logger {
+  /**
+   * Flags returns the output flags for the logger.
+   * The flag bits are Ldate, Ltime, and so on.
+   */
+  flags(): number
+ }
+ interface Logger {
+  /**
+   * SetFlags sets the output flags for the logger.
+   * The flag bits are Ldate, Ltime, and so on.
+   */
+  setFlags(flag: number): void
+ }
+ interface Logger {
+  /**
+   * Prefix returns the output prefix for the logger.
+   */
+  prefix(): string
+ }
+ interface Logger {
+  /**
+   * SetPrefix sets the output prefix for the logger.
+   */
+  setPrefix(prefix: string): void
+ }
+ interface Logger {
+  /**
+   * Writer returns the output destination for the logger.
+   */
+  writer(): io.Writer
+ }
+}
+
+/**
+ * Package tls partially implements TLS 1.2, as specified in RFC 5246,
+ * and TLS 1.3, as specified in RFC 8446.
+ */
+namespace tls {
+ interface ConnectionState {
+  /**
+   * Version is the TLS version used by the connection (e.g. VersionTLS12).
+   */
+  version: number
+  /**
+   * HandshakeComplete is true if the handshake has concluded.
+   */
+  handshakeComplete: boolean
+  /**
+   * DidResume is true if this connection was successfully resumed from a
+   * previous session with a session ticket or similar mechanism.
+   */
+  didResume: boolean
+  /**
+   * CipherSuite is the cipher suite negotiated for the connection (e.g.
+   * TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256, TLS_AES_128_GCM_SHA256).
+   */
+  cipherSuite: number
+  /**
+   * NegotiatedProtocol is the application protocol negotiated with ALPN.
+   */
+  negotiatedProtocol: string
+  /**
+   * NegotiatedProtocolIsMutual used to indicate a mutual NPN negotiation.
+   * 
+   * Deprecated: this value is always true.
+   */
+  negotiatedProtocolIsMutual: boolean
+  /**
+   * ServerName is the value of the Server Name Indication extension sent by
+   * the client. It's available both on the server and on the client side.
+   */
+  serverName: string
+  /**
+   * PeerCertificates are the parsed certificates sent by the peer, in the
+   * order in which they were sent. The first element is the leaf certificate
+   * that the connection is verified against.
+   * 
+   * On the client side, it can't be empty. On the server side, it can be
+   * empty if Config.ClientAuth is not RequireAnyClientCert or
+   * RequireAndVerifyClientCert.
+   * 
+   * PeerCertificates and its contents should not be modified.
+   */
+  peerCertificates: Array<(x509.Certificate | undefined)>
+  /**
+   * VerifiedChains is a list of one or more chains where the first element is
+   * PeerCertificates[0] and the last element is from Config.RootCAs (on the
+   * client side) or Config.ClientCAs (on the server side).
+   * 
+   * On the client side, it's set if Config.InsecureSkipVerify is false. On
+   * the server side, it's set if Config.ClientAuth is VerifyClientCertIfGiven
+   * (and the peer provided a certificate) or RequireAndVerifyClientCert.
+   * 
+   * VerifiedChains and its contents should not be modified.
+   */
+  verifiedChains: Array<Array<(x509.Certificate | undefined)>>
+  /**
+   * SignedCertificateTimestamps is a list of SCTs provided by the peer
+   * through the TLS handshake for the leaf certificate, if any.
+   */
+  signedCertificateTimestamps: Array<string>
+  /**
+   * OCSPResponse is a stapled Online Certificate Status Protocol (OCSP)
+   * response provided by the peer for the leaf certificate, if any.
+   */
+  ocspResponse: string
+  /**
+   * TLSUnique contains the "tls-unique" channel binding value (see RFC 5929,
+   * Section 3). This value will be nil for TLS 1.3 connections and for all
+   * resumed connections.
+   * 
+   * Deprecated: there are conditions in which this value might not be unique
+   * to a connection. See the Security Considerations sections of RFC 5705 and
+   * RFC 7627, and https://mitls.org/pages/attacks/3SHAKE#channelbindings.
+   */
+  tlsUnique: string
+ }
+ interface ConnectionState {
+  /**
+   * ExportKeyingMaterial returns length bytes of exported key material in a new
+   * slice as defined in RFC 5705. If context is nil, it is not used as part of
+   * the seed. If the connection was set to allow renegotiation via
+   * Config.Renegotiation, this function will return an error.
+   */
+  exportKeyingMaterial(label: string, context: string, length: number): string
+ }
+ interface Config {
+  /**
+   * Rand provides the source of entropy for nonces and RSA blinding.
+   * If Rand is nil, TLS uses the cryptographic random reader in package
+   * crypto/rand.
+   * The Reader must be safe for use by multiple goroutines.
+   */
+  rand: io.Reader
+  /**
+   * Time returns the current time as the number of seconds since the epoch.
+   * If Time is nil, TLS uses time.Now.
+   */
+  time: () => time.Time
+  /**
+   * Certificates contains one or more certificate chains to present to the
+   * other side of the connection. The first certificate compatible with the
+   * peer's requirements is selected automatically.
+   * 
+   * Server configurations must set one of Certificates, GetCertificate or
+   * GetConfigForClient. Clients doing client-authentication may set either
+   * Certificates or GetClientCertificate.
+   * 
+   * Note: if there are multiple Certificates, and they don't have the
+   * optional field Leaf set, certificate selection will incur a significant
+   * per-handshake performance cost.
+   */
+  certificates: Array<Certificate>
+  /**
+   * NameToCertificate maps from a certificate name to an element of
+   * Certificates. Note that a certificate name can be of the form
+   * '*.example.com' and so doesn't have to be a domain name as such.
+   * 
+   * Deprecated: NameToCertificate only allows associating a single
+   * certificate with a given name. Leave this field nil to let the library
+   * select the first compatible chain from Certificates.
+   */
+  nameToCertificate: _TygojaDict
+  /**
+   * GetCertificate returns a Certificate based on the given
+   * ClientHelloInfo. It will only be called if the client supplies SNI
+   * information or if Certificates is empty.
+   * 
+   * If GetCertificate is nil or returns nil, then the certificate is
+   * retrieved from NameToCertificate. If NameToCertificate is nil, the
+   * best element of Certificates will be used.
+   * 
+   * Once a Certificate is returned it should not be modified.
+   */
+  getCertificate: (_arg0: ClientHelloInfo) => (Certificate | undefined)
+  /**
+   * GetClientCertificate, if not nil, is called when a server requests a
+   * certificate from a client. If set, the contents of Certificates will
+   * be ignored.
+   * 
+   * If GetClientCertificate returns an error, the handshake will be
+   * aborted and that error will be returned. Otherwise
+   * GetClientCertificate must return a non-nil Certificate. If
+   * Certificate.Certificate is empty then no certificate will be sent to
+   * the server. If this is unacceptable to the server then it may abort
+   * the handshake.
+   * 
+   * GetClientCertificate may be called multiple times for the same
+   * connection if renegotiation occurs or if TLS 1.3 is in use.
+   * 
+   * Once a Certificate is returned it should not be modified.
+   */
+  getClientCertificate: (_arg0: CertificateRequestInfo) => (Certificate | undefined)
+  /**
+   * GetConfigForClient, if not nil, is called after a ClientHello is
+   * received from a client. It may return a non-nil Config in order to
+   * change the Config that will be used to handle this connection. If
+   * the returned Config is nil, the original Config will be used. The
+   * Config returned by this callback may not be subsequently modified.
+   * 
+   * If GetConfigForClient is nil, the Config passed to Server() will be
+   * used for all connections.
+   * 
+   * If SessionTicketKey was explicitly set on the returned Config, or if
+   * SetSessionTicketKeys was called on the returned Config, those keys will
+   * be used. Otherwise, the original Config keys will be used (and possibly
+   * rotated if they are automatically managed).
+   */
+  getConfigForClient: (_arg0: ClientHelloInfo) => (Config | undefined)
+  /**
+   * VerifyPeerCertificate, if not nil, is called after normal
+   * certificate verification by either a TLS client or server. It
+   * receives the raw ASN.1 certificates provided by the peer and also
+   * any verified chains that normal processing found. If it returns a
+   * non-nil error, the handshake is aborted and that error results.
+   * 
+   * If normal verification fails then the handshake will abort before
+   * considering this callback. If normal verification is disabled by
+   * setting InsecureSkipVerify, or (for a server) when ClientAuth is
+   * RequestClientCert or RequireAnyClientCert, then this callback will
+   * be considered but the verifiedChains argument will always be nil.
+   * 
+   * verifiedChains and its contents should not be modified.
+   */
+  verifyPeerCertificate: (rawCerts: Array<string>, verifiedChains: Array<Array<(x509.Certificate | undefined)>>) => void
+  /**
+   * VerifyConnection, if not nil, is called after normal certificate
+   * verification and after VerifyPeerCertificate by either a TLS client
+   * or server. If it returns a non-nil error, the handshake is aborted
+   * and that error results.
+   * 
+   * If normal verification fails then the handshake will abort before
+   * considering this callback. This callback will run for all connections
+   * regardless of InsecureSkipVerify or ClientAuth settings.
+   */
+  verifyConnection: (_arg0: ConnectionState) => void
+  /**
+   * RootCAs defines the set of root certificate authorities
+   * that clients use when verifying server certificates.
+   * If RootCAs is nil, TLS uses the host's root CA set.
+   */
+  rootCAs?: x509.CertPool
+  /**
+   * NextProtos is a list of supported application level protocols, in
+   * order of preference. If both peers support ALPN, the selected
+   * protocol will be one from this list, and the connection will fail
+   * if there is no mutually supported protocol. If NextProtos is empty
+   * or the peer doesn't support ALPN, the connection will succeed and
+   * ConnectionState.NegotiatedProtocol will be empty.
+   */
+  nextProtos: Array<string>
+  /**
+   * ServerName is used to verify the hostname on the returned
+   * certificates unless InsecureSkipVerify is given. It is also included
+   * in the client's handshake to support virtual hosting unless it is
+   * an IP address.
+   */
+  serverName: string
+  /**
+   * ClientAuth determines the server's policy for
+   * TLS Client Authentication. The default is NoClientCert.
+   */
+  clientAuth: ClientAuthType
+  /**
+   * ClientCAs defines the set of root certificate authorities
+   * that servers use if required to verify a client certificate
+   * by the policy in ClientAuth.
+   */
+  clientCAs?: x509.CertPool
+  /**
+   * InsecureSkipVerify controls whether a client verifies the server's
+   * certificate chain and host name. If InsecureSkipVerify is true, crypto/tls
+   * accepts any certificate presented by the server and any host name in that
+   * certificate. In this mode, TLS is susceptible to machine-in-the-middle
+   * attacks unless custom verification is used. This should be used only for
+   * testing or in combination with VerifyConnection or VerifyPeerCertificate.
+   */
+  insecureSkipVerify: boolean
+  /**
+   * CipherSuites is a list of enabled TLS 1.0–1.2 cipher suites. The order of
+   * the list is ignored. Note that TLS 1.3 ciphersuites are not configurable.
+   * 
+   * If CipherSuites is nil, a safe default list is used. The default cipher
+   * suites might change over time.
+   */
+  cipherSuites: Array<number>
+  /**
+   * PreferServerCipherSuites is a legacy field and has no effect.
+   * 
+   * It used to control whether the server would follow the client's or the
+   * server's preference. Servers now select the best mutually supported
+   * cipher suite based on logic that takes into account inferred client
+   * hardware, server hardware, and security.
+   * 
+   * Deprecated: PreferServerCipherSuites is ignored.
+   */
+  preferServerCipherSuites: boolean
+  /**
+   * SessionTicketsDisabled may be set to true to disable session ticket and
+   * PSK (resumption) support. Note that on clients, session ticket support is
+   * also disabled if ClientSessionCache is nil.
+   */
+  sessionTicketsDisabled: boolean
+  /**
+   * SessionTicketKey is used by TLS servers to provide session resumption.
+   * See RFC 5077 and the PSK mode of RFC 8446. If zero, it will be filled
+   * with random data before the first server handshake.
+   * 
+   * Deprecated: if this field is left at zero, session ticket keys will be
+   * automatically rotated every day and dropped after seven days. For
+   * customizing the rotation schedule or synchronizing servers that are
+   * terminating connections for the same host, use SetSessionTicketKeys.
+   */
+  sessionTicketKey: string
+  /**
+   * ClientSessionCache is a cache of ClientSessionState entries for TLS
+   * session resumption. It is only used by clients.
+   */
+  clientSessionCache: ClientSessionCache
+  /**
+   * MinVersion contains the minimum TLS version that is acceptable.
+   * 
+   * By default, TLS 1.2 is currently used as the minimum when acting as a
+   * client, and TLS 1.0 when acting as a server. TLS 1.0 is the minimum
+   * supported by this package, both as a client and as a server.
+   * 
+   * The client-side default can temporarily be reverted to TLS 1.0 by
+   * including the value "x509sha1=1" in the GODEBUG environment variable.
+   * Note that this option will be removed in Go 1.19 (but it will still be
+   * possible to set this field to VersionTLS10 explicitly).
+   */
+  minVersion: number
+  /**
+   * MaxVersion contains the maximum TLS version that is acceptable.
+   * 
+   * By default, the maximum version supported by this package is used,
+   * which is currently TLS 1.3.
+   */
+  maxVersion: number
+  /**
+   * CurvePreferences contains the elliptic curves that will be used in
+   * an ECDHE handshake, in preference order. If empty, the default will
+   * be used. The client will use the first preference as the type for
+   * its key share in TLS 1.3. This may change in the future.
+   */
+  curvePreferences: Array<CurveID>
+  /**
+   * DynamicRecordSizingDisabled disables adaptive sizing of TLS records.
+   * When true, the largest possible TLS record size is always used. When
+   * false, the size of TLS records may be adjusted in an attempt to
+   * improve latency.
+   */
+  dynamicRecordSizingDisabled: boolean
+  /**
+   * Renegotiation controls what types of renegotiation are supported.
+   * The default, none, is correct for the vast majority of applications.
+   */
+  renegotiation: RenegotiationSupport
+  /**
+   * KeyLogWriter optionally specifies a destination for TLS master secrets
+   * in NSS key log format that can be used to allow external programs
+   * such as Wireshark to decrypt TLS connections.
+   * See https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Key_Log_Format.
+   * Use of KeyLogWriter compromises security and should only be
+   * used for debugging.
+   */
+  keyLogWriter: io.Writer
+ }
+ interface Config {
+  /**
+   * Clone returns a shallow clone of c or nil if c is nil. It is safe to clone a Config that is
+   * being used concurrently by a TLS client or server.
+   */
+  clone(): (Config | undefined)
+ }
+ interface Config {
+  /**
+   * SetSessionTicketKeys updates the session ticket keys for a server.
+   * 
+   * The first key will be used when creating new tickets, while all keys can be
+   * used for decrypting tickets. It is safe to call this function while the
+   * server is running in order to rotate the session ticket keys. The function
+   * will panic if keys is empty.
+   * 
+   * Calling this function will turn off automatic session ticket key rotation.
+   * 
+   * If multiple servers are terminating connections for the same host they should
+   * all have the same session ticket keys. If the session ticket keys leaks,
+   * previously recorded and future TLS connections using those keys might be
+   * compromised.
+   */
+  setSessionTicketKeys(keys: Array<string>): void
+ }
+ interface Config {
+  /**
+   * BuildNameToCertificate parses c.Certificates and builds c.NameToCertificate
+   * from the CommonName and SubjectAlternateName fields of each of the leaf
+   * certificates.
+   * 
+   * Deprecated: NameToCertificate only allows associating a single certificate
+   * with a given name. Leave that field nil to let the library select the first
+   * compatible chain from Certificates.
+   */
+  buildNameToCertificate(): void
  }
 }
 
@@ -14373,10 +14219,6 @@ namespace net {
  * with a single network connection.
  */
 namespace textproto {
- /**
-  * A MIMEHeader represents a MIME-style header mapping
-  * keys to sets of values.
-  */
  interface MIMEHeader extends _TygojaDict{}
  interface MIMEHeader {
   /**
@@ -14427,6 +14269,26 @@ namespace textproto {
  * 
  * The implementation is sufficient for HTTP (RFC 2388) and the multipart
  * bodies generated by popular browsers.
+ * 
+ * # Limits
+ * 
+ * To protect against malicious inputs, this package sets limits on the size
+ * of the MIME data it processes.
+ * 
+ * Reader.NextPart and Reader.NextRawPart limit the number of headers in a
+ * part to 10000 and Reader.ReadForm limits the total number of headers in all
+ * FileHeaders to 10000.
+ * These limits may be adjusted with the GODEBUG=multipartmaxheaders=<values>
+ * setting.
+ * 
+ * Reader.ReadForm further limits the number of parts in a form to 1000.
+ * This limit may be adjusted with the GODEBUG=multipartmaxparts=<value>
+ * setting.
+ */
+/**
+ * Copyright 2023 The Go Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style
+ * license that can be found in the LICENSE file.
  */
 namespace multipart {
  interface Reader {
@@ -14441,13 +14303,6 @@ namespace multipart {
    */
   readForm(maxMemory: number): (Form | undefined)
  }
- /**
-  * Form is a parsed multipart form.
-  * Its File parts are stored either in memory or on disk,
-  * and are accessible via the *FileHeader's Open method.
-  * Its Value parts are stored as strings.
-  * Both are keyed by field name.
-  */
  interface Form {
   value: _TygojaDict
   file: _TygojaDict
@@ -14458,18 +14313,8 @@ namespace multipart {
    */
   removeAll(): void
  }
- /**
-  * File is an interface to access the file part of a multipart message.
-  * Its contents may be either stored in memory or on disk.
-  * If stored on disk, the File's underlying concrete type will be an *os.File.
-  */
  interface File {
  }
- /**
-  * Reader is an iterator over parts in a MIME multipart body.
-  * Reader's underlying parser consumes its input as needed. Seeking
-  * isn't supported.
-  */
  interface Reader {
  }
  interface Reader {
@@ -14611,12 +14456,6 @@ namespace multipart {
  * support.
  */
 namespace http {
- /**
-  * A Cookie represents an HTTP cookie as sent in the Set-Cookie header of an
-  * HTTP response or the Cookie header of an HTTP request.
-  * 
-  * See https://tools.ietf.org/html/rfc6265 for details.
-  */
  interface Cookie {
   name: string
   value: string
@@ -14653,12 +14492,6 @@ namespace http {
  }
  // @ts-ignore
  import mathrand = rand
- /**
-  * A Header represents the key-value pairs in an HTTP header.
-  * 
-  * The keys should be in canonical form, as returned by
-  * CanonicalHeaderKey.
-  */
  interface Header extends _TygojaDict{}
  interface Header {
   /**
@@ -14684,7 +14517,8 @@ namespace http {
    * Get gets the first value associated with the given key. If
    * there are no values associated with the key, Get returns "".
    * It is case insensitive; textproto.CanonicalMIMEHeaderKey is
-   * used to canonicalize the provided key. To use non-canonical keys,
+   * used to canonicalize the provided key. Get assumes that all
+   * keys are stored in canonical form. To use non-canonical keys,
    * access the map directly.
    */
   get(key: string): string
@@ -14729,13 +14563,6 @@ namespace http {
  }
  // @ts-ignore
  import urlpkg = url
- /**
-  * Response represents the response from an HTTP request.
-  * 
-  * The Client and Transport return Responses from servers once
-  * the response headers have been received. The response body
-  * is streamed on demand as the Body field is read.
-  */
  interface Response {
   status: string // e.g. "200 OK"
   statusCode: number // e.g. 200
@@ -14831,7 +14658,7 @@ namespace http {
    * The pointer is shared between responses and should not be
    * modified.
    */
-  tls?: any
+  tls?: tls.ConnectionState
  }
  interface Response {
   /**
@@ -14862,53 +14689,25 @@ namespace http {
    * 
    * This method consults the following fields of the response r:
    * 
-   *  StatusCode
-   *  ProtoMajor
-   *  ProtoMinor
-   *  Request.Method
-   *  TransferEncoding
-   *  Trailer
-   *  Body
-   *  ContentLength
-   *  Header, values for non-canonical keys will have unpredictable behavior
+   * ```
+   * 	StatusCode
+   * 	ProtoMajor
+   * 	ProtoMinor
+   * 	Request.Method
+   * 	TransferEncoding
+   * 	Trailer
+   * 	Body
+   * 	ContentLength
+   * 	Header, values for non-canonical keys will have unpredictable behavior
+   * ```
    * 
    * The Response Body is closed after it is sent.
    */
   write(w: io.Writer): void
  }
- /**
-  * A Handler responds to an HTTP request.
-  * 
-  * ServeHTTP should write reply headers and data to the ResponseWriter
-  * and then return. Returning signals that the request is finished; it
-  * is not valid to use the ResponseWriter or read from the
-  * Request.Body after or concurrently with the completion of the
-  * ServeHTTP call.
-  * 
-  * Depending on the HTTP client software, HTTP protocol version, and
-  * any intermediaries between the client and the Go server, it may not
-  * be possible to read from the Request.Body after writing to the
-  * ResponseWriter. Cautious handlers should read the Request.Body
-  * first, and then reply.
-  * 
-  * Except for reading the body, handlers should not modify the
-  * provided Request.
-  * 
-  * If ServeHTTP panics, the server (the caller of ServeHTTP) assumes
-  * that the effect of the panic was isolated to the active request.
-  * It recovers the panic, logs a stack trace to the server error log,
-  * and either closes the network connection or sends an HTTP/2
-  * RST_STREAM, depending on the HTTP protocol. To abort a handler so
-  * the client sees an interrupted response but the server doesn't log
-  * an error, panic with the value ErrAbortHandler.
-  */
  interface Handler {
   serveHTTP(_arg0: ResponseWriter, _arg1: Request): void
  }
- /**
-  * A ConnState represents the state of a client connection to a server.
-  * It's used by the optional Server.ConnState hook.
-  */
  interface ConnState extends Number{}
  interface ConnState {
   string(): string
@@ -14916,9 +14715,6 @@ namespace http {
 }
 
 namespace store {
- /**
-  * Store defines a concurrent safe in memory key-value data store.
-  */
  interface Store<T> {
  }
  interface Store<T> {
@@ -14991,10 +14787,6 @@ namespace store {
  * like datetime, json, etc.
  */
 namespace types {
- /**
-  * DateTime represents a [time.Time] instance in UTC that is wrapped
-  * and serialized using the app default date layout.
-  */
  interface DateTime {
  }
  interface DateTime {
@@ -15034,7 +14826,7 @@ namespace types {
   /**
    * Value implements the [driver.Valuer] interface.
    */
-  value(): any
+  value(): driver.Value
  }
  interface DateTime {
   /**
@@ -15052,20 +14844,12 @@ namespace types {
 namespace schema {
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * SchemaField defines a single schema field structure.
-  */
  interface SchemaField {
   system: boolean
   id: string
   name: string
   type: string
   required: boolean
-  /**
-   * Presentable indicates whether the field is suitable for
-   * visualization purposes (eg. in the Admin UI relation views).
-   */
-  presentable: boolean
   /**
    * Deprecated: This field is no-op and will be removed in future versions.
    * Please use the collection.Indexes field to define a unique constraint.
@@ -15129,314 +14913,9 @@ namespace schema {
 }
 
 /**
- * Package cobra is a commander providing a simple interface to create powerful modern CLI interfaces.
- * In addition to providing an interface, Cobra simultaneously provides a controller to organize your application code.
- */
-namespace cobra {
- interface PositionalArgs {(cmd: Command, args: Array<string>): void }
- // @ts-ignore
- import flag = pflag
- /**
-  * FParseErrWhitelist configures Flag parse errors to be ignored
-  */
- interface FParseErrWhitelist extends _TygojaAny{}
- /**
-  * Group Structure to manage groups for commands
-  */
- interface Group {
-  id: string
-  title: string
- }
- /**
-  * ShellCompDirective is a bit map representing the different behaviors the shell
-  * can be instructed to have once completions have been provided.
-  */
- interface ShellCompDirective extends Number{}
- /**
-  * CompletionOptions are the options to control shell completion
-  */
- interface CompletionOptions {
-  /**
-   * DisableDefaultCmd prevents Cobra from creating a default 'completion' command
-   */
-  disableDefaultCmd: boolean
-  /**
-   * DisableNoDescFlag prevents Cobra from creating the '--no-descriptions' flag
-   * for shells that support completion descriptions
-   */
-  disableNoDescFlag: boolean
-  /**
-   * DisableDescriptions turns off all completion descriptions for shells
-   * that support them
-   */
-  disableDescriptions: boolean
-  /**
-   * HiddenDefaultCmd makes the default 'completion' command hidden
-   */
-  hiddenDefaultCmd: boolean
- }
-}
-
-namespace subscriptions {
- /**
-  * Broker defines a struct for managing subscriptions clients.
-  */
- interface Broker {
- }
- interface Broker {
-  /**
-   * Clients returns a shallow copy of all registered clients indexed
-   * with their connection id.
-   */
-  clients(): _TygojaDict
- }
- interface Broker {
-  /**
-   * ClientById finds a registered client by its id.
-   * 
-   * Returns non-nil error when client with clientId is not registered.
-   */
-  clientById(clientId: string): Client
- }
- interface Broker {
-  /**
-   * Register adds a new client to the broker instance.
-   */
-  register(client: Client): void
- }
- interface Broker {
-  /**
-   * Unregister removes a single client by its id.
-   * 
-   * If client with clientId doesn't exist, this method does nothing.
-   */
-  unregister(clientId: string): void
- }
-}
-
-/**
- * Package sql provides a generic interface around SQL (or SQL-like)
- * databases.
- * 
- * The sql package must be used in conjunction with a database driver.
- * See https://golang.org/s/sqldrivers for a list of drivers.
- * 
- * Drivers that do not support context cancellation will not return until
- * after the query is completed.
- * 
- * For usage examples, see the wiki page at
- * https://golang.org/s/sqlwiki.
- */
-namespace sql {
- /**
-  * IsolationLevel is the transaction isolation level used in TxOptions.
-  */
- interface IsolationLevel extends Number{}
- interface IsolationLevel {
-  /**
-   * String returns the name of the transaction isolation level.
-   */
-  string(): string
- }
- /**
-  * DBStats contains database statistics.
-  */
- interface DBStats {
-  maxOpenConnections: number // Maximum number of open connections to the database.
-  /**
-   * Pool Status
-   */
-  openConnections: number // The number of established connections both in use and idle.
-  inUse: number // The number of connections currently in use.
-  idle: number // The number of idle connections.
-  /**
-   * Counters
-   */
-  waitCount: number // The total number of connections waited for.
-  waitDuration: time.Duration // The total time blocked waiting for a new connection.
-  maxIdleClosed: number // The total number of connections closed due to SetMaxIdleConns.
-  maxIdleTimeClosed: number // The total number of connections closed due to SetConnMaxIdleTime.
-  maxLifetimeClosed: number // The total number of connections closed due to SetConnMaxLifetime.
- }
- /**
-  * Conn represents a single database connection rather than a pool of database
-  * connections. Prefer running queries from DB unless there is a specific
-  * need for a continuous single database connection.
-  * 
-  * A Conn must call Close to return the connection to the database pool
-  * and may do so concurrently with a running query.
-  * 
-  * After a call to Close, all operations on the
-  * connection fail with ErrConnDone.
-  */
- interface Conn {
- }
- interface Conn {
-  /**
-   * PingContext verifies the connection to the database is still alive.
-   */
-  pingContext(ctx: context.Context): void
- }
- interface Conn {
-  /**
-   * ExecContext executes a query without returning any rows.
-   * The args are for any placeholder parameters in the query.
-   */
-  execContext(ctx: context.Context, query: string, ...args: any[]): Result
- }
- interface Conn {
-  /**
-   * QueryContext executes a query that returns rows, typically a SELECT.
-   * The args are for any placeholder parameters in the query.
-   */
-  queryContext(ctx: context.Context, query: string, ...args: any[]): (Rows | undefined)
- }
- interface Conn {
-  /**
-   * QueryRowContext executes a query that is expected to return at most one row.
-   * QueryRowContext always returns a non-nil value. Errors are deferred until
-   * Row's Scan method is called.
-   * If the query selects no rows, the *Row's Scan will return ErrNoRows.
-   * Otherwise, the *Row's Scan scans the first selected row and discards
-   * the rest.
-   */
-  queryRowContext(ctx: context.Context, query: string, ...args: any[]): (Row | undefined)
- }
- interface Conn {
-  /**
-   * PrepareContext creates a prepared statement for later queries or executions.
-   * Multiple queries or executions may be run concurrently from the
-   * returned statement.
-   * The caller must call the statement's Close method
-   * when the statement is no longer needed.
-   * 
-   * The provided context is used for the preparation of the statement, not for the
-   * execution of the statement.
-   */
-  prepareContext(ctx: context.Context, query: string): (Stmt | undefined)
- }
- interface Conn {
-  /**
-   * Raw executes f exposing the underlying driver connection for the
-   * duration of f. The driverConn must not be used outside of f.
-   * 
-   * Once f returns and err is not driver.ErrBadConn, the Conn will continue to be usable
-   * until Conn.Close is called.
-   */
-  raw(f: (driverConn: any) => void): void
- }
- interface Conn {
-  /**
-   * BeginTx starts a transaction.
-   * 
-   * The provided context is used until the transaction is committed or rolled back.
-   * If the context is canceled, the sql package will roll back
-   * the transaction. Tx.Commit will return an error if the context provided to
-   * BeginTx is canceled.
-   * 
-   * The provided TxOptions is optional and may be nil if defaults should be used.
-   * If a non-default isolation level is used that the driver doesn't support,
-   * an error will be returned.
-   */
-  beginTx(ctx: context.Context, opts: TxOptions): (Tx | undefined)
- }
- interface Conn {
-  /**
-   * Close returns the connection to the connection pool.
-   * All operations after a Close will return with ErrConnDone.
-   * Close is safe to call concurrently with other operations and will
-   * block until all other operations finish. It may be useful to first
-   * cancel any used context and then call close directly after.
-   */
-  close(): void
- }
- /**
-  * ColumnType contains the name and type of a column.
-  */
- interface ColumnType {
- }
- interface ColumnType {
-  /**
-   * Name returns the name or alias of the column.
-   */
-  name(): string
- }
- interface ColumnType {
-  /**
-   * Length returns the column type length for variable length column types such
-   * as text and binary field types. If the type length is unbounded the value will
-   * be math.MaxInt64 (any database limits will still apply).
-   * If the column type is not variable length, such as an int, or if not supported
-   * by the driver ok is false.
-   */
-  length(): [number, boolean]
- }
- interface ColumnType {
-  /**
-   * DecimalSize returns the scale and precision of a decimal type.
-   * If not applicable or if not supported ok is false.
-   */
-  decimalSize(): [number, boolean]
- }
- interface ColumnType {
-  /**
-   * ScanType returns a Go type suitable for scanning into using Rows.Scan.
-   * If a driver does not support this property ScanType will return
-   * the type of an empty interface.
-   */
-  scanType(): any
- }
- interface ColumnType {
-  /**
-   * Nullable reports whether the column may be null.
-   * If a driver does not support this property ok will be false.
-   */
-  nullable(): boolean
- }
- interface ColumnType {
-  /**
-   * DatabaseTypeName returns the database system name of the column type. If an empty
-   * string is returned, then the driver type name is not supported.
-   * Consult your driver documentation for a list of driver data types. Length specifiers
-   * are not included.
-   * Common type names include "VARCHAR", "TEXT", "NVARCHAR", "DECIMAL", "BOOL",
-   * "INT", and "BIGINT".
-   */
-  databaseTypeName(): string
- }
- /**
-  * Row is the result of calling QueryRow to select a single row.
-  */
- interface Row {
- }
- interface Row {
-  /**
-   * Scan copies the columns from the matched row into the values
-   * pointed at by dest. See the documentation on Rows.Scan for details.
-   * If more than one row matches the query,
-   * Scan uses the first row and discards the rest. If no row matches
-   * the query, Scan returns ErrNoRows.
-   */
-  scan(...dest: any[]): void
- }
- interface Row {
-  /**
-   * Err provides a way for wrapping packages to check for
-   * query errors without calling Scan.
-   * Err returns the error, if any, that was encountered while running the query.
-   * If this error is not nil, this error will also be returned from Scan.
-   */
-  err(): void
- }
-}
-
-/**
  * Package models implements all PocketBase DB models and DTOs.
  */
 namespace models {
- /**
-  * Model defines an interface with common methods that all db models should have.
-  */
  interface Model {
   tableName(): string
   isNew(): boolean
@@ -15451,9 +14930,6 @@ namespace models {
   refreshCreated(): void
   refreshUpdated(): void
  }
- /**
-  * BaseModel defines common fields and methods used by all other models.
-  */
  interface BaseModel {
   id: string
   created: types.DateTime
@@ -15538,9 +15014,6 @@ namespace models {
  }
  // @ts-ignore
  import validation = ozzo_validation
- /**
-  * CollectionBaseOptions defines the "base" Collection.Options fields.
-  */
  interface CollectionBaseOptions {
  }
  interface CollectionBaseOptions {
@@ -15549,9 +15022,6 @@ namespace models {
    */
   validate(): void
  }
- /**
-  * CollectionAuthOptions defines the "auth" Collection.Options fields.
-  */
  interface CollectionAuthOptions {
   manageRule?: string
   allowOAuth2Auth: boolean
@@ -15568,9 +15038,6 @@ namespace models {
    */
   validate(): void
  }
- /**
-  * CollectionViewOptions defines the "view" Collection.Options fields.
-  */
  interface CollectionViewOptions {
   query: string
  }
@@ -15580,16 +15047,16 @@ namespace models {
    */
   validate(): void
  }
- type _subwmAfV = BaseModel
- interface Param extends _subwmAfV {
+ type _subWdmHR = BaseModel
+ interface Param extends _subWdmHR {
   key: string
   value: types.JsonRaw
  }
  interface Param {
   tableName(): string
  }
- type _subrXEPX = BaseModel
- interface Request extends _subrXEPX {
+ type _subNFZry = BaseModel
+ interface Request extends _subNFZry {
   url: string
   method: string
   status: number
@@ -15617,18 +15084,6 @@ namespace models {
  }
 }
 
-namespace mailer {
- /**
-  * Mailer defines a base mail client interface.
-  */
- interface Mailer {
-  /**
-   * Send sends an email with the provided Message.
-   */
-  send(message: Message): void
- }
-}
-
 /**
  * Package oauth2 provides support for making
  * OAuth2 authorized and authenticated HTTP requests,
@@ -15636,20 +15091,8 @@ namespace mailer {
  * It can additionally grant authorization with Bearer JWT.
  */
 namespace oauth2 {
- /**
-  * An AuthCodeOption is passed to Config.AuthCodeURL.
-  */
  interface AuthCodeOption {
  }
- /**
-  * Token represents the credentials used to authorize
-  * the requests to access protected resources on the OAuth 2.0
-  * provider's backend.
-  * 
-  * Most users of this package should not access fields of Token
-  * directly. They're exported mostly for use by related packages
-  * implementing derivative OAuth2 flows.
-  */
  interface Token {
   /**
    * AccessToken is the token that authorizes and authenticates
@@ -15718,6 +15161,15 @@ namespace oauth2 {
  }
 }
 
+namespace mailer {
+ interface Mailer {
+  /**
+   * Send sends an email with the provided Message.
+   */
+  send(message: Message): void
+ }
+}
+
 /**
  * Package echo implements high performance, minimalist Go web framework.
  * 
@@ -15759,17 +15211,10 @@ namespace oauth2 {
  * Learn more at https://echo.labstack.com
  */
 namespace echo {
- /**
-  * Binder is the interface that wraps the Bind method.
-  */
  interface Binder {
   bind(c: Context, i: {
   }): void
  }
- /**
-  * ServableContext is interface that Echo context implementation must implement to be usable in middleware/handlers and
-  * be able to be routed by Router.
-  */
  interface ServableContext {
   /**
    * Reset resets the context after request completes. It must be called along
@@ -15780,38 +15225,21 @@ namespace echo {
  }
  // @ts-ignore
  import stdContext = context
- /**
-  * JSONSerializer is the interface that encodes and decodes JSON to and from interfaces.
-  */
  interface JSONSerializer {
   serialize(c: Context, i: {
   }, indent: string): void
   deserialize(c: Context, i: {
   }): void
  }
- /**
-  * HTTPErrorHandler is a centralized HTTP error handler.
-  */
  interface HTTPErrorHandler {(c: Context, err: Error): void }
- /**
-  * Validator is the interface that wraps the Validate function.
-  */
  interface Validator {
   validate(i: {
   }): void
  }
- /**
-  * Renderer is the interface that wraps the Render function.
-  */
  interface Renderer {
   render(_arg0: io.Writer, _arg1: string, _arg2: {
   }, _arg3: Context): void
  }
- /**
-  * Group is a set of sub-routes for a specified route. It can be used for inner
-  * routes that share a common middleware or functionality that should be separate
-  * from the parent echo instance while still inheriting from it.
-  */
  interface Group {
  }
  interface Group {
@@ -15944,16 +15372,7 @@ namespace echo {
    */
   addRoute(route: Routable): RouteInfo
  }
- /**
-  * IPExtractor is a function to extract IP addr from http.Request.
-  * Set appropriate one to Echo#IPExtractor.
-  * See https://echo.labstack.com/guide/ip-address for more details.
-  */
  interface IPExtractor {(_arg0: http.Request): string }
- /**
-  * Logger defines the logging interface that Echo uses internally in few places.
-  * For logging in handlers use your own logger instance (dependency injected or package/public variable) from logging framework of your choice.
-  */
  interface Logger {
   /**
    * Write provides writer interface for http.Server `ErrorLog` and for logging startup messages.
@@ -15967,11 +15386,6 @@ namespace echo {
    */
   error(err: Error): void
  }
- /**
-  * Response wraps an http.ResponseWriter and implements its interface to be used
-  * by an HTTP handler to construct an HTTP response.
-  * See: https://golang.org/pkg/net/http/#ResponseWriter
-  */
  interface Response {
   writer: http.ResponseWriter
   status: number
@@ -16072,20 +15486,6 @@ namespace echo {
    */
   filterByName(name: string): Routes
  }
- /**
-  * Router is interface for routing request contexts to registered routes.
-  * 
-  * Contract between Echo/Context instance and the router:
-  * ```
-  *   - all routes must be added through methods on echo.Echo instance.
-  *     Reason: Echo instance uses RouteInfo.Params() length to allocate slice for paths parameters (see `Echo.contextPathParamAllocSize`).
-  *   - Router must populate Context during Router.Route call with:
-  *   - RoutableContext.SetPath
-  *   - RoutableContext.SetRawPathParams (IMPORTANT! with same slice pointer that c.RawPathParams() returns)
-  *   - RoutableContext.SetRouteInfo
-  *     And optionally can set additional information to Context with RoutableContext.Set
-  * ```
-  */
  interface Router {
   /**
    * Add registers Routable with the Router and returns registered RouteInfo
@@ -16106,11 +15506,6 @@ namespace echo {
    */
   route(c: RoutableContext): HandlerFunc
  }
- /**
-  * Routable is interface for registering Route with Router. During route registration process the Router will
-  * convert Routable to RouteInfo with ToRouteInfo method. By creating custom implementation of Routable additional
-  * information about registered route can be stored in Routes (i.e. privileges used with route etc.)
-  */
  interface Routable {
   /**
    * ToRouteInfo converts Routable to RouteInfo
@@ -16134,14 +15529,7 @@ namespace echo {
    */
   forGroup(pathPrefix: string, middlewares: Array<MiddlewareFunc>): Routable
  }
- /**
-  * Routes is collection of RouteInfo instances with various helper methods.
-  */
  interface Routes extends Array<RouteInfo>{}
- /**
-  * RouteInfo describes registered route base fields.
-  * Method+Path pair uniquely identifies the Route. Name can have duplicates.
-  */
  interface RouteInfo {
   method(): string
   path(): string
@@ -16153,9 +15541,6 @@ namespace echo {
   reverse(...params: {
   }[]): string
  }
- /**
-  * PathParams is collections of PathParam instances with various helper methods
-  */
  interface PathParams extends Array<PathParam>{}
  interface PathParams {
   /**
@@ -16195,13 +15580,6 @@ namespace settings {
    * to decide whether to upgrade the connection or not.
    */
   tls: boolean
-  /**
-   * LocalName is optional domain name or IP address used for the
-   * EHLO/HELO exchange (if not explicitly set, defaults to "localhost").
-   * 
-   * This is required only by some SMTP servers, such as Gmail SMTP-relay.
-   */
-  localName: string
  }
  interface SmtpConfig {
   /**
@@ -16294,9 +15672,6 @@ namespace settings {
    */
   setupProvider(provider: auth.Provider): void
  }
- /**
-  * Deprecated: Will be removed in v0.9+
-  */
  interface EmailAuthConfig {
   enabled: boolean
   exceptDomains: Array<string>
@@ -16311,23 +15686,12 @@ namespace settings {
  }
 }
 
-namespace migrate {
- interface Migration {
-  file: string
-  up: (db: dbx.Builder) => void
-  down: (db: dbx.Builder) => void
- }
-}
-
 /**
  * Package daos handles common PocketBase DB model manipulations.
  * 
  * Think of daos as DB repository and service layer in one.
  */
 namespace daos {
- /**
-  * ExpandFetchFunc defines the function that is used to fetch the expanded relation records.
-  */
  interface ExpandFetchFunc {(relCollection: models.Collection, relIds: Array<string>): Array<(models.Record | undefined)> }
  // @ts-ignore
  import validation = ozzo_validation
@@ -16338,10 +15702,6 @@ namespace daos {
 }
 
 namespace hook {
- /**
-  * Hook defines a concurrent safe structure for handling event hooks
-  * (aka. callbacks propagation).
-  */
  interface Hook<T> {
  }
  interface Hook<T> {
@@ -16386,12 +15746,8 @@ namespace hook {
    */
   trigger(data: T, ...oneOffHandlers: Handler<T>[]): void
  }
- /**
-  * TaggedHook defines a proxy hook which register handlers that are triggered only
-  * if the TaggedHook.tags are empty or includes at least one of the event data tag(s).
-  */
- type _subVbbkk<T> = mainHook<T>
- interface TaggedHook<T> extends _subVbbkk<T> {
+ type _subEnRjS<T> = mainHook<T>
+ interface TaggedHook<T> extends _subEnRjS<T> {
  }
  interface TaggedHook<T> {
   /**
@@ -16418,6 +15774,40 @@ namespace hook {
  }
 }
 
+namespace subscriptions {
+ interface Broker {
+ }
+ interface Broker {
+  /**
+   * Clients returns a shallow copy of all registered clients indexed
+   * with their connection id.
+   */
+  clients(): _TygojaDict
+ }
+ interface Broker {
+  /**
+   * ClientById finds a registered client by its id.
+   * 
+   * Returns non-nil error when client with clientId is not registered.
+   */
+  clientById(clientId: string): Client
+ }
+ interface Broker {
+  /**
+   * Register adds a new client to the broker instance.
+   */
+  register(client: Client): void
+ }
+ interface Broker {
+  /**
+   * Unregister removes a single client by its id.
+   * 
+   * If client with clientId doesn't exist, this method does nothing.
+   */
+  unregister(clientId: string): void
+ }
+}
+
 /**
  * Package core is the backbone of PocketBase.
  * 
@@ -16434,18 +15824,18 @@ namespace core {
   app: App
   router?: echo.Echo
   server?: http.Server
-  certManager?: any
+  certManager?: autocert.Manager
  }
  interface ApiErrorEvent {
   httpContext: echo.Context
   error: Error
  }
- type _subIouEe = BaseModelEvent
- interface ModelEvent extends _subIouEe {
+ type _subwVHuv = BaseModelEvent
+ interface ModelEvent extends _subwVHuv {
   dao?: daos.Dao
  }
- type _subEFclS = BaseCollectionEvent
- interface MailerRecordEvent extends _subEFclS {
+ type _subLxfJw = BaseCollectionEvent
+ interface MailerRecordEvent extends _subLxfJw {
   mailClient: mailer.Mailer
   message?: mailer.Message
   record?: models.Record
@@ -16485,50 +15875,50 @@ namespace core {
   oldSettings?: settings.Settings
   newSettings?: settings.Settings
  }
- type _subvaWqp = BaseCollectionEvent
- interface RecordsListEvent extends _subvaWqp {
+ type _subhFgjC = BaseCollectionEvent
+ interface RecordsListEvent extends _subhFgjC {
   httpContext: echo.Context
   records: Array<(models.Record | undefined)>
   result?: search.Result
  }
- type _subicLYz = BaseCollectionEvent
- interface RecordViewEvent extends _subicLYz {
+ type _subHiPfN = BaseCollectionEvent
+ interface RecordViewEvent extends _subHiPfN {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subirWVA = BaseCollectionEvent
- interface RecordCreateEvent extends _subirWVA {
-  httpContext: echo.Context
-  record?: models.Record
-  uploadedFiles: _TygojaDict
- }
- type _subjTcZH = BaseCollectionEvent
- interface RecordUpdateEvent extends _subjTcZH {
+ type _subSVXjI = BaseCollectionEvent
+ interface RecordCreateEvent extends _subSVXjI {
   httpContext: echo.Context
   record?: models.Record
   uploadedFiles: _TygojaDict
  }
- type _subwnWRR = BaseCollectionEvent
- interface RecordDeleteEvent extends _subwnWRR {
+ type _subfFDWj = BaseCollectionEvent
+ interface RecordUpdateEvent extends _subfFDWj {
+  httpContext: echo.Context
+  record?: models.Record
+  uploadedFiles: _TygojaDict
+ }
+ type _subqzsHN = BaseCollectionEvent
+ interface RecordDeleteEvent extends _subqzsHN {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subNjxuX = BaseCollectionEvent
- interface RecordAuthEvent extends _subNjxuX {
+ type _subNwoyq = BaseCollectionEvent
+ interface RecordAuthEvent extends _subNwoyq {
   httpContext: echo.Context
   record?: models.Record
   token: string
   meta: any
  }
- type _subzPpfH = BaseCollectionEvent
- interface RecordAuthWithPasswordEvent extends _subzPpfH {
+ type _subhjyWu = BaseCollectionEvent
+ interface RecordAuthWithPasswordEvent extends _subhjyWu {
   httpContext: echo.Context
   record?: models.Record
   identity: string
   password: string
  }
- type _subGcppL = BaseCollectionEvent
- interface RecordAuthWithOAuth2Event extends _subGcppL {
+ type _subWvaVb = BaseCollectionEvent
+ interface RecordAuthWithOAuth2Event extends _subWvaVb {
   httpContext: echo.Context
   providerName: string
   providerClient: auth.Provider
@@ -16536,49 +15926,49 @@ namespace core {
   oAuth2User?: auth.AuthUser
   isNewRecord: boolean
  }
- type _subNOrsn = BaseCollectionEvent
- interface RecordAuthRefreshEvent extends _subNOrsn {
+ type _subyuvli = BaseCollectionEvent
+ interface RecordAuthRefreshEvent extends _subyuvli {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subZhvjt = BaseCollectionEvent
- interface RecordRequestPasswordResetEvent extends _subZhvjt {
+ type _subEJcJK = BaseCollectionEvent
+ interface RecordRequestPasswordResetEvent extends _subEJcJK {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subnxjOW = BaseCollectionEvent
- interface RecordConfirmPasswordResetEvent extends _subnxjOW {
+ type _submKSGM = BaseCollectionEvent
+ interface RecordConfirmPasswordResetEvent extends _submKSGM {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subKYIFm = BaseCollectionEvent
- interface RecordRequestVerificationEvent extends _subKYIFm {
+ type _subQEeTs = BaseCollectionEvent
+ interface RecordRequestVerificationEvent extends _subQEeTs {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subGKxcc = BaseCollectionEvent
- interface RecordConfirmVerificationEvent extends _subGKxcc {
+ type _subeaQxG = BaseCollectionEvent
+ interface RecordConfirmVerificationEvent extends _subeaQxG {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subieaVf = BaseCollectionEvent
- interface RecordRequestEmailChangeEvent extends _subieaVf {
+ type _subqNztV = BaseCollectionEvent
+ interface RecordRequestEmailChangeEvent extends _subqNztV {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subSakck = BaseCollectionEvent
- interface RecordConfirmEmailChangeEvent extends _subSakck {
+ type _subYtaGf = BaseCollectionEvent
+ interface RecordConfirmEmailChangeEvent extends _subYtaGf {
   httpContext: echo.Context
   record?: models.Record
  }
- type _subheWkH = BaseCollectionEvent
- interface RecordListExternalAuthsEvent extends _subheWkH {
+ type _subphRfZ = BaseCollectionEvent
+ interface RecordListExternalAuthsEvent extends _subphRfZ {
   httpContext: echo.Context
   record?: models.Record
   externalAuths: Array<(models.ExternalAuth | undefined)>
  }
- type _subRryZI = BaseCollectionEvent
- interface RecordUnlinkExternalAuthEvent extends _subRryZI {
+ type _suboQlFX = BaseCollectionEvent
+ interface RecordUnlinkExternalAuthEvent extends _suboQlFX {
   httpContext: echo.Context
   record?: models.Record
   externalAuth?: models.ExternalAuth
@@ -16632,33 +16022,33 @@ namespace core {
   collections: Array<(models.Collection | undefined)>
   result?: search.Result
  }
- type _subpRjVc = BaseCollectionEvent
- interface CollectionViewEvent extends _subpRjVc {
+ type _subSjAHn = BaseCollectionEvent
+ interface CollectionViewEvent extends _subSjAHn {
   httpContext: echo.Context
  }
- type _subaoqBL = BaseCollectionEvent
- interface CollectionCreateEvent extends _subaoqBL {
+ type _subttzNe = BaseCollectionEvent
+ interface CollectionCreateEvent extends _subttzNe {
   httpContext: echo.Context
  }
- type _subwWdpB = BaseCollectionEvent
- interface CollectionUpdateEvent extends _subwWdpB {
+ type _subeXHIN = BaseCollectionEvent
+ interface CollectionUpdateEvent extends _subeXHIN {
   httpContext: echo.Context
  }
- type _subDBWkH = BaseCollectionEvent
- interface CollectionDeleteEvent extends _subDBWkH {
+ type _subIpjHP = BaseCollectionEvent
+ interface CollectionDeleteEvent extends _subIpjHP {
   httpContext: echo.Context
  }
  interface CollectionsImportEvent {
   httpContext: echo.Context
   collections: Array<(models.Collection | undefined)>
  }
- type _subssPOe = BaseModelEvent
- interface FileTokenEvent extends _subssPOe {
+ type _subgszqh = BaseModelEvent
+ interface FileTokenEvent extends _subgszqh {
   httpContext: echo.Context
   token: string
  }
- type _subZKlFi = BaseCollectionEvent
- interface FileDownloadEvent extends _subZKlFi {
+ type _submgzNL = BaseCollectionEvent
+ interface FileDownloadEvent extends _submgzNL {
   httpContext: echo.Context
   record?: models.Record
   fileField?: schema.SchemaField
@@ -16668,78 +16058,1811 @@ namespace core {
 }
 
 /**
- * Package url parses URLs and implements query escaping.
+ * Package pflag is a drop-in replacement for Go's flag package, implementing
+ * POSIX/GNU-style --flags.
+ * 
+ * pflag is compatible with the GNU extensions to the POSIX recommendations
+ * for command-line options. See
+ * http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
+ * 
+ * Usage:
+ * 
+ * pflag is a drop-in replacement of Go's native flag package. If you import
+ * pflag under the name "flag" then all code should continue to function
+ * with no changes.
+ * 
+ * ```
+ * 	import flag "github.com/spf13/pflag"
+ * ```
+ * 
+ * There is one exception to this: if you directly instantiate the Flag struct
+ * there is one more field "Shorthand" that you will need to set.
+ * Most code never instantiates this struct directly, and instead uses
+ * functions such as String(), BoolVar(), and Var(), and is therefore
+ * unaffected.
+ * 
+ * Define flags using flag.String(), Bool(), Int(), etc.
+ * 
+ * This declares an integer flag, -flagname, stored in the pointer ip, with type *int.
+ * ```
+ * 	var ip = flag.Int("flagname", 1234, "help message for flagname")
+ * ```
+ * If you like, you can bind the flag to a variable using the Var() functions.
+ * ```
+ * 	var flagvar int
+ * 	func init() {
+ * 		flag.IntVar(&flagvar, "flagname", 1234, "help message for flagname")
+ * 	}
+ * ```
+ * Or you can create custom flags that satisfy the Value interface (with
+ * pointer receivers) and couple them to flag parsing by
+ * ```
+ * 	flag.Var(&flagVal, "name", "help message for flagname")
+ * ```
+ * For such flags, the default value is just the initial value of the variable.
+ * 
+ * After all flags are defined, call
+ * ```
+ * 	flag.Parse()
+ * ```
+ * to parse the command line into the defined flags.
+ * 
+ * Flags may then be used directly. If you're using the flags themselves,
+ * they are all pointers; if you bind to variables, they're values.
+ * ```
+ * 	fmt.Println("ip has value ", *ip)
+ * 	fmt.Println("flagvar has value ", flagvar)
+ * ```
+ * 
+ * After parsing, the arguments after the flag are available as the
+ * slice flag.Args() or individually as flag.Arg(i).
+ * The arguments are indexed from 0 through flag.NArg()-1.
+ * 
+ * The pflag package also defines some new functions that are not in flag,
+ * that give one-letter shorthands for flags. You can use these by appending
+ * 'P' to the name of any function that defines a flag.
+ * ```
+ * 	var ip = flag.IntP("flagname", "f", 1234, "help message")
+ * 	var flagvar bool
+ * 	func init() {
+ * 		flag.BoolVarP(&flagvar, "boolname", "b", true, "help message")
+ * 	}
+ * 	flag.VarP(&flagval, "varname", "v", "help message")
+ * ```
+ * Shorthand letters can be used with single dashes on the command line.
+ * Boolean shorthand flags can be combined with other shorthand flags.
+ * 
+ * Command line flag syntax:
+ * ```
+ * 	--flag    // boolean flags only
+ * 	--flag=x
+ * ```
+ * 
+ * Unlike the flag package, a single dash before an option means something
+ * different than a double dash. Single dashes signify a series of shorthand
+ * letters for flags. All but the last shorthand letter must be boolean flags.
+ * ```
+ * 	// boolean flags
+ * 	-f
+ * 	-abc
+ * 	// non-boolean flags
+ * 	-n 1234
+ * 	-Ifile
+ * 	// mixed
+ * 	-abcs "hello"
+ * 	-abcn1234
+ * ```
+ * 
+ * Flag parsing stops after the terminator "--". Unlike the flag package,
+ * flags can be interspersed with arguments anywhere on the command line
+ * before this terminator.
+ * 
+ * Integer flags accept 1234, 0664, 0x1234 and may be negative.
+ * Boolean flags (in their long form) accept 1, 0, t, f, true, false,
+ * TRUE, FALSE, True, False.
+ * Duration flags accept any input valid for time.ParseDuration.
+ * 
+ * The default set of command-line flags is controlled by
+ * top-level functions.  The FlagSet type allows one to define
+ * independent sets of flags, such as to implement subcommands
+ * in a command-line interface. The methods of FlagSet are
+ * analogous to the top-level functions for the command-line
+ * flag set.
  */
-namespace url {
- /**
-  * The Userinfo type is an immutable encapsulation of username and
-  * password details for a URL. An existing Userinfo value is guaranteed
-  * to have a username set (potentially empty, as allowed by RFC 2396),
-  * and optionally a password.
-  */
- interface Userinfo {
- }
- interface Userinfo {
+namespace pflag {
+ interface FlagSet {
   /**
-   * Username returns the username.
+   * GetBool return the bool value of a flag with the given name
    */
-  username(): string
+  getBool(name: string): boolean
  }
- interface Userinfo {
+ interface FlagSet {
   /**
-   * Password returns the password in case it is set, and whether it is set.
+   * BoolVar defines a bool flag with specified name, default value, and usage string.
+   * The argument p points to a bool variable in which to store the value of the flag.
    */
-  password(): [string, boolean]
+  boolVar(p: boolean, name: string, value: boolean, usage: string): void
  }
- interface Userinfo {
+ interface FlagSet {
   /**
-   * String returns the encoded userinfo information in the standard form
-   * of "username[:password]".
+   * BoolVarP is like BoolVar, but accepts a shorthand letter that can be used after a single dash.
    */
-  string(): string
+  boolVarP(p: boolean, name: string, value: boolean, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Bool defines a bool flag with specified name, default value, and usage string.
+   * The return value is the address of a bool variable that stores the value of the flag.
+   */
+  bool(name: string, value: boolean, usage: string): (boolean | undefined)
+ }
+ interface FlagSet {
+  /**
+   * BoolP is like Bool, but accepts a shorthand letter that can be used after a single dash.
+   */
+  boolP(name: string, value: boolean, usage: string): (boolean | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetBoolSlice returns the []bool value of a flag with the given name.
+   */
+  getBoolSlice(name: string): Array<boolean>
+ }
+ interface FlagSet {
+  /**
+   * BoolSliceVar defines a boolSlice flag with specified name, default value, and usage string.
+   * The argument p points to a []bool variable in which to store the value of the flag.
+   */
+  boolSliceVar(p: Array<boolean>, name: string, value: Array<boolean>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BoolSliceVarP is like BoolSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  boolSliceVarP(p: Array<boolean>, name: string, value: Array<boolean>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BoolSlice defines a []bool flag with specified name, default value, and usage string.
+   * The return value is the address of a []bool variable that stores the value of the flag.
+   */
+  boolSlice(name: string, value: Array<boolean>, usage: string): (Array<boolean> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * BoolSliceP is like BoolSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  boolSliceP(name: string, value: Array<boolean>, usage: string): (Array<boolean> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetBytesHex return the []byte value of a flag with the given name
+   */
+  getBytesHex(name: string): string
+ }
+ interface FlagSet {
+  /**
+   * BytesHexVar defines an []byte flag with specified name, default value, and usage string.
+   * The argument p points to an []byte variable in which to store the value of the flag.
+   */
+  bytesHexVar(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BytesHexVarP is like BytesHexVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  bytesHexVarP(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BytesHex defines an []byte flag with specified name, default value, and usage string.
+   * The return value is the address of an []byte variable that stores the value of the flag.
+   */
+  bytesHex(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * BytesHexP is like BytesHex, but accepts a shorthand letter that can be used after a single dash.
+   */
+  bytesHexP(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetBytesBase64 return the []byte value of a flag with the given name
+   */
+  getBytesBase64(name: string): string
+ }
+ interface FlagSet {
+  /**
+   * BytesBase64Var defines an []byte flag with specified name, default value, and usage string.
+   * The argument p points to an []byte variable in which to store the value of the flag.
+   */
+  bytesBase64Var(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BytesBase64VarP is like BytesBase64Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  bytesBase64VarP(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * BytesBase64 defines an []byte flag with specified name, default value, and usage string.
+   * The return value is the address of an []byte variable that stores the value of the flag.
+   */
+  bytesBase64(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * BytesBase64P is like BytesBase64, but accepts a shorthand letter that can be used after a single dash.
+   */
+  bytesBase64P(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetCount return the int value of a flag with the given name
+   */
+  getCount(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * CountVar defines a count flag with specified name, default value, and usage string.
+   * The argument p points to an int variable in which to store the value of the flag.
+   * A count flag will add 1 to its value every time it is found on the command line
+   */
+  countVar(p: number, name: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * CountVarP is like CountVar only take a shorthand for the flag name.
+   */
+  countVarP(p: number, name: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Count defines a count flag with specified name, default value, and usage string.
+   * The return value is the address of an int variable that stores the value of the flag.
+   * A count flag will add 1 to its value every time it is found on the command line
+   */
+  count(name: string, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * CountP is like Count only takes a shorthand for the flag name.
+   */
+  countP(name: string, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetDuration return the duration value of a flag with the given name
+   */
+  getDuration(name: string): time.Duration
+ }
+ interface FlagSet {
+  /**
+   * DurationVar defines a time.Duration flag with specified name, default value, and usage string.
+   * The argument p points to a time.Duration variable in which to store the value of the flag.
+   */
+  durationVar(p: time.Duration, name: string, value: time.Duration, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * DurationVarP is like DurationVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  durationVarP(p: time.Duration, name: string, value: time.Duration, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Duration defines a time.Duration flag with specified name, default value, and usage string.
+   * The return value is the address of a time.Duration variable that stores the value of the flag.
+   */
+  duration(name: string, value: time.Duration, usage: string): (time.Duration | undefined)
+ }
+ interface FlagSet {
+  /**
+   * DurationP is like Duration, but accepts a shorthand letter that can be used after a single dash.
+   */
+  durationP(name: string, value: time.Duration, usage: string): (time.Duration | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetDurationSlice returns the []time.Duration value of a flag with the given name
+   */
+  getDurationSlice(name: string): Array<time.Duration>
+ }
+ interface FlagSet {
+  /**
+   * DurationSliceVar defines a durationSlice flag with specified name, default value, and usage string.
+   * The argument p points to a []time.Duration variable in which to store the value of the flag.
+   */
+  durationSliceVar(p: Array<time.Duration>, name: string, value: Array<time.Duration>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * DurationSliceVarP is like DurationSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  durationSliceVarP(p: Array<time.Duration>, name: string, value: Array<time.Duration>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * DurationSlice defines a []time.Duration flag with specified name, default value, and usage string.
+   * The return value is the address of a []time.Duration variable that stores the value of the flag.
+   */
+  durationSlice(name: string, value: Array<time.Duration>, usage: string): (Array<time.Duration> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * DurationSliceP is like DurationSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  durationSliceP(name: string, value: Array<time.Duration>, usage: string): (Array<time.Duration> | undefined)
+ }
+ // @ts-ignore
+ import goflag = flag
+ interface NormalizedName extends String{}
+ interface FlagSet {
+  /**
+   * Usage is the function called when an error occurs while parsing flags.
+   * The field is a function (not a method) that may be changed to point to
+   * a custom error handler.
+   */
+  usage: () => void
+  /**
+   * SortFlags is used to indicate, if user wants to have sorted flags in
+   * help/usage messages.
+   */
+  sortFlags: boolean
+  /**
+   * ParseErrorsWhitelist is used to configure a whitelist of errors
+   */
+  parseErrorsWhitelist: ParseErrorsWhitelist
+ }
+ interface Flag {
+  name: string // name as it appears on command line
+  shorthand: string // one-letter abbreviated flag
+  usage: string // help message
+  value: Value // value as set
+  defValue: string // default value (as text); for usage message
+  changed: boolean // If the user set the value (or if left to default)
+  noOptDefVal: string // default value (as text); if the flag is on the command line without any options
+  deprecated: string // If this flag is deprecated, this string is the new or now thing to use
+  hidden: boolean // used by cobra.Command to allow flags to be hidden from help/usage text
+  shorthandDeprecated: string // If the shorthand of this flag is deprecated, this string is the new or now thing to use
+  annotations: _TygojaDict // used by cobra.Command bash autocomple code
+ }
+ interface FlagSet {
+  /**
+   * SetNormalizeFunc allows you to add a function which can translate flag names.
+   * Flags added to the FlagSet will be translated and then when anything tries to
+   * look up the flag that will also be translated. So it would be possible to create
+   * a flag named "getURL" and have it translated to "geturl".  A user could then pass
+   * "--getUrl" which may also be translated to "geturl" and everything will work.
+   */
+  setNormalizeFunc(n: (f: FlagSet, name: string) => NormalizedName): void
+ }
+ interface FlagSet {
+  /**
+   * GetNormalizeFunc returns the previously set NormalizeFunc of a function which
+   * does no translation, if not set previously.
+   */
+  getNormalizeFunc(): (f: FlagSet, name: string) => NormalizedName
+ }
+ interface FlagSet {
+  /**
+   * SetOutput sets the destination for usage and error messages.
+   * If output is nil, os.Stderr is used.
+   */
+  setOutput(output: io.Writer): void
+ }
+ interface FlagSet {
+  /**
+   * VisitAll visits the flags in lexicographical order or
+   * in primordial order if f.SortFlags is false, calling fn for each.
+   * It visits all flags, even those not set.
+   */
+  visitAll(fn: (_arg0: Flag) => void): void
+ }
+ interface FlagSet {
+  /**
+   * HasFlags returns a bool to indicate if the FlagSet has any flags defined.
+   */
+  hasFlags(): boolean
+ }
+ interface FlagSet {
+  /**
+   * HasAvailableFlags returns a bool to indicate if the FlagSet has any flags
+   * that are not hidden.
+   */
+  hasAvailableFlags(): boolean
+ }
+ interface FlagSet {
+  /**
+   * Visit visits the flags in lexicographical order or
+   * in primordial order if f.SortFlags is false, calling fn for each.
+   * It visits only those flags that have been set.
+   */
+  visit(fn: (_arg0: Flag) => void): void
+ }
+ interface FlagSet {
+  /**
+   * Lookup returns the Flag structure of the named flag, returning nil if none exists.
+   */
+  lookup(name: string): (Flag | undefined)
+ }
+ interface FlagSet {
+  /**
+   * ShorthandLookup returns the Flag structure of the short handed flag,
+   * returning nil if none exists.
+   * It panics, if len(name) > 1.
+   */
+  shorthandLookup(name: string): (Flag | undefined)
+ }
+ interface FlagSet {
+  /**
+   * ArgsLenAtDash will return the length of f.Args at the moment when a -- was
+   * found during arg parsing. This allows your program to know which args were
+   * before the -- and which came after.
+   */
+  argsLenAtDash(): number
+ }
+ interface FlagSet {
+  /**
+   * MarkDeprecated indicated that a flag is deprecated in your program. It will
+   * continue to function but will not show up in help or usage messages. Using
+   * this flag will also print the given usageMessage.
+   */
+  markDeprecated(name: string, usageMessage: string): void
+ }
+ interface FlagSet {
+  /**
+   * MarkShorthandDeprecated will mark the shorthand of a flag deprecated in your
+   * program. It will continue to function but will not show up in help or usage
+   * messages. Using this flag will also print the given usageMessage.
+   */
+  markShorthandDeprecated(name: string, usageMessage: string): void
+ }
+ interface FlagSet {
+  /**
+   * MarkHidden sets a flag to 'hidden' in your program. It will continue to
+   * function but will not show up in help or usage messages.
+   */
+  markHidden(name: string): void
+ }
+ interface FlagSet {
+  /**
+   * Set sets the value of the named flag.
+   */
+  set(name: string): void
+ }
+ interface FlagSet {
+  /**
+   * SetAnnotation allows one to set arbitrary annotations on a flag in the FlagSet.
+   * This is sometimes used by spf13/cobra programs which want to generate additional
+   * bash completion information.
+   */
+  setAnnotation(name: string, values: Array<string>): void
+ }
+ interface FlagSet {
+  /**
+   * Changed returns true if the flag was explicitly set during Parse() and false
+   * otherwise
+   */
+  changed(name: string): boolean
+ }
+ interface FlagSet {
+  /**
+   * PrintDefaults prints, to standard error unless configured
+   * otherwise, the default values of all defined flags in the set.
+   */
+  printDefaults(): void
+ }
+ interface FlagSet {
+  /**
+   * FlagUsagesWrapped returns a string containing the usage information
+   * for all flags in the FlagSet. Wrapped to `cols` columns (0 for no
+   * wrapping)
+   */
+  flagUsagesWrapped(cols: number): string
+ }
+ interface FlagSet {
+  /**
+   * FlagUsages returns a string containing the usage information for all flags in
+   * the FlagSet
+   */
+  flagUsages(): string
+ }
+ interface FlagSet {
+  /**
+   * NFlag returns the number of flags that have been set.
+   */
+  nFlag(): number
+ }
+ interface FlagSet {
+  /**
+   * Arg returns the i'th argument.  Arg(0) is the first remaining argument
+   * after flags have been processed.
+   */
+  arg(i: number): string
+ }
+ interface FlagSet {
+  /**
+   * NArg is the number of arguments remaining after flags have been processed.
+   */
+  nArg(): number
+ }
+ interface FlagSet {
+  /**
+   * Args returns the non-flag arguments.
+   */
+  args(): Array<string>
+ }
+ interface FlagSet {
+  /**
+   * Var defines a flag with the specified name and usage string. The type and
+   * value of the flag are represented by the first argument, of type Value, which
+   * typically holds a user-defined implementation of Value. For instance, the
+   * caller could create a flag that turns a comma-separated string into a slice
+   * of strings by giving the slice the methods of Value; in particular, Set would
+   * decompose the comma-separated string into the slice.
+   */
+  var(value: Value, name: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * VarPF is like VarP, but returns the flag created
+   */
+  varPF(value: Value, name: string): (Flag | undefined)
+ }
+ interface FlagSet {
+  /**
+   * VarP is like Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  varP(value: Value, name: string): void
+ }
+ interface FlagSet {
+  /**
+   * AddFlag will add the flag to the FlagSet
+   */
+  addFlag(flag: Flag): void
+ }
+ interface FlagSet {
+  /**
+   * AddFlagSet adds one FlagSet to another. If a flag is already present in f
+   * the flag from newSet will be ignored.
+   */
+  addFlagSet(newSet: FlagSet): void
+ }
+ interface FlagSet {
+  /**
+   * Parse parses flag definitions from the argument list, which should not
+   * include the command name.  Must be called after all flags in the FlagSet
+   * are defined and before flags are accessed by the program.
+   * The return value will be ErrHelp if -help was set but not defined.
+   */
+  parse(arguments: Array<string>): void
+ }
+ interface FlagSet {
+  /**
+   * ParseAll parses flag definitions from the argument list, which should not
+   * include the command name. The arguments for fn are flag and value. Must be
+   * called after all flags in the FlagSet are defined and before flags are
+   * accessed by the program. The return value will be ErrHelp if -help was set
+   * but not defined.
+   */
+  parseAll(arguments: Array<string>, fn: (flag: Flag, value: string) => void): void
+ }
+ interface FlagSet {
+  /**
+   * Parsed reports whether f.Parse has been called.
+   */
+  parsed(): boolean
+ }
+ interface FlagSet {
+  /**
+   * SetInterspersed sets whether to support interspersed option/non-option arguments.
+   */
+  setInterspersed(interspersed: boolean): void
+ }
+ interface FlagSet {
+  /**
+   * Init sets the name and error handling property for a flag set.
+   * By default, the zero FlagSet uses an empty name and the
+   * ContinueOnError error handling policy.
+   */
+  init(name: string, errorHandling: ErrorHandling): void
+ }
+ interface FlagSet {
+  /**
+   * GetFloat32 return the float32 value of a flag with the given name
+   */
+  getFloat32(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Float32Var defines a float32 flag with specified name, default value, and usage string.
+   * The argument p points to a float32 variable in which to store the value of the flag.
+   */
+  float32Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float32VarP is like Float32Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float32VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float32 defines a float32 flag with specified name, default value, and usage string.
+   * The return value is the address of a float32 variable that stores the value of the flag.
+   */
+  float32(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Float32P is like Float32, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float32P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetFloat32Slice return the []float32 value of a flag with the given name
+   */
+  getFloat32Slice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * Float32SliceVar defines a float32Slice flag with specified name, default value, and usage string.
+   * The argument p points to a []float32 variable in which to store the value of the flag.
+   */
+  float32SliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float32SliceVarP is like Float32SliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float32SliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float32Slice defines a []float32 flag with specified name, default value, and usage string.
+   * The return value is the address of a []float32 variable that stores the value of the flag.
+   */
+  float32Slice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Float32SliceP is like Float32Slice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float32SliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetFloat64 return the float64 value of a flag with the given name
+   */
+  getFloat64(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Float64Var defines a float64 flag with specified name, default value, and usage string.
+   * The argument p points to a float64 variable in which to store the value of the flag.
+   */
+  float64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float64VarP is like Float64Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float64VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float64 defines a float64 flag with specified name, default value, and usage string.
+   * The return value is the address of a float64 variable that stores the value of the flag.
+   */
+  float64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Float64P is like Float64, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float64P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetFloat64Slice return the []float64 value of a flag with the given name
+   */
+  getFloat64Slice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * Float64SliceVar defines a float64Slice flag with specified name, default value, and usage string.
+   * The argument p points to a []float64 variable in which to store the value of the flag.
+   */
+  float64SliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float64SliceVarP is like Float64SliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float64SliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float64Slice defines a []float64 flag with specified name, default value, and usage string.
+   * The return value is the address of a []float64 variable that stores the value of the flag.
+   */
+  float64Slice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Float64SliceP is like Float64Slice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  float64SliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * AddGoFlag will add the given *flag.Flag to the pflag.FlagSet
+   */
+  addGoFlag(goflag: goflag.Flag): void
+ }
+ interface FlagSet {
+  /**
+   * AddGoFlagSet will add the given *flag.FlagSet to the pflag.FlagSet
+   */
+  addGoFlagSet(newSet: goflag.FlagSet): void
+ }
+ interface FlagSet {
+  /**
+   * GetInt return the int value of a flag with the given name
+   */
+  getInt(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * IntVar defines an int flag with specified name, default value, and usage string.
+   * The argument p points to an int variable in which to store the value of the flag.
+   */
+  intVar(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IntVarP is like IntVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  intVarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int defines an int flag with specified name, default value, and usage string.
+   * The return value is the address of an int variable that stores the value of the flag.
+   */
+  int(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IntP is like Int, but accepts a shorthand letter that can be used after a single dash.
+   */
+  intP(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt16 returns the int16 value of a flag with the given name
+   */
+  getInt16(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Int16Var defines an int16 flag with specified name, default value, and usage string.
+   * The argument p points to an int16 variable in which to store the value of the flag.
+   */
+  int16Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int16VarP is like Int16Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int16VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int16 defines an int16 flag with specified name, default value, and usage string.
+   * The return value is the address of an int16 variable that stores the value of the flag.
+   */
+  int16(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int16P is like Int16, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int16P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt32 return the int32 value of a flag with the given name
+   */
+  getInt32(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Int32Var defines an int32 flag with specified name, default value, and usage string.
+   * The argument p points to an int32 variable in which to store the value of the flag.
+   */
+  int32Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int32VarP is like Int32Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int32VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int32 defines an int32 flag with specified name, default value, and usage string.
+   * The return value is the address of an int32 variable that stores the value of the flag.
+   */
+  int32(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int32P is like Int32, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int32P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt32Slice return the []int32 value of a flag with the given name
+   */
+  getInt32Slice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * Int32SliceVar defines a int32Slice flag with specified name, default value, and usage string.
+   * The argument p points to a []int32 variable in which to store the value of the flag.
+   */
+  int32SliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int32SliceVarP is like Int32SliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int32SliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int32Slice defines a []int32 flag with specified name, default value, and usage string.
+   * The return value is the address of a []int32 variable that stores the value of the flag.
+   */
+  int32Slice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int32SliceP is like Int32Slice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int32SliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt64 return the int64 value of a flag with the given name
+   */
+  getInt64(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Int64Var defines an int64 flag with specified name, default value, and usage string.
+   * The argument p points to an int64 variable in which to store the value of the flag.
+   */
+  int64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int64VarP is like Int64Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int64VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int64 defines an int64 flag with specified name, default value, and usage string.
+   * The return value is the address of an int64 variable that stores the value of the flag.
+   */
+  int64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int64P is like Int64, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int64P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt64Slice return the []int64 value of a flag with the given name
+   */
+  getInt64Slice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * Int64SliceVar defines a int64Slice flag with specified name, default value, and usage string.
+   * The argument p points to a []int64 variable in which to store the value of the flag.
+   */
+  int64SliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int64SliceVarP is like Int64SliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int64SliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int64Slice defines a []int64 flag with specified name, default value, and usage string.
+   * The return value is the address of a []int64 variable that stores the value of the flag.
+   */
+  int64Slice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int64SliceP is like Int64Slice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int64SliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetInt8 return the int8 value of a flag with the given name
+   */
+  getInt8(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Int8Var defines an int8 flag with specified name, default value, and usage string.
+   * The argument p points to an int8 variable in which to store the value of the flag.
+   */
+  int8Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int8VarP is like Int8Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int8VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int8 defines an int8 flag with specified name, default value, and usage string.
+   * The return value is the address of an int8 variable that stores the value of the flag.
+   */
+  int8(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int8P is like Int8, but accepts a shorthand letter that can be used after a single dash.
+   */
+  int8P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetIntSlice return the []int value of a flag with the given name
+   */
+  getIntSlice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * IntSliceVar defines a intSlice flag with specified name, default value, and usage string.
+   * The argument p points to a []int variable in which to store the value of the flag.
+   */
+  intSliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IntSliceVarP is like IntSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  intSliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IntSlice defines a []int flag with specified name, default value, and usage string.
+   * The return value is the address of a []int variable that stores the value of the flag.
+   */
+  intSlice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IntSliceP is like IntSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  intSliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetIP return the net.IP value of a flag with the given name
+   */
+  getIP(name: string): net.IP
+ }
+ interface FlagSet {
+  /**
+   * IPVar defines an net.IP flag with specified name, default value, and usage string.
+   * The argument p points to an net.IP variable in which to store the value of the flag.
+   */
+  ipVar(p: net.IP, name: string, value: net.IP, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPVarP is like IPVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipVarP(p: net.IP, name: string, value: net.IP, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IP defines an net.IP flag with specified name, default value, and usage string.
+   * The return value is the address of an net.IP variable that stores the value of the flag.
+   */
+  ip(name: string, value: net.IP, usage: string): (net.IP | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IPP is like IP, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipp(name: string, value: net.IP, usage: string): (net.IP | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetIPSlice returns the []net.IP value of a flag with the given name
+   */
+  getIPSlice(name: string): Array<net.IP>
+ }
+ interface FlagSet {
+  /**
+   * IPSliceVar defines a ipSlice flag with specified name, default value, and usage string.
+   * The argument p points to a []net.IP variable in which to store the value of the flag.
+   */
+  ipSliceVar(p: Array<net.IP>, name: string, value: Array<net.IP>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPSliceVarP is like IPSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipSliceVarP(p: Array<net.IP>, name: string, value: Array<net.IP>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPSlice defines a []net.IP flag with specified name, default value, and usage string.
+   * The return value is the address of a []net.IP variable that stores the value of that flag.
+   */
+  ipSlice(name: string, value: Array<net.IP>, usage: string): (Array<net.IP> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IPSliceP is like IPSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipSliceP(name: string, value: Array<net.IP>, usage: string): (Array<net.IP> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetIPv4Mask return the net.IPv4Mask value of a flag with the given name
+   */
+  getIPv4Mask(name: string): net.IPMask
+ }
+ interface FlagSet {
+  /**
+   * IPMaskVar defines an net.IPMask flag with specified name, default value, and usage string.
+   * The argument p points to an net.IPMask variable in which to store the value of the flag.
+   */
+  ipMaskVar(p: net.IPMask, name: string, value: net.IPMask, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPMaskVarP is like IPMaskVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipMaskVarP(p: net.IPMask, name: string, value: net.IPMask, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPMask defines an net.IPMask flag with specified name, default value, and usage string.
+   * The return value is the address of an net.IPMask variable that stores the value of the flag.
+   */
+  ipMask(name: string, value: net.IPMask, usage: string): (net.IPMask | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IPMaskP is like IPMask, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipMaskP(name: string, value: net.IPMask, usage: string): (net.IPMask | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetIPNet return the net.IPNet value of a flag with the given name
+   */
+  getIPNet(name: string): net.IPNet
+ }
+ interface FlagSet {
+  /**
+   * IPNetVar defines an net.IPNet flag with specified name, default value, and usage string.
+   * The argument p points to an net.IPNet variable in which to store the value of the flag.
+   */
+  ipNetVar(p: net.IPNet, name: string, value: net.IPNet, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPNetVarP is like IPNetVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipNetVarP(p: net.IPNet, name: string, value: net.IPNet, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * IPNet defines an net.IPNet flag with specified name, default value, and usage string.
+   * The return value is the address of an net.IPNet variable that stores the value of the flag.
+   */
+  ipNet(name: string, value: net.IPNet, usage: string): (net.IPNet | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IPNetP is like IPNet, but accepts a shorthand letter that can be used after a single dash.
+   */
+  ipNetP(name: string, value: net.IPNet, usage: string): (net.IPNet | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetString return the string value of a flag with the given name
+   */
+  getString(name: string): string
+ }
+ interface FlagSet {
+  /**
+   * StringVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a string variable in which to store the value of the flag.
+   */
+  stringVar(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringVarP is like StringVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringVarP(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * String defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a string variable that stores the value of the flag.
+   */
+  string(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringP is like String, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringP(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetStringArray return the []string value of a flag with the given name
+   */
+  getStringArray(name: string): Array<string>
+ }
+ interface FlagSet {
+  /**
+   * StringArrayVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a []string variable in which to store the values of the multiple flags.
+   * The value of each argument will not try to be separated by comma. Use a StringSlice for that.
+   */
+  stringArrayVar(p: Array<string>, name: string, value: Array<string>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringArrayVarP is like StringArrayVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringArrayVarP(p: Array<string>, name: string, value: Array<string>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringArray defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a []string variable that stores the value of the flag.
+   * The value of each argument will not try to be separated by comma. Use a StringSlice for that.
+   */
+  stringArray(name: string, value: Array<string>, usage: string): (Array<string> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringArrayP is like StringArray, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringArrayP(name: string, value: Array<string>, usage: string): (Array<string> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetStringSlice return the []string value of a flag with the given name
+   */
+  getStringSlice(name: string): Array<string>
+ }
+ interface FlagSet {
+  /**
+   * StringSliceVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a []string variable in which to store the value of the flag.
+   * Compared to StringArray flags, StringSlice flags take comma-separated value as arguments and split them accordingly.
+   * For example:
+   * ```
+   *   --ss="v1,v2" --ss="v3"
+   * ```
+   * will result in
+   * ```
+   *   []string{"v1", "v2", "v3"}
+   * ```
+   */
+  stringSliceVar(p: Array<string>, name: string, value: Array<string>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringSliceVarP is like StringSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringSliceVarP(p: Array<string>, name: string, value: Array<string>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringSlice defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a []string variable that stores the value of the flag.
+   * Compared to StringArray flags, StringSlice flags take comma-separated value as arguments and split them accordingly.
+   * For example:
+   * ```
+   *   --ss="v1,v2" --ss="v3"
+   * ```
+   * will result in
+   * ```
+   *   []string{"v1", "v2", "v3"}
+   * ```
+   */
+  stringSlice(name: string, value: Array<string>, usage: string): (Array<string> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringSliceP is like StringSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringSliceP(name: string, value: Array<string>, usage: string): (Array<string> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetStringToInt return the map[string]int value of a flag with the given name
+   */
+  getStringToInt(name: string): _TygojaDict
+ }
+ interface FlagSet {
+  /**
+   * StringToIntVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a map[string]int variable in which to store the values of the multiple flags.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToIntVar(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToIntVarP is like StringToIntVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToIntVarP(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToInt defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a map[string]int variable that stores the value of the flag.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToInt(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringToIntP is like StringToInt, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToIntP(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetStringToInt64 return the map[string]int64 value of a flag with the given name
+   */
+  getStringToInt64(name: string): _TygojaDict
+ }
+ interface FlagSet {
+  /**
+   * StringToInt64Var defines a string flag with specified name, default value, and usage string.
+   * The argument p point64s to a map[string]int64 variable in which to store the values of the multiple flags.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToInt64Var(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToInt64VarP is like StringToInt64Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToInt64VarP(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToInt64 defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a map[string]int64 variable that stores the value of the flag.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToInt64(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringToInt64P is like StringToInt64, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToInt64P(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetStringToString return the map[string]string value of a flag with the given name
+   */
+  getStringToString(name: string): _TygojaDict
+ }
+ interface FlagSet {
+  /**
+   * StringToStringVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a map[string]string variable in which to store the values of the multiple flags.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToStringVar(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToStringVarP is like StringToStringVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToStringVarP(p: _TygojaDict, name: string, value: _TygojaDict, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * StringToString defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a map[string]string variable that stores the value of the flag.
+   * The value of each argument will not try to be separated by comma
+   */
+  stringToString(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringToStringP is like StringToString, but accepts a shorthand letter that can be used after a single dash.
+   */
+  stringToStringP(name: string, value: _TygojaDict, usage: string): (_TygojaDict | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUint return the uint value of a flag with the given name
+   */
+  getUint(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * UintVar defines a uint flag with specified name, default value, and usage string.
+   * The argument p points to a uint variable in which to store the value of the flag.
+   */
+  uintVar(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * UintVarP is like UintVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uintVarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint defines a uint flag with specified name, default value, and usage string.
+   * The return value is the address of a uint  variable that stores the value of the flag.
+   */
+  uint(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * UintP is like Uint, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uintP(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUint16 return the uint16 value of a flag with the given name
+   */
+  getUint16(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Uint16Var defines a uint flag with specified name, default value, and usage string.
+   * The argument p points to a uint variable in which to store the value of the flag.
+   */
+  uint16Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint16VarP is like Uint16Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint16VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint16 defines a uint flag with specified name, default value, and usage string.
+   * The return value is the address of a uint  variable that stores the value of the flag.
+   */
+  uint16(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Uint16P is like Uint16, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint16P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUint32 return the uint32 value of a flag with the given name
+   */
+  getUint32(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Uint32Var defines a uint32 flag with specified name, default value, and usage string.
+   * The argument p points to a uint32 variable in which to store the value of the flag.
+   */
+  uint32Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint32VarP is like Uint32Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint32VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint32 defines a uint32 flag with specified name, default value, and usage string.
+   * The return value is the address of a uint32  variable that stores the value of the flag.
+   */
+  uint32(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Uint32P is like Uint32, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint32P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUint64 return the uint64 value of a flag with the given name
+   */
+  getUint64(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Uint64Var defines a uint64 flag with specified name, default value, and usage string.
+   * The argument p points to a uint64 variable in which to store the value of the flag.
+   */
+  uint64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint64VarP is like Uint64Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint64VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint64 defines a uint64 flag with specified name, default value, and usage string.
+   * The return value is the address of a uint64 variable that stores the value of the flag.
+   */
+  uint64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Uint64P is like Uint64, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint64P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUint8 return the uint8 value of a flag with the given name
+   */
+  getUint8(name: string): number
+ }
+ interface FlagSet {
+  /**
+   * Uint8Var defines a uint8 flag with specified name, default value, and usage string.
+   * The argument p points to a uint8 variable in which to store the value of the flag.
+   */
+  uint8Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint8VarP is like Uint8Var, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint8VarP(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint8 defines a uint8 flag with specified name, default value, and usage string.
+   * The return value is the address of a uint8 variable that stores the value of the flag.
+   */
+  uint8(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Uint8P is like Uint8, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uint8P(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * GetUintSlice returns the []uint value of a flag with the given name.
+   */
+  getUintSlice(name: string): Array<number>
+ }
+ interface FlagSet {
+  /**
+   * UintSliceVar defines a uintSlice flag with specified name, default value, and usage string.
+   * The argument p points to a []uint variable in which to store the value of the flag.
+   */
+  uintSliceVar(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * UintSliceVarP is like UintSliceVar, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uintSliceVarP(p: Array<number>, name: string, value: Array<number>, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * UintSlice defines a []uint flag with specified name, default value, and usage string.
+   * The return value is the address of a []uint variable that stores the value of the flag.
+   */
+  uintSlice(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
+ }
+ interface FlagSet {
+  /**
+   * UintSliceP is like UintSlice, but accepts a shorthand letter that can be used after a single dash.
+   */
+  uintSliceP(name: string, value: Array<number>, usage: string): (Array<number> | undefined)
  }
 }
 
 /**
- * Package types implements some commonly used db serializable types
- * like datetime, json, etc.
+ * Package cobra is a commander providing a simple interface to create powerful modern CLI interfaces.
+ * In addition to providing an interface, Cobra simultaneously provides a controller to organize your application code.
  */
-namespace types {
- /**
-  * JsonRaw defines a json value type that is safe for db read/write.
-  */
- interface JsonRaw extends String{}
- interface JsonRaw {
+namespace cobra {
+ interface PositionalArgs {(cmd: Command, args: Array<string>): void }
+ // @ts-ignore
+ import flag = pflag
+ interface FParseErrWhitelist extends flag.ParseErrorsWhitelist{}
+ interface Group {
+  id: string
+  title: string
+ }
+ interface ShellCompDirective extends Number{}
+ interface CompletionOptions {
   /**
-   * String returns the current JsonRaw instance as a json encoded string.
+   * DisableDefaultCmd prevents Cobra from creating a default 'completion' command
+   */
+  disableDefaultCmd: boolean
+  /**
+   * DisableNoDescFlag prevents Cobra from creating the '--no-descriptions' flag
+   * for shells that support completion descriptions
+   */
+  disableNoDescFlag: boolean
+  /**
+   * DisableDescriptions turns off all completion descriptions for shells
+   * that support them
+   */
+  disableDescriptions: boolean
+  /**
+   * HiddenDefaultCmd makes the default 'completion' command hidden
+   */
+  hiddenDefaultCmd: boolean
+ }
+}
+
+namespace migrate {
+ interface Migration {
+  file: string
+  up: (db: dbx.Builder) => void
+  down: (db: dbx.Builder) => void
+ }
+}
+
+/**
+ * Package reflect implements run-time reflection, allowing a program to
+ * manipulate objects with arbitrary types. The typical use is to take a value
+ * with static type interface{} and extract its dynamic type information by
+ * calling TypeOf, which returns a Type.
+ * 
+ * A call to ValueOf returns a Value representing the run-time data.
+ * Zero takes a Type and returns a Value representing a zero value
+ * for that type.
+ * 
+ * See "The Laws of Reflection" for an introduction to reflection in Go:
+ * https://golang.org/doc/articles/laws_of_reflection.html
+ */
+namespace reflect {
+ interface Type {
+  /**
+   * Align returns the alignment in bytes of a value of
+   * this type when allocated in memory.
+   */
+  align(): number
+  /**
+   * FieldAlign returns the alignment in bytes of a value of
+   * this type when used as a field in a struct.
+   */
+  fieldAlign(): number
+  /**
+   * Method returns the i'th method in the type's method set.
+   * It panics if i is not in the range [0, NumMethod()).
+   * 
+   * For a non-interface type T or *T, the returned Method's Type and Func
+   * fields describe a function whose first argument is the receiver,
+   * and only exported methods are accessible.
+   * 
+   * For an interface type, the returned Method's Type field gives the
+   * method signature, without a receiver, and the Func field is nil.
+   * 
+   * Methods are sorted in lexicographic order.
+   */
+  method(_arg0: number): Method
+  /**
+   * MethodByName returns the method with that name in the type's
+   * method set and a boolean indicating if the method was found.
+   * 
+   * For a non-interface type T or *T, the returned Method's Type and Func
+   * fields describe a function whose first argument is the receiver.
+   * 
+   * For an interface type, the returned Method's Type field gives the
+   * method signature, without a receiver, and the Func field is nil.
+   */
+  methodByName(_arg0: string): [Method, boolean]
+  /**
+   * NumMethod returns the number of methods accessible using Method.
+   * 
+   * For a non-interface type, it returns the number of exported methods.
+   * 
+   * For an interface type, it returns the number of exported and unexported methods.
+   */
+  numMethod(): number
+  /**
+   * Name returns the type's name within its package for a defined type.
+   * For other (non-defined) types it returns the empty string.
+   */
+  name(): string
+  /**
+   * PkgPath returns a defined type's package path, that is, the import path
+   * that uniquely identifies the package, such as "encoding/base64".
+   * If the type was predeclared (string, error) or not defined (*T, struct{},
+   * []int, or A where A is an alias for a non-defined type), the package path
+   * will be the empty string.
+   */
+  pkgPath(): string
+  /**
+   * Size returns the number of bytes needed to store
+   * a value of the given type; it is analogous to unsafe.Sizeof.
+   */
+  size(): number
+  /**
+   * String returns a string representation of the type.
+   * The string representation may use shortened package names
+   * (e.g., base64 instead of "encoding/base64") and is not
+   * guaranteed to be unique among types. To test for type identity,
+   * compare the Types directly.
    */
   string(): string
- }
- interface JsonRaw {
   /**
-   * MarshalJSON implements the [json.Marshaler] interface.
+   * Kind returns the specific kind of this type.
    */
-  marshalJSON(): string
- }
- interface JsonRaw {
+  kind(): Kind
   /**
-   * UnmarshalJSON implements the [json.Unmarshaler] interface.
+   * Implements reports whether the type implements the interface type u.
    */
-  unmarshalJSON(b: string): void
- }
- interface JsonRaw {
+  implements(u: Type): boolean
   /**
-   * Value implements the [driver.Valuer] interface.
+   * AssignableTo reports whether a value of the type is assignable to type u.
    */
-  value(): any
- }
- interface JsonRaw {
+  assignableTo(u: Type): boolean
   /**
-   * Scan implements [sql.Scanner] interface to scan the provided value
-   * into the current JsonRaw instance.
+   * ConvertibleTo reports whether a value of the type is convertible to type u.
+   * Even if ConvertibleTo returns true, the conversion may still panic.
+   * For example, a slice of type []T is convertible to *[N]T,
+   * but the conversion will panic if its length is less than N.
    */
-  scan(value: {
-   }): void
+  convertibleTo(u: Type): boolean
+  /**
+   * Comparable reports whether values of this type are comparable.
+   * Even if Comparable returns true, the comparison may still panic.
+   * For example, values of interface type are comparable,
+   * but the comparison will panic if their dynamic type is not comparable.
+   */
+  comparable(): boolean
+  /**
+   * Bits returns the size of the type in bits.
+   * It panics if the type's Kind is not one of the
+   * sized or unsized Int, Uint, Float, or Complex kinds.
+   */
+  bits(): number
+  /**
+   * ChanDir returns a channel type's direction.
+   * It panics if the type's Kind is not Chan.
+   */
+  chanDir(): ChanDir
+  /**
+   * IsVariadic reports whether a function type's final input parameter
+   * is a "..." parameter. If so, t.In(t.NumIn() - 1) returns the parameter's
+   * implicit actual type []T.
+   * 
+   * For concreteness, if t represents func(x int, y ... float64), then
+   * 
+   * ```
+   * 	t.NumIn() == 2
+   * 	t.In(0) is the reflect.Type for "int"
+   * 	t.In(1) is the reflect.Type for "[]float64"
+   * 	t.IsVariadic() == true
+   * ```
+   * 
+   * IsVariadic panics if the type's Kind is not Func.
+   */
+  isVariadic(): boolean
+  /**
+   * Elem returns a type's element type.
+   * It panics if the type's Kind is not Array, Chan, Map, Pointer, or Slice.
+   */
+  elem(): Type
+  /**
+   * Field returns a struct type's i'th field.
+   * It panics if the type's Kind is not Struct.
+   * It panics if i is not in the range [0, NumField()).
+   */
+  field(i: number): StructField
+  /**
+   * FieldByIndex returns the nested field corresponding
+   * to the index sequence. It is equivalent to calling Field
+   * successively for each index i.
+   * It panics if the type's Kind is not Struct.
+   */
+  fieldByIndex(index: Array<number>): StructField
+  /**
+   * FieldByName returns the struct field with the given name
+   * and a boolean indicating if the field was found.
+   */
+  fieldByName(name: string): [StructField, boolean]
+  /**
+   * FieldByNameFunc returns the struct field with a name
+   * that satisfies the match function and a boolean indicating if
+   * the field was found.
+   * 
+   * FieldByNameFunc considers the fields in the struct itself
+   * and then the fields in any embedded structs, in breadth first order,
+   * stopping at the shallowest nesting depth containing one or more
+   * fields satisfying the match function. If multiple fields at that depth
+   * satisfy the match function, they cancel each other
+   * and FieldByNameFunc returns no match.
+   * This behavior mirrors Go's handling of name lookup in
+   * structs containing embedded fields.
+   */
+  fieldByNameFunc(match: (_arg0: string) => boolean): [StructField, boolean]
+  /**
+   * In returns the type of a function type's i'th input parameter.
+   * It panics if the type's Kind is not Func.
+   * It panics if i is not in the range [0, NumIn()).
+   */
+  in(i: number): Type
+  /**
+   * Key returns a map type's key type.
+   * It panics if the type's Kind is not Map.
+   */
+  key(): Type
+  /**
+   * Len returns an array type's length.
+   * It panics if the type's Kind is not Array.
+   */
+  len(): number
+  /**
+   * NumField returns a struct type's field count.
+   * It panics if the type's Kind is not Struct.
+   */
+  numField(): number
+  /**
+   * NumIn returns a function type's input parameter count.
+   * It panics if the type's Kind is not Func.
+   */
+  numIn(): number
+  /**
+   * NumOut returns a function type's output parameter count.
+   * It panics if the type's Kind is not Func.
+   */
+  numOut(): number
+  /**
+   * Out returns the type of a function type's i'th output parameter.
+   * It panics if the type's Kind is not Func.
+   * It panics if i is not in the range [0, NumOut()).
+   */
+  out(i: number): Type
  }
 }
 
@@ -16749,12 +17872,8 @@ namespace types {
  * the interface but provides buffering and some help for textual I/O.
  */
 namespace bufio {
- /**
-  * ReadWriter stores pointers to a Reader and a Writer.
-  * It implements io.ReadWriter.
-  */
- type _subyqlBO = Reader&Writer
- interface ReadWriter extends _subyqlBO {
+ type _subqFZSe = Reader&Writer
+ interface ReadWriter extends _subqFZSe {
  }
 }
 
@@ -16796,7 +17915,7 @@ namespace bufio {
  * 	}
  * ```
  * 
- * Name Resolution
+ * # Name Resolution
  * 
  * The method for resolving domain names, whether indirectly with functions like Dial
  * or directly with functions like LookupHost and LookupAddr, varies by operating system.
@@ -16822,7 +17941,7 @@ namespace bufio {
  * 
  * ```
  * 	export GODEBUG=netdns=go    # force pure Go resolver
- * 	export GODEBUG=netdns=cgo   # force cgo resolver
+ * 	export GODEBUG=netdns=cgo   # force native resolver (cgo, win32)
  * ```
  * 
  * The decision can also be forced while building the Go source tree
@@ -16835,19 +17954,643 @@ namespace bufio {
  * 
  * On Plan 9, the resolver always accesses /net/cs and /net/dns.
  * 
- * On Windows, the resolver always uses C library functions, such as GetAddrInfo and DnsQuery.
+ * On Windows, in Go 1.18.x and earlier, the resolver always used C
+ * library functions, such as GetAddrInfo and DnsQuery.
  */
 namespace net {
- /**
-  * Addr represents a network end point address.
-  * 
-  * The two methods Network and String conventionally return strings
-  * that can be passed as the arguments to Dial, but the exact form
-  * and meaning of the strings is up to the implementation.
-  */
+ interface IP extends String{}
+ interface IPMask extends String{}
+ interface IPNet {
+  ip: IP // network number
+  mask: IPMask // network mask
+ }
+ interface IP {
+  /**
+   * IsUnspecified reports whether ip is an unspecified address, either
+   * the IPv4 address "0.0.0.0" or the IPv6 address "::".
+   */
+  isUnspecified(): boolean
+ }
+ interface IP {
+  /**
+   * IsLoopback reports whether ip is a loopback address.
+   */
+  isLoopback(): boolean
+ }
+ interface IP {
+  /**
+   * IsPrivate reports whether ip is a private address, according to
+   * RFC 1918 (IPv4 addresses) and RFC 4193 (IPv6 addresses).
+   */
+  isPrivate(): boolean
+ }
+ interface IP {
+  /**
+   * IsMulticast reports whether ip is a multicast address.
+   */
+  isMulticast(): boolean
+ }
+ interface IP {
+  /**
+   * IsInterfaceLocalMulticast reports whether ip is
+   * an interface-local multicast address.
+   */
+  isInterfaceLocalMulticast(): boolean
+ }
+ interface IP {
+  /**
+   * IsLinkLocalMulticast reports whether ip is a link-local
+   * multicast address.
+   */
+  isLinkLocalMulticast(): boolean
+ }
+ interface IP {
+  /**
+   * IsLinkLocalUnicast reports whether ip is a link-local
+   * unicast address.
+   */
+  isLinkLocalUnicast(): boolean
+ }
+ interface IP {
+  /**
+   * IsGlobalUnicast reports whether ip is a global unicast
+   * address.
+   * 
+   * The identification of global unicast addresses uses address type
+   * identification as defined in RFC 1122, RFC 4632 and RFC 4291 with
+   * the exception of IPv4 directed broadcast addresses.
+   * It returns true even if ip is in IPv4 private address space or
+   * local IPv6 unicast address space.
+   */
+  isGlobalUnicast(): boolean
+ }
+ interface IP {
+  /**
+   * To4 converts the IPv4 address ip to a 4-byte representation.
+   * If ip is not an IPv4 address, To4 returns nil.
+   */
+  to4(): IP
+ }
+ interface IP {
+  /**
+   * To16 converts the IP address ip to a 16-byte representation.
+   * If ip is not an IP address (it is the wrong length), To16 returns nil.
+   */
+  to16(): IP
+ }
+ interface IP {
+  /**
+   * DefaultMask returns the default IP mask for the IP address ip.
+   * Only IPv4 addresses have default masks; DefaultMask returns
+   * nil if ip is not a valid IPv4 address.
+   */
+  defaultMask(): IPMask
+ }
+ interface IP {
+  /**
+   * Mask returns the result of masking the IP address ip with mask.
+   */
+  mask(mask: IPMask): IP
+ }
+ interface IP {
+  /**
+   * String returns the string form of the IP address ip.
+   * It returns one of 4 forms:
+   * ```
+   *   - "<nil>", if ip has length 0
+   *   - dotted decimal ("192.0.2.1"), if ip is an IPv4 or IP4-mapped IPv6 address
+   *   - IPv6 conforming to RFC 5952 ("2001:db8::1"), if ip is a valid IPv6 address
+   *   - the hexadecimal form of ip, without punctuation, if no other cases apply
+   * ```
+   */
+  string(): string
+ }
+ interface IP {
+  /**
+   * MarshalText implements the encoding.TextMarshaler interface.
+   * The encoding is the same as returned by String, with one exception:
+   * When len(ip) is zero, it returns an empty slice.
+   */
+  marshalText(): string
+ }
+ interface IP {
+  /**
+   * UnmarshalText implements the encoding.TextUnmarshaler interface.
+   * The IP address is expected in a form accepted by ParseIP.
+   */
+  unmarshalText(text: string): void
+ }
+ interface IP {
+  /**
+   * Equal reports whether ip and x are the same IP address.
+   * An IPv4 address and that same address in IPv6 form are
+   * considered to be equal.
+   */
+  equal(x: IP): boolean
+ }
+ interface IPMask {
+  /**
+   * Size returns the number of leading ones and total bits in the mask.
+   * If the mask is not in the canonical form--ones followed by zeros--then
+   * Size returns 0, 0.
+   */
+  size(): number
+ }
+ interface IPMask {
+  /**
+   * String returns the hexadecimal form of m, with no punctuation.
+   */
+  string(): string
+ }
+ interface IPNet {
+  /**
+   * Contains reports whether the network includes ip.
+   */
+  contains(ip: IP): boolean
+ }
+ interface IPNet {
+  /**
+   * Network returns the address's network name, "ip+net".
+   */
+  network(): string
+ }
+ interface IPNet {
+  /**
+   * String returns the CIDR notation of n like "192.0.2.0/24"
+   * or "2001:db8::/48" as defined in RFC 4632 and RFC 4291.
+   * If the mask is not in the canonical form, it returns the
+   * string which consists of an IP address, followed by a slash
+   * character and a mask expressed as hexadecimal form with no
+   * punctuation like "198.51.100.0/c000ff00".
+   */
+  string(): string
+ }
  interface Addr {
   network(): string // name of the network (for example, "tcp", "udp")
   string(): string // string form of address (for example, "192.0.2.1:25", "[2001:db8::1]:80")
+ }
+}
+
+/**
+ * Package url parses URLs and implements query escaping.
+ */
+namespace url {
+ interface Userinfo {
+ }
+ interface Userinfo {
+  /**
+   * Username returns the username.
+   */
+  username(): string
+ }
+ interface Userinfo {
+  /**
+   * Password returns the password in case it is set, and whether it is set.
+   */
+  password(): [string, boolean]
+ }
+ interface Userinfo {
+  /**
+   * String returns the encoded userinfo information in the standard form
+   * of "username[:password]".
+   */
+  string(): string
+ }
+}
+
+/**
+ * Package x509 implements a subset of the X.509 standard.
+ * 
+ * It allows parsing and generating certificates, certificate signing
+ * requests, certificate revocation lists, and encoded public and private keys.
+ * It provides a certificate verifier, complete with a chain builder.
+ * 
+ * The package targets the X.509 technical profile defined by the IETF (RFC
+ * 2459/3280/5280), and as further restricted by the CA/Browser Forum Baseline
+ * Requirements. There is minimal support for features outside of these
+ * profiles, as the primary goal of the package is to provide compatibility
+ * with the publicly trusted TLS certificate ecosystem and its policies and
+ * constraints.
+ * 
+ * On macOS and Windows, certificate verification is handled by system APIs, but
+ * the package aims to apply consistent validation rules across operating
+ * systems.
+ */
+namespace x509 {
+ interface CertPool {
+ }
+ interface CertPool {
+  /**
+   * Clone returns a copy of s.
+   */
+  clone(): (CertPool | undefined)
+ }
+ interface CertPool {
+  /**
+   * AddCert adds a certificate to a pool.
+   */
+  addCert(cert: Certificate): void
+ }
+ interface CertPool {
+  /**
+   * AppendCertsFromPEM attempts to parse a series of PEM encoded certificates.
+   * It appends any certificates found to s and reports whether any certificates
+   * were successfully parsed.
+   * 
+   * On many Linux systems, /etc/ssl/cert.pem will contain the system wide set
+   * of root CAs in a format suitable for this function.
+   */
+  appendCertsFromPEM(pemCerts: string): boolean
+ }
+ interface CertPool {
+  /**
+   * Subjects returns a list of the DER-encoded subjects of
+   * all of the certificates in the pool.
+   * 
+   * Deprecated: if s was returned by SystemCertPool, Subjects
+   * will not include the system roots.
+   */
+  subjects(): Array<string>
+ }
+ interface CertPool {
+  /**
+   * Equal reports whether s and other are equal.
+   */
+  equal(other: CertPool): boolean
+ }
+ // @ts-ignore
+ import cryptobyte_asn1 = asn1
+ // @ts-ignore
+ import macOS = macos
+ interface Certificate {
+  /**
+   * Verify attempts to verify c by building one or more chains from c to a
+   * certificate in opts.Roots, using certificates in opts.Intermediates if
+   * needed. If successful, it returns one or more chains where the first
+   * element of the chain is c and the last element is from opts.Roots.
+   * 
+   * If opts.Roots is nil, the platform verifier might be used, and
+   * verification details might differ from what is described below. If system
+   * roots are unavailable the returned error will be of type SystemRootsError.
+   * 
+   * Name constraints in the intermediates will be applied to all names claimed
+   * in the chain, not just opts.DNSName. Thus it is invalid for a leaf to claim
+   * example.com if an intermediate doesn't permit it, even if example.com is not
+   * the name being validated. Note that DirectoryName constraints are not
+   * supported.
+   * 
+   * Name constraint validation follows the rules from RFC 5280, with the
+   * addition that DNS name constraints may use the leading period format
+   * defined for emails and URIs. When a constraint has a leading period
+   * it indicates that at least one additional label must be prepended to
+   * the constrained name to be considered valid.
+   * 
+   * Extended Key Usage values are enforced nested down a chain, so an intermediate
+   * or root that enumerates EKUs prevents a leaf from asserting an EKU not in that
+   * list. (While this is not specified, it is common practice in order to limit
+   * the types of certificates a CA can issue.)
+   * 
+   * Certificates that use SHA1WithRSA and ECDSAWithSHA1 signatures are not supported,
+   * and will not be used to build chains.
+   * 
+   * Certificates other than c in the returned chains should not be modified.
+   * 
+   * WARNING: this function doesn't do any revocation checking.
+   */
+  verify(opts: VerifyOptions): Array<Array<(Certificate | undefined)>>
+ }
+ interface Certificate {
+  /**
+   * VerifyHostname returns nil if c is a valid certificate for the named host.
+   * Otherwise it returns an error describing the mismatch.
+   * 
+   * IP addresses can be optionally enclosed in square brackets and are checked
+   * against the IPAddresses field. Other names are checked case insensitively
+   * against the DNSNames field. If the names are valid hostnames, the certificate
+   * fields can have a wildcard as the left-most label.
+   * 
+   * Note that the legacy Common Name field is ignored.
+   */
+  verifyHostname(h: string): void
+ }
+ interface Certificate {
+  raw: string // Complete ASN.1 DER content (certificate, signature algorithm and signature).
+  rawTBSCertificate: string // Certificate part of raw ASN.1 DER content.
+  rawSubjectPublicKeyInfo: string // DER encoded SubjectPublicKeyInfo.
+  rawSubject: string // DER encoded Subject
+  rawIssuer: string // DER encoded Issuer
+  signature: string
+  signatureAlgorithm: SignatureAlgorithm
+  publicKeyAlgorithm: PublicKeyAlgorithm
+  publicKey: any
+  version: number
+  serialNumber?: big.Int
+  issuer: pkix.Name
+  subject: pkix.Name
+  notBefore: time.Time // Validity bounds.
+  keyUsage: KeyUsage
+  /**
+   * Extensions contains raw X.509 extensions. When parsing certificates,
+   * this can be used to extract non-critical extensions that are not
+   * parsed by this package. When marshaling certificates, the Extensions
+   * field is ignored, see ExtraExtensions.
+   */
+  extensions: Array<pkix.Extension>
+  /**
+   * ExtraExtensions contains extensions to be copied, raw, into any
+   * marshaled certificates. Values override any extensions that would
+   * otherwise be produced based on the other fields. The ExtraExtensions
+   * field is not populated when parsing certificates, see Extensions.
+   */
+  extraExtensions: Array<pkix.Extension>
+  /**
+   * UnhandledCriticalExtensions contains a list of extension IDs that
+   * were not (fully) processed when parsing. Verify will fail if this
+   * slice is non-empty, unless verification is delegated to an OS
+   * library which understands all the critical extensions.
+   * 
+   * Users can access these extensions using Extensions and can remove
+   * elements from this slice if they believe that they have been
+   * handled.
+   */
+  unhandledCriticalExtensions: Array<asn1.ObjectIdentifier>
+  extKeyUsage: Array<ExtKeyUsage> // Sequence of extended key usages.
+  unknownExtKeyUsage: Array<asn1.ObjectIdentifier> // Encountered extended key usages unknown to this package.
+  /**
+   * BasicConstraintsValid indicates whether IsCA, MaxPathLen,
+   * and MaxPathLenZero are valid.
+   */
+  basicConstraintsValid: boolean
+  isCA: boolean
+  /**
+   * MaxPathLen and MaxPathLenZero indicate the presence and
+   * value of the BasicConstraints' "pathLenConstraint".
+   * 
+   * When parsing a certificate, a positive non-zero MaxPathLen
+   * means that the field was specified, -1 means it was unset,
+   * and MaxPathLenZero being true mean that the field was
+   * explicitly set to zero. The case of MaxPathLen==0 with MaxPathLenZero==false
+   * should be treated equivalent to -1 (unset).
+   * 
+   * When generating a certificate, an unset pathLenConstraint
+   * can be requested with either MaxPathLen == -1 or using the
+   * zero value for both MaxPathLen and MaxPathLenZero.
+   */
+  maxPathLen: number
+  /**
+   * MaxPathLenZero indicates that BasicConstraintsValid==true
+   * and MaxPathLen==0 should be interpreted as an actual
+   * maximum path length of zero. Otherwise, that combination is
+   * interpreted as MaxPathLen not being set.
+   */
+  maxPathLenZero: boolean
+  subjectKeyId: string
+  authorityKeyId: string
+  /**
+   * RFC 5280, 4.2.2.1 (Authority Information Access)
+   */
+  ocspServer: Array<string>
+  issuingCertificateURL: Array<string>
+  /**
+   * Subject Alternate Name values. (Note that these values may not be valid
+   * if invalid values were contained within a parsed certificate. For
+   * example, an element of DNSNames may not be a valid DNS domain name.)
+   */
+  dnsNames: Array<string>
+  emailAddresses: Array<string>
+  ipAddresses: Array<net.IP>
+  urIs: Array<(url.URL | undefined)>
+  /**
+   * Name constraints
+   */
+  permittedDNSDomainsCritical: boolean // if true then the name constraints are marked critical.
+  permittedDNSDomains: Array<string>
+  excludedDNSDomains: Array<string>
+  permittedIPRanges: Array<(net.IPNet | undefined)>
+  excludedIPRanges: Array<(net.IPNet | undefined)>
+  permittedEmailAddresses: Array<string>
+  excludedEmailAddresses: Array<string>
+  permittedURIDomains: Array<string>
+  excludedURIDomains: Array<string>
+  /**
+   * CRL Distribution Points
+   */
+  crlDistributionPoints: Array<string>
+  policyIdentifiers: Array<asn1.ObjectIdentifier>
+ }
+ interface Certificate {
+  equal(other: Certificate): boolean
+ }
+ interface Certificate {
+  /**
+   * CheckSignatureFrom verifies that the signature on c is a valid signature from parent.
+   * 
+   * This is a low-level API that performs very limited checks, and not a full
+   * path verifier. Most users should use [Certificate.Verify] instead.
+   */
+  checkSignatureFrom(parent: Certificate): void
+ }
+ interface Certificate {
+  /**
+   * CheckSignature verifies that signature is a valid signature over signed from
+   * c's public key.
+   * 
+   * This is a low-level API that performs no validity checks on the certificate.
+   * 
+   * [MD5WithRSA] signatures are rejected, while [SHA1WithRSA] and [ECDSAWithSHA1]
+   * signatures are currently accepted.
+   */
+  checkSignature(algo: SignatureAlgorithm, signed: string): void
+ }
+ interface Certificate {
+  /**
+   * CheckCRLSignature checks that the signature in crl is from c.
+   * 
+   * Deprecated: Use RevocationList.CheckSignatureFrom instead.
+   */
+  checkCRLSignature(crl: pkix.CertificateList): void
+ }
+ interface Certificate {
+  /**
+   * CreateCRL returns a DER encoded CRL, signed by this Certificate, that
+   * contains the given list of revoked certificates.
+   * 
+   * Deprecated: this method does not generate an RFC 5280 conformant X.509 v2 CRL.
+   * To generate a standards compliant CRL, use CreateRevocationList instead.
+   */
+  createCRL(rand: io.Reader, priv: any, revokedCerts: Array<pkix.RevokedCertificate>, now: time.Time): string
+ }
+}
+
+/**
+ * Package tls partially implements TLS 1.2, as specified in RFC 5246,
+ * and TLS 1.3, as specified in RFC 8446.
+ */
+namespace tls {
+ interface CurveID extends Number{}
+ interface ClientAuthType extends Number{}
+ interface ClientSessionCache {
+  /**
+   * Get searches for a ClientSessionState associated with the given key.
+   * On return, ok is true if one was found.
+   */
+  get(sessionKey: string): [(ClientSessionState | undefined), boolean]
+  /**
+   * Put adds the ClientSessionState to the cache with the given key. It might
+   * get called multiple times in a connection if a TLS 1.3 server provides
+   * more than one session ticket. If called with a nil *ClientSessionState,
+   * it should remove the cache entry.
+   */
+  put(sessionKey: string, cs: ClientSessionState): void
+ }
+ interface ClientHelloInfo {
+  /**
+   * CipherSuites lists the CipherSuites supported by the client (e.g.
+   * TLS_AES_128_GCM_SHA256, TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256).
+   */
+  cipherSuites: Array<number>
+  /**
+   * ServerName indicates the name of the server requested by the client
+   * in order to support virtual hosting. ServerName is only set if the
+   * client is using SNI (see RFC 4366, Section 3.1).
+   */
+  serverName: string
+  /**
+   * SupportedCurves lists the elliptic curves supported by the client.
+   * SupportedCurves is set only if the Supported Elliptic Curves
+   * Extension is being used (see RFC 4492, Section 5.1.1).
+   */
+  supportedCurves: Array<CurveID>
+  /**
+   * SupportedPoints lists the point formats supported by the client.
+   * SupportedPoints is set only if the Supported Point Formats Extension
+   * is being used (see RFC 4492, Section 5.1.2).
+   */
+  supportedPoints: Array<number>
+  /**
+   * SignatureSchemes lists the signature and hash schemes that the client
+   * is willing to verify. SignatureSchemes is set only if the Signature
+   * Algorithms Extension is being used (see RFC 5246, Section 7.4.1.4.1).
+   */
+  signatureSchemes: Array<SignatureScheme>
+  /**
+   * SupportedProtos lists the application protocols supported by the client.
+   * SupportedProtos is set only if the Application-Layer Protocol
+   * Negotiation Extension is being used (see RFC 7301, Section 3.1).
+   * 
+   * Servers can select a protocol by setting Config.NextProtos in a
+   * GetConfigForClient return value.
+   */
+  supportedProtos: Array<string>
+  /**
+   * SupportedVersions lists the TLS versions supported by the client.
+   * For TLS versions less than 1.3, this is extrapolated from the max
+   * version advertised by the client, so values other than the greatest
+   * might be rejected if used.
+   */
+  supportedVersions: Array<number>
+  /**
+   * Conn is the underlying net.Conn for the connection. Do not read
+   * from, or write to, this connection; that will cause the TLS
+   * connection to fail.
+   */
+  conn: net.Conn
+ }
+ interface ClientHelloInfo {
+  /**
+   * Context returns the context of the handshake that is in progress.
+   * This context is a child of the context passed to HandshakeContext,
+   * if any, and is canceled when the handshake concludes.
+   */
+  context(): context.Context
+ }
+ interface CertificateRequestInfo {
+  /**
+   * AcceptableCAs contains zero or more, DER-encoded, X.501
+   * Distinguished Names. These are the names of root or intermediate CAs
+   * that the server wishes the returned certificate to be signed by. An
+   * empty slice indicates that the server has no preference.
+   */
+  acceptableCAs: Array<string>
+  /**
+   * SignatureSchemes lists the signature schemes that the server is
+   * willing to verify.
+   */
+  signatureSchemes: Array<SignatureScheme>
+  /**
+   * Version is the TLS version that was negotiated for this connection.
+   */
+  version: number
+ }
+ interface CertificateRequestInfo {
+  /**
+   * Context returns the context of the handshake that is in progress.
+   * This context is a child of the context passed to HandshakeContext,
+   * if any, and is canceled when the handshake concludes.
+   */
+  context(): context.Context
+ }
+ interface RenegotiationSupport extends Number{}
+ interface ClientHelloInfo {
+  /**
+   * SupportsCertificate returns nil if the provided certificate is supported by
+   * the client that sent the ClientHello. Otherwise, it returns an error
+   * describing the reason for the incompatibility.
+   * 
+   * If this ClientHelloInfo was passed to a GetConfigForClient or GetCertificate
+   * callback, this method will take into account the associated Config. Note that
+   * if GetConfigForClient returns a different Config, the change can't be
+   * accounted for by this method.
+   * 
+   * This function will call x509.ParseCertificate unless c.Leaf is set, which can
+   * incur a significant performance cost.
+   */
+  supportsCertificate(c: Certificate): void
+ }
+ interface CertificateRequestInfo {
+  /**
+   * SupportsCertificate returns nil if the provided certificate is supported by
+   * the server that sent the CertificateRequest. Otherwise, it returns an error
+   * describing the reason for the incompatibility.
+   */
+  supportsCertificate(c: Certificate): void
+ }
+ interface Certificate {
+  certificate: Array<string>
+  /**
+   * PrivateKey contains the private key corresponding to the public key in
+   * Leaf. This must implement crypto.Signer with an RSA, ECDSA or Ed25519 PublicKey.
+   * For a server up to TLS 1.2, it can also implement crypto.Decrypter with
+   * an RSA PublicKey.
+   */
+  privateKey: crypto.PrivateKey
+  /**
+   * SupportedSignatureAlgorithms is an optional list restricting what
+   * signature algorithms the PrivateKey can be used for.
+   */
+  supportedSignatureAlgorithms: Array<SignatureScheme>
+  /**
+   * OCSPStaple contains an optional OCSP response which will be served
+   * to clients that request it.
+   */
+  ocspStaple: string
+  /**
+   * SignedCertificateTimestamps contains an optional list of Signed
+   * Certificate Timestamps which will be served to clients that request it.
+   */
+  signedCertificateTimestamps: Array<string>
+  /**
+   * Leaf is the parsed form of the leaf certificate, which may be initialized
+   * using x509.ParseCertificate to reduce per-handshake processing. If nil,
+   * the leaf certificate will be parsed as needed.
+   */
+  leaf?: x509.Certificate
+ }
+ interface CurveID {
+  string(): string
+ }
+ interface ClientAuthType {
+  string(): string
  }
 }
 
@@ -16857,11 +18600,28 @@ namespace net {
  * 
  * The implementation is sufficient for HTTP (RFC 2388) and the multipart
  * bodies generated by popular browsers.
+ * 
+ * # Limits
+ * 
+ * To protect against malicious inputs, this package sets limits on the size
+ * of the MIME data it processes.
+ * 
+ * Reader.NextPart and Reader.NextRawPart limit the number of headers in a
+ * part to 10000 and Reader.ReadForm limits the total number of headers in all
+ * FileHeaders to 10000.
+ * These limits may be adjusted with the GODEBUG=multipartmaxheaders=<values>
+ * setting.
+ * 
+ * Reader.ReadForm further limits the number of parts in a form to 1000.
+ * This limit may be adjusted with the GODEBUG=multipartmaxparts=<value>
+ * setting.
+ */
+/**
+ * Copyright 2023 The Go Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style
+ * license that can be found in the LICENSE file.
  */
 namespace multipart {
- /**
-  * A Part represents a single part in a multipart body.
-  */
  interface Part {
   /**
    * The headers of the body, if any, with the keys canonicalized
@@ -16895,6 +18655,21 @@ namespace multipart {
  interface Part {
   close(): void
  }
+}
+
+/**
+ * Package log implements a simple logging package. It defines a type, Logger,
+ * with methods for formatting output. It also has a predefined 'standard'
+ * Logger accessible through helper functions Print[f|ln], Fatal[f|ln], and
+ * Panic[f|ln], which are easier to use than creating a Logger manually.
+ * That logger writes to standard error and prints the date and time
+ * of each logged message.
+ * Every log message is output on a separate line: if the message being
+ * printed does not end in a newline, the logger will add one.
+ * The Fatal functions call os.Exit(1) after writing the log message.
+ * The Panic functions call panic after writing the log message.
+ */
+namespace log {
 }
 
 /**
@@ -17013,14 +18788,6 @@ namespace multipart {
  * support.
  */
 namespace http {
- /**
-  * SameSite allows a server to define a cookie attribute making it impossible for
-  * the browser to send this cookie along with cross-site requests. The main
-  * goal is to mitigate the risk of cross-origin information leakage, and provide
-  * some protection against cross-site request forgery attacks.
-  * 
-  * See https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site-00 for details.
-  */
  interface SameSite extends Number{}
  // @ts-ignore
  import mathrand = rand
@@ -17032,9 +18799,6 @@ namespace store {
 }
 
 namespace mailer {
- /**
-  * Message defines a generic email message struct.
-  */
  interface Message {
   from: mail.Address
   to: Array<mail.Address>
@@ -17045,6 +18809,70 @@ namespace mailer {
   text: string
   headers: _TygojaDict
   attachments: _TygojaDict
+ }
+}
+
+/**
+ * Package driver defines interfaces to be implemented by database
+ * drivers as used by package sql.
+ * 
+ * Most code should use package sql.
+ * 
+ * The driver interface has evolved over time. Drivers should implement
+ * Connector and DriverContext interfaces.
+ * The Connector.Connect and Driver.Open methods should never return ErrBadConn.
+ * ErrBadConn should only be returned from Validator, SessionResetter, or
+ * a query method if the connection is already in an invalid (e.g. closed) state.
+ * 
+ * All Conn implementations should implement the following interfaces:
+ * Pinger, SessionResetter, and Validator.
+ * 
+ * If named parameters or context are supported, the driver's Conn should implement:
+ * ExecerContext, QueryerContext, ConnPrepareContext, and ConnBeginTx.
+ * 
+ * To support custom data types, implement NamedValueChecker. NamedValueChecker
+ * also allows queries to accept per-query options as a parameter by returning
+ * ErrRemoveArgument from CheckNamedValue.
+ * 
+ * If multiple result sets are supported, Rows should implement RowsNextResultSet.
+ * If the driver knows how to describe the types present in the returned result
+ * it should implement the following interfaces: RowsColumnTypeScanType,
+ * RowsColumnTypeDatabaseTypeName, RowsColumnTypeLength, RowsColumnTypeNullable,
+ * and RowsColumnTypePrecisionScale. A given row value may also return a Rows
+ * type, which may represent a database cursor value.
+ * 
+ * Before a connection is returned to the connection pool after use, IsValid is
+ * called if implemented. Before a connection is reused for another query,
+ * ResetSession is called if implemented. If a connection is never returned to the
+ * connection pool but immediately reused, then ResetSession is called prior to
+ * reuse but IsValid is not called.
+ */
+namespace driver {
+ interface Conn {
+  /**
+   * Prepare returns a prepared statement, bound to this connection.
+   */
+  prepare(query: string): Stmt
+  /**
+   * Close invalidates and potentially stops any current
+   * prepared statements and transactions, marking this
+   * connection as no longer in use.
+   * 
+   * Because the sql package maintains a free pool of
+   * connections and only calls Close when there's a surplus of
+   * idle connections, it shouldn't be necessary for drivers to
+   * do their own connection caching.
+   * 
+   * Drivers must ensure all network calls made by Close
+   * do not block indefinitely (e.g. apply a timeout).
+   */
+  close(): void
+  /**
+   * Begin starts and returns a new transaction.
+   * 
+   * Deprecated: Drivers should implement ConnBeginTx instead (or additionally).
+   */
+  begin(): Tx
  }
 }
 
@@ -17091,10 +18919,6 @@ namespace mailer {
 namespace echo {
  // @ts-ignore
  import stdContext = context
- /**
-  * Route contains information to adding/registering new route with the router.
-  * Method+Path pair uniquely identifies the Route. It is mandatory to provide Method+Path+Handler fields.
-  */
  interface Route {
   method: string
   path: string
@@ -17120,10 +18944,6 @@ namespace echo {
    */
   forGroup(pathPrefix: string, middlewares: Array<MiddlewareFunc>): Routable
  }
- /**
-  * RoutableContext is additional interface that structures implementing Context must implement. Methods inside this
-  * interface are meant for request routing purposes and should not be used in middlewares.
-  */
  interface RoutableContext {
   /**
    * Request returns `*http.Request`.
@@ -17153,19 +18973,53 @@ namespace echo {
   set(key: string, val: {
   }): void
  }
- /**
-  * PathParam is tuple pf path parameter name and its value in request path
-  */
  interface PathParam {
   name: string
   value: string
  }
 }
 
+/**
+ * Package types implements some commonly used db serializable types
+ * like datetime, json, etc.
+ */
+namespace types {
+ interface JsonRaw extends String{}
+ interface JsonRaw {
+  /**
+   * String returns the current JsonRaw instance as a json encoded string.
+   */
+  string(): string
+ }
+ interface JsonRaw {
+  /**
+   * MarshalJSON implements the [json.Marshaler] interface.
+   */
+  marshalJSON(): string
+ }
+ interface JsonRaw {
+  /**
+   * UnmarshalJSON implements the [json.Unmarshaler] interface.
+   */
+  unmarshalJSON(b: string): void
+ }
+ interface JsonRaw {
+  /**
+   * Value implements the [driver.Valuer] interface.
+   */
+  value(): driver.Value
+ }
+ interface JsonRaw {
+  /**
+   * Scan implements [sql.Scanner] interface to scan the provided value
+   * into the current JsonRaw instance.
+   */
+  scan(value: {
+   }): void
+ }
+}
+
 namespace search {
- /**
-  * Result defines the returned search result structure.
-  */
  interface Result {
   page: number
   perPage: number
@@ -17198,30 +19052,505 @@ namespace settings {
  }
 }
 
-namespace hook {
- /**
-  * Handler defines a hook handler function.
-  */
- interface Handler<T> {(e: T): void }
- /**
-  * wrapped local Hook embedded struct to limit the public API surface.
-  */
- type _subSoilZ<T> = Hook<T>
- interface mainHook<T> extends _subSoilZ<T> {
+/**
+ * Package flag implements command-line flag parsing.
+ * 
+ * # Usage
+ * 
+ * Define flags using flag.String(), Bool(), Int(), etc.
+ * 
+ * This declares an integer flag, -n, stored in the pointer nFlag, with type *int:
+ * 
+ * ```
+ * 	import "flag"
+ * 	var nFlag = flag.Int("n", 1234, "help message for flag n")
+ * ```
+ * 
+ * If you like, you can bind the flag to a variable using the Var() functions.
+ * 
+ * ```
+ * 	var flagvar int
+ * 	func init() {
+ * 		flag.IntVar(&flagvar, "flagname", 1234, "help message for flagname")
+ * 	}
+ * ```
+ * 
+ * Or you can create custom flags that satisfy the Value interface (with
+ * pointer receivers) and couple them to flag parsing by
+ * 
+ * ```
+ * 	flag.Var(&flagVal, "name", "help message for flagname")
+ * ```
+ * 
+ * For such flags, the default value is just the initial value of the variable.
+ * 
+ * After all flags are defined, call
+ * 
+ * ```
+ * 	flag.Parse()
+ * ```
+ * 
+ * to parse the command line into the defined flags.
+ * 
+ * Flags may then be used directly. If you're using the flags themselves,
+ * they are all pointers; if you bind to variables, they're values.
+ * 
+ * ```
+ * 	fmt.Println("ip has value ", *ip)
+ * 	fmt.Println("flagvar has value ", flagvar)
+ * ```
+ * 
+ * After parsing, the arguments following the flags are available as the
+ * slice flag.Args() or individually as flag.Arg(i).
+ * The arguments are indexed from 0 through flag.NArg()-1.
+ * 
+ * # Command line flag syntax
+ * 
+ * The following forms are permitted:
+ * 
+ * ```
+ * 	-flag
+ * 	--flag   // double dashes are also permitted
+ * 	-flag=x
+ * 	-flag x  // non-boolean flags only
+ * ```
+ * 
+ * One or two dashes may be used; they are equivalent.
+ * The last form is not permitted for boolean flags because the
+ * meaning of the command
+ * 
+ * ```
+ * 	cmd -x *
+ * ```
+ * 
+ * where * is a Unix shell wildcard, will change if there is a file
+ * called 0, false, etc. You must use the -flag=false form to turn
+ * off a boolean flag.
+ * 
+ * Flag parsing stops just before the first non-flag argument
+ * ("-" is a non-flag argument) or after the terminator "--".
+ * 
+ * Integer flags accept 1234, 0664, 0x1234 and may be negative.
+ * Boolean flags may be:
+ * 
+ * ```
+ * 	1, 0, t, f, T, F, true, false, TRUE, FALSE, True, False
+ * ```
+ * 
+ * Duration flags accept any input valid for time.ParseDuration.
+ * 
+ * The default set of command-line flags is controlled by
+ * top-level functions.  The FlagSet type allows one to define
+ * independent sets of flags, such as to implement subcommands
+ * in a command-line interface. The methods of FlagSet are
+ * analogous to the top-level functions for the command-line
+ * flag set.
+ */
+namespace flag {
+ interface FlagSet {
+  /**
+   * Usage is the function called when an error occurs while parsing flags.
+   * The field is a function (not a method) that may be changed to point to
+   * a custom error handler. What happens after Usage is called depends
+   * on the ErrorHandling setting; for the command line, this defaults
+   * to ExitOnError, which exits the program after calling Usage.
+   */
+  usage: () => void
+ }
+ interface Flag {
+  name: string // name as it appears on command line
+  usage: string // help message
+  value: Value // value as set
+  defValue: string // default value (as text); for usage message
+ }
+ interface FlagSet {
+  /**
+   * Output returns the destination for usage and error messages. os.Stderr is returned if
+   * output was not set or was set to nil.
+   */
+  output(): io.Writer
+ }
+ interface FlagSet {
+  /**
+   * Name returns the name of the flag set.
+   */
+  name(): string
+ }
+ interface FlagSet {
+  /**
+   * ErrorHandling returns the error handling behavior of the flag set.
+   */
+  errorHandling(): ErrorHandling
+ }
+ interface FlagSet {
+  /**
+   * SetOutput sets the destination for usage and error messages.
+   * If output is nil, os.Stderr is used.
+   */
+  setOutput(output: io.Writer): void
+ }
+ interface FlagSet {
+  /**
+   * VisitAll visits the flags in lexicographical order, calling fn for each.
+   * It visits all flags, even those not set.
+   */
+  visitAll(fn: (_arg0: Flag) => void): void
+ }
+ interface FlagSet {
+  /**
+   * Visit visits the flags in lexicographical order, calling fn for each.
+   * It visits only those flags that have been set.
+   */
+  visit(fn: (_arg0: Flag) => void): void
+ }
+ interface FlagSet {
+  /**
+   * Lookup returns the Flag structure of the named flag, returning nil if none exists.
+   */
+  lookup(name: string): (Flag | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Set sets the value of the named flag.
+   */
+  set(name: string): void
+ }
+ interface FlagSet {
+  /**
+   * PrintDefaults prints, to standard error unless configured otherwise, the
+   * default values of all defined command-line flags in the set. See the
+   * documentation for the global function PrintDefaults for more information.
+   */
+  printDefaults(): void
+ }
+ interface FlagSet {
+  /**
+   * NFlag returns the number of flags that have been set.
+   */
+  nFlag(): number
+ }
+ interface FlagSet {
+  /**
+   * Arg returns the i'th argument. Arg(0) is the first remaining argument
+   * after flags have been processed. Arg returns an empty string if the
+   * requested element does not exist.
+   */
+  arg(i: number): string
+ }
+ interface FlagSet {
+  /**
+   * NArg is the number of arguments remaining after flags have been processed.
+   */
+  nArg(): number
+ }
+ interface FlagSet {
+  /**
+   * Args returns the non-flag arguments.
+   */
+  args(): Array<string>
+ }
+ interface FlagSet {
+  /**
+   * BoolVar defines a bool flag with specified name, default value, and usage string.
+   * The argument p points to a bool variable in which to store the value of the flag.
+   */
+  boolVar(p: boolean, name: string, value: boolean, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Bool defines a bool flag with specified name, default value, and usage string.
+   * The return value is the address of a bool variable that stores the value of the flag.
+   */
+  bool(name: string, value: boolean, usage: string): (boolean | undefined)
+ }
+ interface FlagSet {
+  /**
+   * IntVar defines an int flag with specified name, default value, and usage string.
+   * The argument p points to an int variable in which to store the value of the flag.
+   */
+  intVar(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int defines an int flag with specified name, default value, and usage string.
+   * The return value is the address of an int variable that stores the value of the flag.
+   */
+  int(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Int64Var defines an int64 flag with specified name, default value, and usage string.
+   * The argument p points to an int64 variable in which to store the value of the flag.
+   */
+  int64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Int64 defines an int64 flag with specified name, default value, and usage string.
+   * The return value is the address of an int64 variable that stores the value of the flag.
+   */
+  int64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * UintVar defines a uint flag with specified name, default value, and usage string.
+   * The argument p points to a uint variable in which to store the value of the flag.
+   */
+  uintVar(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint defines a uint flag with specified name, default value, and usage string.
+   * The return value is the address of a uint variable that stores the value of the flag.
+   */
+  uint(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Uint64Var defines a uint64 flag with specified name, default value, and usage string.
+   * The argument p points to a uint64 variable in which to store the value of the flag.
+   */
+  uint64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Uint64 defines a uint64 flag with specified name, default value, and usage string.
+   * The return value is the address of a uint64 variable that stores the value of the flag.
+   */
+  uint64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * StringVar defines a string flag with specified name, default value, and usage string.
+   * The argument p points to a string variable in which to store the value of the flag.
+   */
+  stringVar(p: string, name: string, value: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * String defines a string flag with specified name, default value, and usage string.
+   * The return value is the address of a string variable that stores the value of the flag.
+   */
+  string(name: string, value: string, usage: string): (string | undefined)
+ }
+ interface FlagSet {
+  /**
+   * Float64Var defines a float64 flag with specified name, default value, and usage string.
+   * The argument p points to a float64 variable in which to store the value of the flag.
+   */
+  float64Var(p: number, name: string, value: number, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Float64 defines a float64 flag with specified name, default value, and usage string.
+   * The return value is the address of a float64 variable that stores the value of the flag.
+   */
+  float64(name: string, value: number, usage: string): (number | undefined)
+ }
+ interface FlagSet {
+  /**
+   * DurationVar defines a time.Duration flag with specified name, default value, and usage string.
+   * The argument p points to a time.Duration variable in which to store the value of the flag.
+   * The flag accepts a value acceptable to time.ParseDuration.
+   */
+  durationVar(p: time.Duration, name: string, value: time.Duration, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Duration defines a time.Duration flag with specified name, default value, and usage string.
+   * The return value is the address of a time.Duration variable that stores the value of the flag.
+   * The flag accepts a value acceptable to time.ParseDuration.
+   */
+  duration(name: string, value: time.Duration, usage: string): (time.Duration | undefined)
+ }
+ interface FlagSet {
+  /**
+   * TextVar defines a flag with a specified name, default value, and usage string.
+   * The argument p must be a pointer to a variable that will hold the value
+   * of the flag, and p must implement encoding.TextUnmarshaler.
+   * If the flag is used, the flag value will be passed to p's UnmarshalText method.
+   * The type of the default value must be the same as the type of p.
+   */
+  textVar(p: encoding.TextUnmarshaler, name: string, value: encoding.TextMarshaler, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Func defines a flag with the specified name and usage string.
+   * Each time the flag is seen, fn is called with the value of the flag.
+   * If fn returns a non-nil error, it will be treated as a flag value parsing error.
+   */
+  func(name: string, fn: (_arg0: string) => void): void
+ }
+ interface FlagSet {
+  /**
+   * Var defines a flag with the specified name and usage string. The type and
+   * value of the flag are represented by the first argument, of type Value, which
+   * typically holds a user-defined implementation of Value. For instance, the
+   * caller could create a flag that turns a comma-separated string into a slice
+   * of strings by giving the slice the methods of Value; in particular, Set would
+   * decompose the comma-separated string into the slice.
+   */
+  var(value: Value, name: string, usage: string): void
+ }
+ interface FlagSet {
+  /**
+   * Parse parses flag definitions from the argument list, which should not
+   * include the command name. Must be called after all flags in the FlagSet
+   * are defined and before flags are accessed by the program.
+   * The return value will be ErrHelp if -help or -h were set but not defined.
+   */
+  parse(arguments: Array<string>): void
+ }
+ interface FlagSet {
+  /**
+   * Parsed reports whether f.Parse has been called.
+   */
+  parsed(): boolean
+ }
+ interface FlagSet {
+  /**
+   * Init sets the name and error handling property for a flag set.
+   * By default, the zero FlagSet uses an empty name and the
+   * ContinueOnError error handling policy.
+   */
+  init(name: string, errorHandling: ErrorHandling): void
+ }
+}
+
+/**
+ * Package pflag is a drop-in replacement for Go's flag package, implementing
+ * POSIX/GNU-style --flags.
+ * 
+ * pflag is compatible with the GNU extensions to the POSIX recommendations
+ * for command-line options. See
+ * http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
+ * 
+ * Usage:
+ * 
+ * pflag is a drop-in replacement of Go's native flag package. If you import
+ * pflag under the name "flag" then all code should continue to function
+ * with no changes.
+ * 
+ * ```
+ * 	import flag "github.com/spf13/pflag"
+ * ```
+ * 
+ * There is one exception to this: if you directly instantiate the Flag struct
+ * there is one more field "Shorthand" that you will need to set.
+ * Most code never instantiates this struct directly, and instead uses
+ * functions such as String(), BoolVar(), and Var(), and is therefore
+ * unaffected.
+ * 
+ * Define flags using flag.String(), Bool(), Int(), etc.
+ * 
+ * This declares an integer flag, -flagname, stored in the pointer ip, with type *int.
+ * ```
+ * 	var ip = flag.Int("flagname", 1234, "help message for flagname")
+ * ```
+ * If you like, you can bind the flag to a variable using the Var() functions.
+ * ```
+ * 	var flagvar int
+ * 	func init() {
+ * 		flag.IntVar(&flagvar, "flagname", 1234, "help message for flagname")
+ * 	}
+ * ```
+ * Or you can create custom flags that satisfy the Value interface (with
+ * pointer receivers) and couple them to flag parsing by
+ * ```
+ * 	flag.Var(&flagVal, "name", "help message for flagname")
+ * ```
+ * For such flags, the default value is just the initial value of the variable.
+ * 
+ * After all flags are defined, call
+ * ```
+ * 	flag.Parse()
+ * ```
+ * to parse the command line into the defined flags.
+ * 
+ * Flags may then be used directly. If you're using the flags themselves,
+ * they are all pointers; if you bind to variables, they're values.
+ * ```
+ * 	fmt.Println("ip has value ", *ip)
+ * 	fmt.Println("flagvar has value ", flagvar)
+ * ```
+ * 
+ * After parsing, the arguments after the flag are available as the
+ * slice flag.Args() or individually as flag.Arg(i).
+ * The arguments are indexed from 0 through flag.NArg()-1.
+ * 
+ * The pflag package also defines some new functions that are not in flag,
+ * that give one-letter shorthands for flags. You can use these by appending
+ * 'P' to the name of any function that defines a flag.
+ * ```
+ * 	var ip = flag.IntP("flagname", "f", 1234, "help message")
+ * 	var flagvar bool
+ * 	func init() {
+ * 		flag.BoolVarP(&flagvar, "boolname", "b", true, "help message")
+ * 	}
+ * 	flag.VarP(&flagval, "varname", "v", "help message")
+ * ```
+ * Shorthand letters can be used with single dashes on the command line.
+ * Boolean shorthand flags can be combined with other shorthand flags.
+ * 
+ * Command line flag syntax:
+ * ```
+ * 	--flag    // boolean flags only
+ * 	--flag=x
+ * ```
+ * 
+ * Unlike the flag package, a single dash before an option means something
+ * different than a double dash. Single dashes signify a series of shorthand
+ * letters for flags. All but the last shorthand letter must be boolean flags.
+ * ```
+ * 	// boolean flags
+ * 	-f
+ * 	-abc
+ * 	// non-boolean flags
+ * 	-n 1234
+ * 	-Ifile
+ * 	// mixed
+ * 	-abcs "hello"
+ * 	-abcn1234
+ * ```
+ * 
+ * Flag parsing stops after the terminator "--". Unlike the flag package,
+ * flags can be interspersed with arguments anywhere on the command line
+ * before this terminator.
+ * 
+ * Integer flags accept 1234, 0664, 0x1234 and may be negative.
+ * Boolean flags (in their long form) accept 1, 0, t, f, true, false,
+ * TRUE, FALSE, True, False.
+ * Duration flags accept any input valid for time.ParseDuration.
+ * 
+ * The default set of command-line flags is controlled by
+ * top-level functions.  The FlagSet type allows one to define
+ * independent sets of flags, such as to implement subcommands
+ * in a command-line interface. The methods of FlagSet are
+ * analogous to the top-level functions for the command-line
+ * flag set.
+ */
+namespace pflag {
+ // @ts-ignore
+ import goflag = flag
+ interface ErrorHandling extends Number{}
+ interface ParseErrorsWhitelist {
+  /**
+   * UnknownFlags will ignore unknown flags errors and continue parsing rest of the flags
+   */
+  unknownFlags: boolean
+ }
+ interface Value {
+  string(): string
+  set(_arg0: string): void
+  type(): string
  }
 }
 
 namespace subscriptions {
- /**
-  * Message defines a client's channel data.
-  */
  interface Message {
   name: string
   data: string
  }
- /**
-  * Client is an interface for a generic subscription client.
-  */
  interface Client {
   /**
    * Id Returns the unique id of the client.
@@ -17278,6 +19607,169 @@ namespace subscriptions {
  }
 }
 
+namespace hook {
+ interface Handler<T> {(e: T): void }
+ type _subqrVhF<T> = Hook<T>
+ interface mainHook<T> extends _subqrVhF<T> {
+ }
+}
+
+/**
+ * Package autocert provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ * 
+ * This package is a work in progress and makes no API stability promises.
+ */
+namespace autocert {
+ // @ts-ignore
+ import mathrand = rand
+ interface Manager {
+  /**
+   * Prompt specifies a callback function to conditionally accept a CA's Terms of Service (TOS).
+   * The registration may require the caller to agree to the CA's TOS.
+   * If so, Manager calls Prompt with a TOS URL provided by the CA. Prompt should report
+   * whether the caller agrees to the terms.
+   * 
+   * To always accept the terms, the callers can use AcceptTOS.
+   */
+  prompt: (tosURL: string) => boolean
+  /**
+   * Cache optionally stores and retrieves previously-obtained certificates
+   * and other state. If nil, certs will only be cached for the lifetime of
+   * the Manager. Multiple Managers can share the same Cache.
+   * 
+   * Using a persistent Cache, such as DirCache, is strongly recommended.
+   */
+  cache: Cache
+  /**
+   * HostPolicy controls which domains the Manager will attempt
+   * to retrieve new certificates for. It does not affect cached certs.
+   * 
+   * If non-nil, HostPolicy is called before requesting a new cert.
+   * If nil, all hosts are currently allowed. This is not recommended,
+   * as it opens a potential attack where clients connect to a server
+   * by IP address and pretend to be asking for an incorrect host name.
+   * Manager will attempt to obtain a certificate for that host, incorrectly,
+   * eventually reaching the CA's rate limit for certificate requests
+   * and making it impossible to obtain actual certificates.
+   * 
+   * See GetCertificate for more details.
+   */
+  hostPolicy: HostPolicy
+  /**
+   * RenewBefore optionally specifies how early certificates should
+   * be renewed before they expire.
+   * 
+   * If zero, they're renewed 30 days before expiration.
+   */
+  renewBefore: time.Duration
+  /**
+   * Client is used to perform low-level operations, such as account registration
+   * and requesting new certificates.
+   * 
+   * If Client is nil, a zero-value acme.Client is used with DefaultACMEDirectory
+   * as the directory endpoint.
+   * If the Client.Key is nil, a new ECDSA P-256 key is generated and,
+   * if Cache is not nil, stored in cache.
+   * 
+   * Mutating the field after the first call of GetCertificate method will have no effect.
+   */
+  client?: acme.Client
+  /**
+   * Email optionally specifies a contact email address.
+   * This is used by CAs, such as Let's Encrypt, to notify about problems
+   * with issued certificates.
+   * 
+   * If the Client's account key is already registered, Email is not used.
+   */
+  email: string
+  /**
+   * ForceRSA used to make the Manager generate RSA certificates. It is now ignored.
+   * 
+   * Deprecated: the Manager will request the correct type of certificate based
+   * on what each client supports.
+   */
+  forceRSA: boolean
+  /**
+   * ExtraExtensions are used when generating a new CSR (Certificate Request),
+   * thus allowing customization of the resulting certificate.
+   * For instance, TLS Feature Extension (RFC 7633) can be used
+   * to prevent an OCSP downgrade attack.
+   * 
+   * The field value is passed to crypto/x509.CreateCertificateRequest
+   * in the template's ExtraExtensions field as is.
+   */
+  extraExtensions: Array<pkix.Extension>
+  /**
+   * ExternalAccountBinding optionally represents an arbitrary binding to an
+   * account of the CA to which the ACME server is tied.
+   * See RFC 8555, Section 7.3.4 for more details.
+   */
+  externalAccountBinding?: acme.ExternalAccountBinding
+ }
+ interface Manager {
+  /**
+   * TLSConfig creates a new TLS config suitable for net/http.Server servers,
+   * supporting HTTP/2 and the tls-alpn-01 ACME challenge type.
+   */
+  tlsConfig(): (tls.Config | undefined)
+ }
+ interface Manager {
+  /**
+   * GetCertificate implements the tls.Config.GetCertificate hook.
+   * It provides a TLS certificate for hello.ServerName host, including answering
+   * tls-alpn-01 challenges.
+   * All other fields of hello are ignored.
+   * 
+   * If m.HostPolicy is non-nil, GetCertificate calls the policy before requesting
+   * a new cert. A non-nil error returned from m.HostPolicy halts TLS negotiation.
+   * The error is propagated back to the caller of GetCertificate and is user-visible.
+   * This does not affect cached certs. See HostPolicy field description for more details.
+   * 
+   * If GetCertificate is used directly, instead of via Manager.TLSConfig, package users will
+   * also have to add acme.ALPNProto to NextProtos for tls-alpn-01, or use HTTPHandler for http-01.
+   */
+  getCertificate(hello: tls.ClientHelloInfo): (tls.Certificate | undefined)
+ }
+ interface Manager {
+  /**
+   * HTTPHandler configures the Manager to provision ACME "http-01" challenge responses.
+   * It returns an http.Handler that responds to the challenges and must be
+   * running on port 80. If it receives a request that is not an ACME challenge,
+   * it delegates the request to the optional fallback handler.
+   * 
+   * If fallback is nil, the returned handler redirects all GET and HEAD requests
+   * to the default TLS port 443 with 302 Found status code, preserving the original
+   * request path and query. It responds with 400 Bad Request to all other HTTP methods.
+   * The fallback is not protected by the optional HostPolicy.
+   * 
+   * Because the fallback handler is run with unencrypted port 80 requests,
+   * the fallback should not serve TLS-only requests.
+   * 
+   * If HTTPHandler is never called, the Manager will only use the "tls-alpn-01"
+   * challenge for domain verification.
+   */
+  httpHandler(fallback: http.Handler): http.Handler
+ }
+ interface Manager {
+  /**
+   * Listener listens on the standard TLS port (443) on all interfaces
+   * and returns a net.Listener returning *tls.Conn connections.
+   * 
+   * The returned listener uses a *tls.Config that enables HTTP/2, and
+   * should only be used with servers that support HTTP/2.
+   * 
+   * The returned Listener also enables TCP keep-alives on the accepted
+   * connections. The returned *tls.Conn are returned before their TLS
+   * handshake has completed.
+   * 
+   * Unlike NewListener, it is the caller's responsibility to initialize
+   * the Manager m's Prompt, Cache, HostPolicy, and other desired options.
+   */
+  listener(): net.Listener
+ }
+}
+
 /**
  * Package core is the backbone of PocketBase.
  * 
@@ -17304,9 +19796,6 @@ namespace core {
  * the interface but provides buffering and some help for textual I/O.
  */
 namespace bufio {
- /**
-  * Reader implements buffering for an io.Reader object.
-  */
  interface Reader {
  }
  interface Reader {
@@ -17353,7 +19842,8 @@ namespace bufio {
    * The bytes are taken from at most one Read on the underlying Reader,
    * hence n may be less than len(p).
    * To read exactly len(p) bytes, use io.ReadFull(b, p).
-   * At EOF, the count will be zero and err will be io.EOF.
+   * If the underlying Reader can return a non-zero count with io.EOF,
+   * then this Read method can do so as well; see the [io.Reader] docs.
    */
   read(p: string): number
  }
@@ -17466,14 +19956,6 @@ namespace bufio {
    */
   writeTo(w: io.Writer): number
  }
- /**
-  * Writer implements buffering for an io.Writer object.
-  * If an error occurs writing to a Writer, no more data will be
-  * accepted and all subsequent writes, and Flush, will return the error.
-  * After all data has been written, the client should call the
-  * Flush method to guarantee all data has been forwarded to
-  * the underlying io.Writer.
-  */
  interface Writer {
  }
  interface Writer {
@@ -17561,26 +20043,94 @@ namespace bufio {
 }
 
 /**
+ * Package reflect implements run-time reflection, allowing a program to
+ * manipulate objects with arbitrary types. The typical use is to take a value
+ * with static type interface{} and extract its dynamic type information by
+ * calling TypeOf, which returns a Type.
+ * 
+ * A call to ValueOf returns a Value representing the run-time data.
+ * Zero takes a Type and returns a Value representing a zero value
+ * for that type.
+ * 
+ * See "The Laws of Reflection" for an introduction to reflection in Go:
+ * https://golang.org/doc/articles/laws_of_reflection.html
+ */
+namespace reflect {
+ interface Kind extends Number{}
+ interface ChanDir extends Number{}
+ interface Method {
+  /**
+   * Name is the method name.
+   */
+  name: string
+  /**
+   * PkgPath is the package path that qualifies a lower case (unexported)
+   * method name. It is empty for upper case (exported) method names.
+   * The combination of PkgPath and Name uniquely identifies a method
+   * in a method set.
+   * See https://golang.org/ref/spec#Uniqueness_of_identifiers
+   */
+  pkgPath: string
+  type: Type // method type
+  func: Value // func with receiver as first argument
+  index: number // index for Type.Method
+ }
+ interface Method {
+  /**
+   * IsExported reports whether the method is exported.
+   */
+  isExported(): boolean
+ }
+ interface Kind {
+  /**
+   * String returns the name of k.
+   */
+  string(): string
+ }
+ interface ChanDir {
+  string(): string
+ }
+ interface StructField {
+  /**
+   * Name is the field name.
+   */
+  name: string
+  /**
+   * PkgPath is the package path that qualifies a lower case (unexported)
+   * field name. It is empty for upper case (exported) field names.
+   * See https://golang.org/ref/spec#Uniqueness_of_identifiers
+   */
+  pkgPath: string
+  type: Type // field type
+  tag: StructTag // field tag string
+  offset: number // offset within struct, in bytes
+  index: Array<number> // index sequence for Type.FieldByIndex
+  anonymous: boolean // is an embedded field
+ }
+ interface StructField {
+  /**
+   * IsExported reports whether the field is exported.
+   */
+  isExported(): boolean
+ }
+}
+
+/**
  * Package mail implements parsing of mail messages.
  * 
  * For the most part, this package follows the syntax as specified by RFC 5322 and
  * extended by RFC 6532.
  * Notable divergences:
  * ```
- * 	* Obsolete address formats are not parsed, including addresses with
- * 	  embedded route information.
- * 	* The full range of spacing (the CFWS syntax element) is not supported,
- * 	  such as breaking addresses across lines.
- * 	* No unicode normalization is performed.
- * 	* The special characters ()[]:;@\, are allowed to appear unquoted in names.
+ *   - Obsolete address formats are not parsed, including addresses with
+ *     embedded route information.
+ *   - The full range of spacing (the CFWS syntax element) is not supported,
+ *     such as breaking addresses across lines.
+ *   - No unicode normalization is performed.
+ *   - The special characters ()[]:;@\, are allowed to appear unquoted in names.
  * ```
  */
 namespace mail {
- /**
-  * Address represents a single mail address.
-  * An address such as "Barry Gibbs <bg@example.com>" is represented
-  * as Address{Name: "Barry Gibbs", Address: "bg@example.com"}.
-  */
  interface Address {
   name: string // Proper name; may be empty.
   address: string // user@domain
@@ -17595,8 +20145,3612 @@ namespace mail {
  }
 }
 
-namespace search {
+/**
+ * Package encoding defines interfaces shared by other packages that
+ * convert data to and from byte-level and textual representations.
+ * Packages that check for these interfaces include encoding/gob,
+ * encoding/json, and encoding/xml. As a result, implementing an
+ * interface once can make a type useful in multiple encodings.
+ * Standard types that implement these interfaces include time.Time and net.IP.
+ * The interfaces come in pairs that produce and consume encoded data.
+ */
+namespace encoding {
+ interface TextMarshaler {
+  marshalText(): string
+ }
+ interface TextUnmarshaler {
+  unmarshalText(text: string): void
+ }
+}
+
+/**
+ * Package flag implements command-line flag parsing.
+ * 
+ * # Usage
+ * 
+ * Define flags using flag.String(), Bool(), Int(), etc.
+ * 
+ * This declares an integer flag, -n, stored in the pointer nFlag, with type *int:
+ * 
+ * ```
+ * 	import "flag"
+ * 	var nFlag = flag.Int("n", 1234, "help message for flag n")
+ * ```
+ * 
+ * If you like, you can bind the flag to a variable using the Var() functions.
+ * 
+ * ```
+ * 	var flagvar int
+ * 	func init() {
+ * 		flag.IntVar(&flagvar, "flagname", 1234, "help message for flagname")
+ * 	}
+ * ```
+ * 
+ * Or you can create custom flags that satisfy the Value interface (with
+ * pointer receivers) and couple them to flag parsing by
+ * 
+ * ```
+ * 	flag.Var(&flagVal, "name", "help message for flagname")
+ * ```
+ * 
+ * For such flags, the default value is just the initial value of the variable.
+ * 
+ * After all flags are defined, call
+ * 
+ * ```
+ * 	flag.Parse()
+ * ```
+ * 
+ * to parse the command line into the defined flags.
+ * 
+ * Flags may then be used directly. If you're using the flags themselves,
+ * they are all pointers; if you bind to variables, they're values.
+ * 
+ * ```
+ * 	fmt.Println("ip has value ", *ip)
+ * 	fmt.Println("flagvar has value ", flagvar)
+ * ```
+ * 
+ * After parsing, the arguments following the flags are available as the
+ * slice flag.Args() or individually as flag.Arg(i).
+ * The arguments are indexed from 0 through flag.NArg()-1.
+ * 
+ * # Command line flag syntax
+ * 
+ * The following forms are permitted:
+ * 
+ * ```
+ * 	-flag
+ * 	--flag   // double dashes are also permitted
+ * 	-flag=x
+ * 	-flag x  // non-boolean flags only
+ * ```
+ * 
+ * One or two dashes may be used; they are equivalent.
+ * The last form is not permitted for boolean flags because the
+ * meaning of the command
+ * 
+ * ```
+ * 	cmd -x *
+ * ```
+ * 
+ * where * is a Unix shell wildcard, will change if there is a file
+ * called 0, false, etc. You must use the -flag=false form to turn
+ * off a boolean flag.
+ * 
+ * Flag parsing stops just before the first non-flag argument
+ * ("-" is a non-flag argument) or after the terminator "--".
+ * 
+ * Integer flags accept 1234, 0664, 0x1234 and may be negative.
+ * Boolean flags may be:
+ * 
+ * ```
+ * 	1, 0, t, f, T, F, true, false, TRUE, FALSE, True, False
+ * ```
+ * 
+ * Duration flags accept any input valid for time.ParseDuration.
+ * 
+ * The default set of command-line flags is controlled by
+ * top-level functions.  The FlagSet type allows one to define
+ * independent sets of flags, such as to implement subcommands
+ * in a command-line interface. The methods of FlagSet are
+ * analogous to the top-level functions for the command-line
+ * flag set.
+ */
+namespace flag {
+ interface Value {
+  string(): string
+  set(_arg0: string): void
+ }
+ interface ErrorHandling extends Number{}
+}
+
+/**
+ * Package crypto collects common cryptographic constants.
+ */
+namespace crypto {
+ interface PrivateKey extends _TygojaAny{}
+}
+
+/**
+ * Package big implements arbitrary-precision arithmetic (big numbers).
+ * The following numeric types are supported:
+ * 
+ * ```
+ * 	Int    signed integers
+ * 	Rat    rational numbers
+ * 	Float  floating-point numbers
+ * ```
+ * 
+ * The zero value for an Int, Rat, or Float correspond to 0. Thus, new
+ * values can be declared in the usual ways and denote 0 without further
+ * initialization:
+ * 
+ * ```
+ * 	var x Int        // &x is an *Int of value 0
+ * 	var r = &Rat{}   // r is a *Rat of value 0
+ * 	y := new(Float)  // y is a *Float of value 0
+ * ```
+ * 
+ * Alternatively, new values can be allocated and initialized with factory
+ * functions of the form:
+ * 
+ * ```
+ * 	func NewT(v V) *T
+ * ```
+ * 
+ * For instance, NewInt(x) returns an *Int set to the value of the int64
+ * argument x, NewRat(a, b) returns a *Rat set to the fraction a/b where
+ * a and b are int64 values, and NewFloat(f) returns a *Float initialized
+ * to the float64 argument f. More flexibility is provided with explicit
+ * setters, for instance:
+ * 
+ * ```
+ * 	var z1 Int
+ * 	z1.SetUint64(123)                 // z1 := 123
+ * 	z2 := new(Rat).SetFloat64(1.25)   // z2 := 5/4
+ * 	z3 := new(Float).SetInt(z1)       // z3 := 123.0
+ * ```
+ * 
+ * Setters, numeric operations and predicates are represented as methods of
+ * the form:
+ * 
+ * ```
+ * 	func (z *T) SetV(v V) *T          // z = v
+ * 	func (z *T) Unary(x *T) *T        // z = unary x
+ * 	func (z *T) Binary(x, y *T) *T    // z = x binary y
+ * 	func (x *T) Pred() P              // p = pred(x)
+ * ```
+ * 
+ * with T one of Int, Rat, or Float. For unary and binary operations, the
+ * result is the receiver (usually named z in that case; see below); if it
+ * is one of the operands x or y it may be safely overwritten (and its memory
+ * reused).
+ * 
+ * Arithmetic expressions are typically written as a sequence of individual
+ * method calls, with each call corresponding to an operation. The receiver
+ * denotes the result and the method arguments are the operation's operands.
+ * For instance, given three *Int values a, b and c, the invocation
+ * 
+ * ```
+ * 	c.Add(a, b)
+ * ```
+ * 
+ * computes the sum a + b and stores the result in c, overwriting whatever
+ * value was held in c before. Unless specified otherwise, operations permit
+ * aliasing of parameters, so it is perfectly ok to write
+ * 
+ * ```
+ * 	sum.Add(sum, x)
+ * ```
+ * 
+ * to accumulate values x in a sum.
+ * 
+ * (By always passing in a result value via the receiver, memory use can be
+ * much better controlled. Instead of having to allocate new memory for each
+ * result, an operation can reuse the space allocated for the result value,
+ * and overwrite that value with the new result in the process.)
+ * 
+ * Notational convention: Incoming method parameters (including the receiver)
+ * are named consistently in the API to clarify their use. Incoming operands
+ * are usually named x, y, a, b, and so on, but never z. A parameter specifying
+ * the result is named z (typically the receiver).
+ * 
+ * For instance, the arguments for (*Int).Add are named x and y, and because
+ * the receiver specifies the result destination, it is called z:
+ * 
+ * ```
+ * 	func (z *Int) Add(x, y *Int) *Int
+ * ```
+ * 
+ * Methods of this form typically return the incoming receiver as well, to
+ * enable simple call chaining.
+ * 
+ * Methods which don't require a result value to be passed in (for instance,
+ * Int.Sign), simply return the result. In this case, the receiver is typically
+ * the first operand, named x:
+ * 
+ * ```
+ * 	func (x *Int) Sign() int
+ * ```
+ * 
+ * Various methods support conversions between strings and corresponding
+ * numeric values, and vice versa: *Int, *Rat, and *Float values implement
+ * the Stringer interface for a (default) string representation of the value,
+ * but also provide SetString methods to initialize a value from a string in
+ * a variety of supported formats (see the respective SetString documentation).
+ * 
+ * Finally, *Int, *Rat, and *Float satisfy the fmt package's Scanner interface
+ * for scanning and (except for *Rat) the Formatter interface for formatted
+ * printing.
+ */
+namespace big {
+ interface Int {
+ }
+ interface Int {
+  /**
+   * Sign returns:
+   * 
+   * ```
+   * 	-1 if x <  0
+   * 	 0 if x == 0
+   * 	+1 if x >  0
+   * ```
+   */
+  sign(): number
+ }
+ interface Int {
+  /**
+   * SetInt64 sets z to x and returns z.
+   */
+  setInt64(x: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * SetUint64 sets z to x and returns z.
+   */
+  setUint64(x: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Set sets z to x and returns z.
+   */
+  set(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Bits provides raw (unchecked but fast) access to x by returning its
+   * absolute value as a little-endian Word slice. The result and x share
+   * the same underlying array.
+   * Bits is intended to support implementation of missing low-level Int
+   * functionality outside this package; it should be avoided otherwise.
+   */
+  bits(): Array<Word>
+ }
+ interface Int {
+  /**
+   * SetBits provides raw (unchecked but fast) access to z by setting its
+   * value to abs, interpreted as a little-endian Word slice, and returning
+   * z. The result and abs share the same underlying array.
+   * SetBits is intended to support implementation of missing low-level Int
+   * functionality outside this package; it should be avoided otherwise.
+   */
+  setBits(abs: Array<Word>): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Abs sets z to |x| (the absolute value of x) and returns z.
+   */
+  abs(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Neg sets z to -x and returns z.
+   */
+  neg(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Add sets z to the sum x+y and returns z.
+   */
+  add(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Sub sets z to the difference x-y and returns z.
+   */
+  sub(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Mul sets z to the product x*y and returns z.
+   */
+  mul(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * MulRange sets z to the product of all integers
+   * in the range [a, b] inclusively and returns z.
+   * If a > b (empty range), the result is 1.
+   */
+  mulRange(a: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Binomial sets z to the binomial coefficient C(n, k) and returns z.
+   */
+  binomial(n: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Quo sets z to the quotient x/y for y != 0 and returns z.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * Quo implements truncated division (like Go); see QuoRem for more details.
+   */
+  quo(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Rem sets z to the remainder x%y for y != 0 and returns z.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * Rem implements truncated modulus (like Go); see QuoRem for more details.
+   */
+  rem(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * QuoRem sets z to the quotient x/y and r to the remainder x%y
+   * and returns the pair (z, r) for y != 0.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * 
+   * QuoRem implements T-division and modulus (like Go):
+   * 
+   * ```
+   * 	q = x/y      with the result truncated to zero
+   * 	r = x - y*q
+   * ```
+   * 
+   * (See Daan Leijen, “Division and Modulus for Computer Scientists”.)
+   * See DivMod for Euclidean division and modulus (unlike Go).
+   */
+  quoRem(x: Int): [(Int | undefined), (Int | undefined)]
+ }
+ interface Int {
+  /**
+   * Div sets z to the quotient x/y for y != 0 and returns z.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * Div implements Euclidean division (unlike Go); see DivMod for more details.
+   */
+  div(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Mod sets z to the modulus x%y for y != 0 and returns z.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * Mod implements Euclidean modulus (unlike Go); see DivMod for more details.
+   */
+  mod(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * DivMod sets z to the quotient x div y and m to the modulus x mod y
+   * and returns the pair (z, m) for y != 0.
+   * If y == 0, a division-by-zero run-time panic occurs.
+   * 
+   * DivMod implements Euclidean division and modulus (unlike Go):
+   * 
+   * ```
+   * 	q = x div y  such that
+   * 	m = x - y*q  with 0 <= m < |y|
+   * ```
+   * 
+   * (See Raymond T. Boute, “The Euclidean definition of the functions
+   * div and mod”. ACM Transactions on Programming Languages and
+   * Systems (TOPLAS), 14(2):127-144, New York, NY, USA, 4/1992.
+   * ACM press.)
+   * See QuoRem for T-division and modulus (like Go).
+   */
+  divMod(x: Int): [(Int | undefined), (Int | undefined)]
+ }
+ interface Int {
+  /**
+   * Cmp compares x and y and returns:
+   * 
+   * ```
+   * 	-1 if x <  y
+   * 	 0 if x == y
+   * 	+1 if x >  y
+   * ```
+   */
+  cmp(y: Int): number
+ }
+ interface Int {
+  /**
+   * CmpAbs compares the absolute values of x and y and returns:
+   * 
+   * ```
+   * 	-1 if |x| <  |y|
+   * 	 0 if |x| == |y|
+   * 	+1 if |x| >  |y|
+   * ```
+   */
+  cmpAbs(y: Int): number
+ }
+ interface Int {
+  /**
+   * Int64 returns the int64 representation of x.
+   * If x cannot be represented in an int64, the result is undefined.
+   */
+  int64(): number
+ }
+ interface Int {
+  /**
+   * Uint64 returns the uint64 representation of x.
+   * If x cannot be represented in a uint64, the result is undefined.
+   */
+  uint64(): number
+ }
+ interface Int {
+  /**
+   * IsInt64 reports whether x can be represented as an int64.
+   */
+  isInt64(): boolean
+ }
+ interface Int {
+  /**
+   * IsUint64 reports whether x can be represented as a uint64.
+   */
+  isUint64(): boolean
+ }
+ interface Int {
+  /**
+   * SetString sets z to the value of s, interpreted in the given base,
+   * and returns z and a boolean indicating success. The entire string
+   * (not just a prefix) must be valid for success. If SetString fails,
+   * the value of z is undefined but the returned value is nil.
+   * 
+   * The base argument must be 0 or a value between 2 and MaxBase.
+   * For base 0, the number prefix determines the actual base: A prefix of
+   * “0b” or “0B” selects base 2, “0”, “0o” or “0O” selects base 8,
+   * and “0x” or “0X” selects base 16. Otherwise, the selected base is 10
+   * and no prefix is accepted.
+   * 
+   * For bases <= 36, lower and upper case letters are considered the same:
+   * The letters 'a' to 'z' and 'A' to 'Z' represent digit values 10 to 35.
+   * For bases > 36, the upper case letters 'A' to 'Z' represent the digit
+   * values 36 to 61.
+   * 
+   * For base 0, an underscore character “_” may appear between a base
+   * prefix and an adjacent digit, and between successive digits; such
+   * underscores do not change the value of the number.
+   * Incorrect placement of underscores is reported as an error if there
+   * are no other errors. If base != 0, underscores are not recognized
+   * and act like any other character that is not a valid digit.
+   */
+  setString(s: string, base: number): [(Int | undefined), boolean]
+ }
+ interface Int {
+  /**
+   * SetBytes interprets buf as the bytes of a big-endian unsigned
+   * integer, sets z to that value, and returns z.
+   */
+  setBytes(buf: string): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Bytes returns the absolute value of x as a big-endian byte slice.
+   * 
+   * To use a fixed length slice, or a preallocated one, use FillBytes.
+   */
+  bytes(): string
+ }
+ interface Int {
+  /**
+   * FillBytes sets buf to the absolute value of x, storing it as a zero-extended
+   * big-endian byte slice, and returns buf.
+   * 
+   * If the absolute value of x doesn't fit in buf, FillBytes will panic.
+   */
+  fillBytes(buf: string): string
+ }
+ interface Int {
+  /**
+   * BitLen returns the length of the absolute value of x in bits.
+   * The bit length of 0 is 0.
+   */
+  bitLen(): number
+ }
+ interface Int {
+  /**
+   * TrailingZeroBits returns the number of consecutive least significant zero
+   * bits of |x|.
+   */
+  trailingZeroBits(): number
+ }
+ interface Int {
+  /**
+   * Exp sets z = x**y mod |m| (i.e. the sign of m is ignored), and returns z.
+   * If m == nil or m == 0, z = x**y unless y <= 0 then z = 1. If m != 0, y < 0,
+   * and x and m are not relatively prime, z is unchanged and nil is returned.
+   * 
+   * Modular exponentiation of inputs of a particular size is not a
+   * cryptographically constant-time operation.
+   */
+  exp(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * GCD sets z to the greatest common divisor of a and b and returns z.
+   * If x or y are not nil, GCD sets their value such that z = a*x + b*y.
+   * 
+   * a and b may be positive, zero or negative. (Before Go 1.14 both had
+   * to be > 0.) Regardless of the signs of a and b, z is always >= 0.
+   * 
+   * If a == b == 0, GCD sets z = x = y = 0.
+   * 
+   * If a == 0 and b != 0, GCD sets z = |b|, x = 0, y = sign(b) * 1.
+   * 
+   * If a != 0 and b == 0, GCD sets z = |a|, x = sign(a) * 1, y = 0.
+   */
+  gcd(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Rand sets z to a pseudo-random number in [0, n) and returns z.
+   * 
+   * As this uses the math/rand package, it must not be used for
+   * security-sensitive work. Use crypto/rand.Int instead.
+   */
+  rand(rnd: rand.Rand, n: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * ModInverse sets z to the multiplicative inverse of g in the ring ℤ/nℤ
+   * and returns z. If g and n are not relatively prime, g has no multiplicative
+   * inverse in the ring ℤ/nℤ.  In this case, z is unchanged and the return value
+   * is nil. If n == 0, a division-by-zero run-time panic occurs.
+   */
+  modInverse(g: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * ModSqrt sets z to a square root of x mod p if such a square root exists, and
+   * returns z. The modulus p must be an odd prime. If x is not a square mod p,
+   * ModSqrt leaves z unchanged and returns nil. This function panics if p is
+   * not an odd integer, its behavior is undefined if p is odd but not prime.
+   */
+  modSqrt(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Lsh sets z = x << n and returns z.
+   */
+  lsh(x: Int, n: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Rsh sets z = x >> n and returns z.
+   */
+  rsh(x: Int, n: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Bit returns the value of the i'th bit of x. That is, it
+   * returns (x>>i)&1. The bit index i must be >= 0.
+   */
+  bit(i: number): number
+ }
+ interface Int {
+  /**
+   * SetBit sets z to x, with x's i'th bit set to b (0 or 1).
+   * That is, if b is 1 SetBit sets z = x | (1 << i);
+   * if b is 0 SetBit sets z = x &^ (1 << i). If b is not 0 or 1,
+   * SetBit will panic.
+   */
+  setBit(x: Int, i: number, b: number): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * And sets z = x & y and returns z.
+   */
+  and(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * AndNot sets z = x &^ y and returns z.
+   */
+  andNot(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Or sets z = x | y and returns z.
+   */
+  or(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Xor sets z = x ^ y and returns z.
+   */
+  xor(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Not sets z = ^x and returns z.
+   */
+  not(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Sqrt sets z to ⌊√x⌋, the largest integer such that z² ≤ x, and returns z.
+   * It panics if x is negative.
+   */
+  sqrt(x: Int): (Int | undefined)
+ }
+ interface Int {
+  /**
+   * Text returns the string representation of x in the given base.
+   * Base must be between 2 and 62, inclusive. The result uses the
+   * lower-case letters 'a' to 'z' for digit values 10 to 35, and
+   * the upper-case letters 'A' to 'Z' for digit values 36 to 61.
+   * No prefix (such as "0x") is added to the string. If x is a nil
+   * pointer it returns "<nil>".
+   */
+  text(base: number): string
+ }
+ interface Int {
+  /**
+   * Append appends the string representation of x, as generated by
+   * x.Text(base), to buf and returns the extended buffer.
+   */
+  append(buf: string, base: number): string
+ }
+ interface Int {
+  /**
+   * String returns the decimal representation of x as generated by
+   * x.Text(10).
+   */
+  string(): string
+ }
+ interface Int {
+  /**
+   * Format implements fmt.Formatter. It accepts the formats
+   * 'b' (binary), 'o' (octal with 0 prefix), 'O' (octal with 0o prefix),
+   * 'd' (decimal), 'x' (lowercase hexadecimal), and
+   * 'X' (uppercase hexadecimal).
+   * Also supported are the full suite of package fmt's format
+   * flags for integral types, including '+' and ' ' for sign
+   * control, '#' for leading zero in octal and for hexadecimal,
+   * a leading "0x" or "0X" for "%#x" and "%#X" respectively,
+   * specification of minimum digits precision, output field
+   * width, space or zero padding, and '-' for left or right
+   * justification.
+   */
+  format(s: fmt.State, ch: string): void
+ }
+ interface Int {
+  /**
+   * Scan is a support routine for fmt.Scanner; it sets z to the value of
+   * the scanned number. It accepts the formats 'b' (binary), 'o' (octal),
+   * 'd' (decimal), 'x' (lowercase hexadecimal), and 'X' (uppercase hexadecimal).
+   */
+  scan(s: fmt.ScanState, ch: string): void
+ }
+ interface Int {
+  /**
+   * GobEncode implements the gob.GobEncoder interface.
+   */
+  gobEncode(): string
+ }
+ interface Int {
+  /**
+   * GobDecode implements the gob.GobDecoder interface.
+   */
+  gobDecode(buf: string): void
+ }
+ interface Int {
+  /**
+   * MarshalText implements the encoding.TextMarshaler interface.
+   */
+  marshalText(): string
+ }
+ interface Int {
+  /**
+   * UnmarshalText implements the encoding.TextUnmarshaler interface.
+   */
+  unmarshalText(text: string): void
+ }
+ interface Int {
+  /**
+   * MarshalJSON implements the json.Marshaler interface.
+   */
+  marshalJSON(): string
+ }
+ interface Int {
+  /**
+   * UnmarshalJSON implements the json.Unmarshaler interface.
+   */
+  unmarshalJSON(text: string): void
+ }
+ interface Int {
+  /**
+   * ProbablyPrime reports whether x is probably prime,
+   * applying the Miller-Rabin test with n pseudorandomly chosen bases
+   * as well as a Baillie-PSW test.
+   * 
+   * If x is prime, ProbablyPrime returns true.
+   * If x is chosen randomly and not prime, ProbablyPrime probably returns false.
+   * The probability of returning true for a randomly chosen non-prime is at most ¼ⁿ.
+   * 
+   * ProbablyPrime is 100% accurate for inputs less than 2⁶⁴.
+   * See Menezes et al., Handbook of Applied Cryptography, 1997, pp. 145-149,
+   * and FIPS 186-4 Appendix F for further discussion of the error probabilities.
+   * 
+   * ProbablyPrime is not suitable for judging primes that an adversary may
+   * have crafted to fool the test.
+   * 
+   * As of Go 1.8, ProbablyPrime(0) is allowed and applies only a Baillie-PSW test.
+   * Before Go 1.8, ProbablyPrime applied only the Miller-Rabin tests, and ProbablyPrime(0) panicked.
+   */
+  probablyPrime(n: number): boolean
+ }
+}
+
+/**
+ * Package asn1 implements parsing of DER-encoded ASN.1 data structures,
+ * as defined in ITU-T Rec X.690.
+ * 
+ * See also “A Layman's Guide to a Subset of ASN.1, BER, and DER,”
+ * http://luca.ntop.org/Teaching/Appunti/asn1.html.
+ */
+namespace asn1 {
+ interface ObjectIdentifier extends Array<number>{}
+ interface ObjectIdentifier {
+  /**
+   * Equal reports whether oi and other represent the same identifier.
+   */
+  equal(other: ObjectIdentifier): boolean
+ }
+ interface ObjectIdentifier {
+  string(): string
+ }
+}
+
+/**
+ * Package pkix contains shared, low level structures used for ASN.1 parsing
+ * and serialization of X.509 certificates, CRL and OCSP.
+ */
+namespace pkix {
+ interface Extension {
+  id: asn1.ObjectIdentifier
+  critical: boolean
+  value: string
+ }
+ interface Name {
+  country: Array<string>
+  locality: Array<string>
+  streetAddress: Array<string>
+  serialNumber: string
+  /**
+   * Names contains all parsed attributes. When parsing distinguished names,
+   * this can be used to extract non-standard attributes that are not parsed
+   * by this package. When marshaling to RDNSequences, the Names field is
+   * ignored, see ExtraNames.
+   */
+  names: Array<AttributeTypeAndValue>
+  /**
+   * ExtraNames contains attributes to be copied, raw, into any marshaled
+   * distinguished names. Values override any attributes with the same OID.
+   * The ExtraNames field is not populated when parsing, see Names.
+   */
+  extraNames: Array<AttributeTypeAndValue>
+ }
+ interface Name {
+  /**
+   * FillFromRDNSequence populates n from the provided RDNSequence.
+   * Multi-entry RDNs are flattened, all entries are added to the
+   * relevant n fields, and the grouping is not preserved.
+   */
+  fillFromRDNSequence(rdns: RDNSequence): void
+ }
+ interface Name {
+  /**
+   * ToRDNSequence converts n into a single RDNSequence. The following
+   * attributes are encoded as multi-value RDNs:
+   * 
+   * ```
+   *   - Country
+   *   - Organization
+   *   - OrganizationalUnit
+   *   - Locality
+   *   - Province
+   *   - StreetAddress
+   *   - PostalCode
+   * ```
+   * 
+   * Each ExtraNames entry is encoded as an individual RDN.
+   */
+  toRDNSequence(): RDNSequence
+ }
+ interface Name {
+  /**
+   * String returns the string form of n, roughly following
+   * the RFC 2253 Distinguished Names syntax.
+   */
+  string(): string
+ }
+ interface CertificateList {
+  tbsCertList: TBSCertificateList
+  signatureAlgorithm: AlgorithmIdentifier
+  signatureValue: asn1.BitString
+ }
+ interface CertificateList {
+  /**
+   * HasExpired reports whether certList should have been updated by now.
+   */
+  hasExpired(now: time.Time): boolean
+ }
+ interface RevokedCertificate {
+  serialNumber?: big.Int
+  revocationTime: time.Time
+  extensions: Array<Extension>
+ }
+}
+
+/**
+ * Package x509 implements a subset of the X.509 standard.
+ * 
+ * It allows parsing and generating certificates, certificate signing
+ * requests, certificate revocation lists, and encoded public and private keys.
+ * It provides a certificate verifier, complete with a chain builder.
+ * 
+ * The package targets the X.509 technical profile defined by the IETF (RFC
+ * 2459/3280/5280), and as further restricted by the CA/Browser Forum Baseline
+ * Requirements. There is minimal support for features outside of these
+ * profiles, as the primary goal of the package is to provide compatibility
+ * with the publicly trusted TLS certificate ecosystem and its policies and
+ * constraints.
+ * 
+ * On macOS and Windows, certificate verification is handled by system APIs, but
+ * the package aims to apply consistent validation rules across operating
+ * systems.
+ */
+namespace x509 {
+ // @ts-ignore
+ import cryptobyte_asn1 = asn1
+ // @ts-ignore
+ import macOS = macos
+ interface VerifyOptions {
+  /**
+   * DNSName, if set, is checked against the leaf certificate with
+   * Certificate.VerifyHostname or the platform verifier.
+   */
+  dnsName: string
+  /**
+   * Intermediates is an optional pool of certificates that are not trust
+   * anchors, but can be used to form a chain from the leaf certificate to a
+   * root certificate.
+   */
+  intermediates?: CertPool
+  /**
+   * Roots is the set of trusted root certificates the leaf certificate needs
+   * to chain up to. If nil, the system roots or the platform verifier are used.
+   */
+  roots?: CertPool
+  /**
+   * CurrentTime is used to check the validity of all certificates in the
+   * chain. If zero, the current time is used.
+   */
+  currentTime: time.Time
+  /**
+   * KeyUsages specifies which Extended Key Usage values are acceptable. A
+   * chain is accepted if it allows any of the listed values. An empty list
+   * means ExtKeyUsageServerAuth. To accept any key usage, include ExtKeyUsageAny.
+   */
+  keyUsages: Array<ExtKeyUsage>
+  /**
+   * MaxConstraintComparisions is the maximum number of comparisons to
+   * perform when checking a given certificate's name constraints. If
+   * zero, a sensible default is used. This limit prevents pathological
+   * certificates from consuming excessive amounts of CPU time when
+   * validating. It does not apply to the platform verifier.
+   */
+  maxConstraintComparisions: number
+ }
+ interface SignatureAlgorithm extends Number{}
+ interface SignatureAlgorithm {
+  string(): string
+ }
+ interface PublicKeyAlgorithm extends Number{}
+ interface PublicKeyAlgorithm {
+  string(): string
+ }
+ interface KeyUsage extends Number{}
+ interface ExtKeyUsage extends Number{}
+}
+
+/**
+ * Package tls partially implements TLS 1.2, as specified in RFC 5246,
+ * and TLS 1.3, as specified in RFC 8446.
+ */
+namespace tls {
+ interface ClientSessionState {
+ }
+ interface SignatureScheme extends Number{}
+ interface SignatureScheme {
+  string(): string
+ }
+}
+
+/**
+ * Package acme provides an implementation of the
+ * Automatic Certificate Management Environment (ACME) spec,
+ * most famously used by Let's Encrypt.
+ * 
+ * The initial implementation of this package was based on an early version
+ * of the spec. The current implementation supports only the modern
+ * RFC 8555 but some of the old API surface remains for compatibility.
+ * While code using the old API will still compile, it will return an error.
+ * Note the deprecation comments to update your code.
+ * 
+ * See https://tools.ietf.org/html/rfc8555 for the spec.
+ * 
+ * Most common scenarios will want to use autocert subdirectory instead,
+ * which provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ */
+namespace acme {
+ interface Client {
+  /**
+   * Key is the account key used to register with a CA and sign requests.
+   * Key.Public() must return a *rsa.PublicKey or *ecdsa.PublicKey.
+   * 
+   * The following algorithms are supported:
+   * RS256, ES256, ES384 and ES512.
+   * See RFC 7518 for more details about the algorithms.
+   */
+  key: crypto.Signer
+  /**
+   * HTTPClient optionally specifies an HTTP client to use
+   * instead of http.DefaultClient.
+   */
+  httpClient?: any
+  /**
+   * DirectoryURL points to the CA directory endpoint.
+   * If empty, LetsEncryptURL is used.
+   * Mutating this value after a successful call of Client's Discover method
+   * will have no effect.
+   */
+  directoryURL: string
+  /**
+   * RetryBackoff computes the duration after which the nth retry of a failed request
+   * should occur. The value of n for the first call on failure is 1.
+   * The values of r and resp are the request and response of the last failed attempt.
+   * If the returned value is negative or zero, no more retries are done and an error
+   * is returned to the caller of the original method.
+   * 
+   * Requests which result in a 4xx client error are not retried,
+   * except for 400 Bad Request due to "bad nonce" errors and 429 Too Many Requests.
+   * 
+   * If RetryBackoff is nil, a truncated exponential backoff algorithm
+   * with the ceiling of 10 seconds is used, where each subsequent retry n
+   * is done after either ("Retry-After" + jitter) or (2^n seconds + jitter),
+   * preferring the former if "Retry-After" header is found in the resp.
+   * The jitter is a random value up to 1 second.
+   */
+  retryBackoff: (n: number, r: http.Request, resp: http.Response) => time.Duration
+  /**
+   * UserAgent is prepended to the User-Agent header sent to the ACME server,
+   * which by default is this package's name and version.
+   * 
+   * Reusable libraries and tools in particular should set this value to be
+   * identifiable by the server, in case they are causing issues.
+   */
+  userAgent: string
+  /**
+   * KID is the key identifier provided by the CA. If not provided it will be
+   * retrieved from the CA by making a call to the registration endpoint.
+   */
+  kid: KeyID
+ }
+ interface Client {
+  /**
+   * Discover performs ACME server discovery using c.DirectoryURL.
+   * 
+   * It caches successful result. So, subsequent calls will not result in
+   * a network round-trip. This also means mutating c.DirectoryURL after successful call
+   * of this method will have no effect.
+   */
+  discover(ctx: context.Context): Directory
+ }
+ interface Client {
+  /**
+   * CreateCert was part of the old version of ACME. It is incompatible with RFC 8555.
+   * 
+   * Deprecated: this was for the pre-RFC 8555 version of ACME. Callers should use CreateOrderCert.
+   */
+  createCert(ctx: context.Context, csr: string, exp: time.Duration, bundle: boolean): [Array<string>, string]
+ }
+ interface Client {
+  /**
+   * FetchCert retrieves already issued certificate from the given url, in DER format.
+   * It retries the request until the certificate is successfully retrieved,
+   * context is cancelled by the caller or an error response is received.
+   * 
+   * If the bundle argument is true, the returned value also contains the CA (issuer)
+   * certificate chain.
+   * 
+   * FetchCert returns an error if the CA's response or chain was unreasonably large.
+   * Callers are encouraged to parse the returned value to ensure the certificate is valid
+   * and has expected features.
+   */
+  fetchCert(ctx: context.Context, url: string, bundle: boolean): Array<string>
+ }
+ interface Client {
+  /**
+   * RevokeCert revokes a previously issued certificate cert, provided in DER format.
+   * 
+   * The key argument, used to sign the request, must be authorized
+   * to revoke the certificate. It's up to the CA to decide which keys are authorized.
+   * For instance, the key pair of the certificate may be authorized.
+   * If the key is nil, c.Key is used instead.
+   */
+  revokeCert(ctx: context.Context, key: crypto.Signer, cert: string, reason: CRLReasonCode): void
+ }
+ interface Client {
+  /**
+   * Register creates a new account with the CA using c.Key.
+   * It returns the registered account. The account acct is not modified.
+   * 
+   * The registration may require the caller to agree to the CA's Terms of Service (TOS).
+   * If so, and the account has not indicated the acceptance of the terms (see Account for details),
+   * Register calls prompt with a TOS URL provided by the CA. Prompt should report
+   * whether the caller agrees to the terms. To always accept the terms, the caller can use AcceptTOS.
+   * 
+   * When interfacing with an RFC-compliant CA, non-RFC 8555 fields of acct are ignored
+   * and prompt is called if Directory's Terms field is non-zero.
+   * Also see Error's Instance field for when a CA requires already registered accounts to agree
+   * to an updated Terms of Service.
+   */
+  register(ctx: context.Context, acct: Account, prompt: (tosURL: string) => boolean): (Account | undefined)
+ }
+ interface Client {
+  /**
+   * GetReg retrieves an existing account associated with c.Key.
+   * 
+   * The url argument is a legacy artifact of the pre-RFC 8555 API
+   * and is ignored.
+   */
+  getReg(ctx: context.Context, url: string): (Account | undefined)
+ }
+ interface Client {
+  /**
+   * UpdateReg updates an existing registration.
+   * It returns an updated account copy. The provided account is not modified.
+   * 
+   * The account's URI is ignored and the account URL associated with
+   * c.Key is used instead.
+   */
+  updateReg(ctx: context.Context, acct: Account): (Account | undefined)
+ }
+ interface Client {
+  /**
+   * AccountKeyRollover attempts to transition a client's account key to a new key.
+   * On success client's Key is updated which is not concurrency safe.
+   * On failure an error will be returned.
+   * The new key is already registered with the ACME provider if the following is true:
+   * ```
+   *   - error is of type acme.Error
+   *   - StatusCode should be 409 (Conflict)
+   *   - Location header will have the KID of the associated account
+   * ```
+   * 
+   * More about account key rollover can be found at
+   * https://tools.ietf.org/html/rfc8555#section-7.3.5.
+   */
+  accountKeyRollover(ctx: context.Context, newKey: crypto.Signer): void
+ }
+ interface Client {
+  /**
+   * Authorize performs the initial step in the pre-authorization flow,
+   * as opposed to order-based flow.
+   * The caller will then need to choose from and perform a set of returned
+   * challenges using c.Accept in order to successfully complete authorization.
+   * 
+   * Once complete, the caller can use AuthorizeOrder which the CA
+   * should provision with the already satisfied authorization.
+   * For pre-RFC CAs, the caller can proceed directly to requesting a certificate
+   * using CreateCert method.
+   * 
+   * If an authorization has been previously granted, the CA may return
+   * a valid authorization which has its Status field set to StatusValid.
+   * 
+   * More about pre-authorization can be found at
+   * https://tools.ietf.org/html/rfc8555#section-7.4.1.
+   */
+  authorize(ctx: context.Context, domain: string): (Authorization | undefined)
+ }
+ interface Client {
+  /**
+   * AuthorizeIP is the same as Authorize but requests IP address authorization.
+   * Clients which successfully obtain such authorization may request to issue
+   * a certificate for IP addresses.
+   * 
+   * See the ACME spec extension for more details about IP address identifiers:
+   * https://tools.ietf.org/html/draft-ietf-acme-ip.
+   */
+  authorizeIP(ctx: context.Context, ipaddr: string): (Authorization | undefined)
+ }
+ interface Client {
+  /**
+   * GetAuthorization retrieves an authorization identified by the given URL.
+   * 
+   * If a caller needs to poll an authorization until its status is final,
+   * see the WaitAuthorization method.
+   */
+  getAuthorization(ctx: context.Context, url: string): (Authorization | undefined)
+ }
+ interface Client {
+  /**
+   * RevokeAuthorization relinquishes an existing authorization identified
+   * by the given URL.
+   * The url argument is an Authorization.URI value.
+   * 
+   * If successful, the caller will be required to obtain a new authorization
+   * using the Authorize or AuthorizeOrder methods before being able to request
+   * a new certificate for the domain associated with the authorization.
+   * 
+   * It does not revoke existing certificates.
+   */
+  revokeAuthorization(ctx: context.Context, url: string): void
+ }
+ interface Client {
+  /**
+   * WaitAuthorization polls an authorization at the given URL
+   * until it is in one of the final states, StatusValid or StatusInvalid,
+   * the ACME CA responded with a 4xx error code, or the context is done.
+   * 
+   * It returns a non-nil Authorization only if its Status is StatusValid.
+   * In all other cases WaitAuthorization returns an error.
+   * If the Status is StatusInvalid, the returned error is of type *AuthorizationError.
+   */
+  waitAuthorization(ctx: context.Context, url: string): (Authorization | undefined)
+ }
+ interface Client {
+  /**
+   * GetChallenge retrieves the current status of an challenge.
+   * 
+   * A client typically polls a challenge status using this method.
+   */
+  getChallenge(ctx: context.Context, url: string): (Challenge | undefined)
+ }
+ interface Client {
+  /**
+   * Accept informs the server that the client accepts one of its challenges
+   * previously obtained with c.Authorize.
+   * 
+   * The server will then perform the validation asynchronously.
+   */
+  accept(ctx: context.Context, chal: Challenge): (Challenge | undefined)
+ }
+ interface Client {
+  /**
+   * DNS01ChallengeRecord returns a DNS record value for a dns-01 challenge response.
+   * A TXT record containing the returned value must be provisioned under
+   * "_acme-challenge" name of the domain being validated.
+   * 
+   * The token argument is a Challenge.Token value.
+   */
+  dns01ChallengeRecord(token: string): string
+ }
+ interface Client {
+  /**
+   * HTTP01ChallengeResponse returns the response for an http-01 challenge.
+   * Servers should respond with the value to HTTP requests at the URL path
+   * provided by HTTP01ChallengePath to validate the challenge and prove control
+   * over a domain name.
+   * 
+   * The token argument is a Challenge.Token value.
+   */
+  http01ChallengeResponse(token: string): string
+ }
+ interface Client {
+  /**
+   * HTTP01ChallengePath returns the URL path at which the response for an http-01 challenge
+   * should be provided by the servers.
+   * The response value can be obtained with HTTP01ChallengeResponse.
+   * 
+   * The token argument is a Challenge.Token value.
+   */
+  http01ChallengePath(token: string): string
+ }
+ interface Client {
+  /**
+   * TLSSNI01ChallengeCert creates a certificate for TLS-SNI-01 challenge response.
+   * 
+   * Deprecated: This challenge type is unused in both draft-02 and RFC versions of the ACME spec.
+   */
+  tlssni01ChallengeCert(token: string, ...opt: CertOption[]): [tls.Certificate, string]
+ }
+ interface Client {
+  /**
+   * TLSSNI02ChallengeCert creates a certificate for TLS-SNI-02 challenge response.
+   * 
+   * Deprecated: This challenge type is unused in both draft-02 and RFC versions of the ACME spec.
+   */
+  tlssni02ChallengeCert(token: string, ...opt: CertOption[]): [tls.Certificate, string]
+ }
+ interface Client {
+  /**
+   * TLSALPN01ChallengeCert creates a certificate for TLS-ALPN-01 challenge response.
+   * Servers can present the certificate to validate the challenge and prove control
+   * over a domain name. For more details on TLS-ALPN-01 see
+   * https://tools.ietf.org/html/draft-shoemaker-acme-tls-alpn-00#section-3
+   * 
+   * The token argument is a Challenge.Token value.
+   * If a WithKey option is provided, its private part signs the returned cert,
+   * and the public part is used to specify the signee.
+   * If no WithKey option is provided, a new ECDSA key is generated using P-256 curve.
+   * 
+   * The returned certificate is valid for the next 24 hours and must be presented only when
+   * the server name in the TLS ClientHello matches the domain, and the special acme-tls/1 ALPN protocol
+   * has been specified.
+   */
+  tlsalpn01ChallengeCert(token: string, ...opt: CertOption[]): tls.Certificate
+ }
+ interface Client {
+  /**
+   * DeactivateReg permanently disables an existing account associated with c.Key.
+   * A deactivated account can no longer request certificate issuance or access
+   * resources related to the account, such as orders or authorizations.
+   * 
+   * It only works with CAs implementing RFC 8555.
+   */
+  deactivateReg(ctx: context.Context): void
+ }
+ interface Client {
+  /**
+   * AuthorizeOrder initiates the order-based application for certificate issuance,
+   * as opposed to pre-authorization in Authorize.
+   * It is only supported by CAs implementing RFC 8555.
+   * 
+   * The caller then needs to fetch each authorization with GetAuthorization,
+   * identify those with StatusPending status and fulfill a challenge using Accept.
+   * Once all authorizations are satisfied, the caller will typically want to poll
+   * order status using WaitOrder until it's in StatusReady state.
+   * To finalize the order and obtain a certificate, the caller submits a CSR with CreateOrderCert.
+   */
+  authorizeOrder(ctx: context.Context, id: Array<AuthzID>, ...opt: OrderOption[]): (Order | undefined)
+ }
+ interface Client {
+  /**
+   * GetOrder retrives an order identified by the given URL.
+   * For orders created with AuthorizeOrder, the url value is Order.URI.
+   * 
+   * If a caller needs to poll an order until its status is final,
+   * see the WaitOrder method.
+   */
+  getOrder(ctx: context.Context, url: string): (Order | undefined)
+ }
+ interface Client {
+  /**
+   * WaitOrder polls an order from the given URL until it is in one of the final states,
+   * StatusReady, StatusValid or StatusInvalid, the CA responded with a non-retryable error
+   * or the context is done.
+   * 
+   * It returns a non-nil Order only if its Status is StatusReady or StatusValid.
+   * In all other cases WaitOrder returns an error.
+   * If the Status is StatusInvalid, the returned error is of type *OrderError.
+   */
+  waitOrder(ctx: context.Context, url: string): (Order | undefined)
+ }
+ interface Client {
+  /**
+   * CreateOrderCert submits the CSR (Certificate Signing Request) to a CA at the specified URL.
+   * The URL is the FinalizeURL field of an Order created with AuthorizeOrder.
+   * 
+   * If the bundle argument is true, the returned value also contain the CA (issuer)
+   * certificate chain. Otherwise, only a leaf certificate is returned.
+   * The returned URL can be used to re-fetch the certificate using FetchCert.
+   * 
+   * This method is only supported by CAs implementing RFC 8555. See CreateCert for pre-RFC CAs.
+   * 
+   * CreateOrderCert returns an error if the CA's response is unreasonably large.
+   * Callers are encouraged to parse the returned value to ensure the certificate is valid and has the expected features.
+   */
+  createOrderCert(ctx: context.Context, url: string, csr: string, bundle: boolean): [Array<string>, string]
+ }
+ interface Client {
+  /**
+   * ListCertAlternates retrieves any alternate certificate chain URLs for the
+   * given certificate chain URL. These alternate URLs can be passed to FetchCert
+   * in order to retrieve the alternate certificate chains.
+   * 
+   * If there are no alternate issuer certificate chains, a nil slice will be
+   * returned.
+   */
+  listCertAlternates(ctx: context.Context, url: string): Array<string>
+ }
+ interface ExternalAccountBinding {
+  /**
+   * KID is the Key ID of the symmetric MAC key that the CA provides to
+   * identify an external account from ACME.
+   */
+  kid: string
+  /**
+   * Key is the bytes of the symmetric key that the CA provides to identify
+   * the account. Key must correspond to the KID.
+   */
+  key: string
+ }
+ interface ExternalAccountBinding {
+  string(): string
+ }
 }
 
 namespace subscriptions {
+}
+
+/**
+ * Package driver defines interfaces to be implemented by database
+ * drivers as used by package sql.
+ * 
+ * Most code should use package sql.
+ * 
+ * The driver interface has evolved over time. Drivers should implement
+ * Connector and DriverContext interfaces.
+ * The Connector.Connect and Driver.Open methods should never return ErrBadConn.
+ * ErrBadConn should only be returned from Validator, SessionResetter, or
+ * a query method if the connection is already in an invalid (e.g. closed) state.
+ * 
+ * All Conn implementations should implement the following interfaces:
+ * Pinger, SessionResetter, and Validator.
+ * 
+ * If named parameters or context are supported, the driver's Conn should implement:
+ * ExecerContext, QueryerContext, ConnPrepareContext, and ConnBeginTx.
+ * 
+ * To support custom data types, implement NamedValueChecker. NamedValueChecker
+ * also allows queries to accept per-query options as a parameter by returning
+ * ErrRemoveArgument from CheckNamedValue.
+ * 
+ * If multiple result sets are supported, Rows should implement RowsNextResultSet.
+ * If the driver knows how to describe the types present in the returned result
+ * it should implement the following interfaces: RowsColumnTypeScanType,
+ * RowsColumnTypeDatabaseTypeName, RowsColumnTypeLength, RowsColumnTypeNullable,
+ * and RowsColumnTypePrecisionScale. A given row value may also return a Rows
+ * type, which may represent a database cursor value.
+ * 
+ * Before a connection is returned to the connection pool after use, IsValid is
+ * called if implemented. Before a connection is reused for another query,
+ * ResetSession is called if implemented. If a connection is never returned to the
+ * connection pool but immediately reused, then ResetSession is called prior to
+ * reuse but IsValid is not called.
+ */
+namespace driver {
+ interface Stmt {
+  /**
+   * Close closes the statement.
+   * 
+   * As of Go 1.1, a Stmt will not be closed if it's in use
+   * by any queries.
+   * 
+   * Drivers must ensure all network calls made by Close
+   * do not block indefinitely (e.g. apply a timeout).
+   */
+  close(): void
+  /**
+   * NumInput returns the number of placeholder parameters.
+   * 
+   * If NumInput returns >= 0, the sql package will sanity check
+   * argument counts from callers and return errors to the caller
+   * before the statement's Exec or Query methods are called.
+   * 
+   * NumInput may also return -1, if the driver doesn't know
+   * its number of placeholders. In that case, the sql package
+   * will not sanity check Exec or Query argument counts.
+   */
+  numInput(): number
+  /**
+   * Exec executes a query that doesn't return rows, such
+   * as an INSERT or UPDATE.
+   * 
+   * Deprecated: Drivers should implement StmtExecContext instead (or additionally).
+   */
+  exec(args: Array<Value>): Result
+  /**
+   * Query executes a query that may return rows, such as a
+   * SELECT.
+   * 
+   * Deprecated: Drivers should implement StmtQueryContext instead (or additionally).
+   */
+  query(args: Array<Value>): Rows
+ }
+ interface Tx {
+  commit(): void
+  rollback(): void
+ }
+}
+
+/**
+ * Package autocert provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ * 
+ * This package is a work in progress and makes no API stability promises.
+ */
+namespace autocert {
+ // @ts-ignore
+ import mathrand = rand
+ interface HostPolicy {(ctx: context.Context, host: string): void }
+ interface Cache {
+  /**
+   * Get returns a certificate data for the specified key.
+   * If there's no such key, Get returns ErrCacheMiss.
+   */
+  get(ctx: context.Context, key: string): string
+  /**
+   * Put stores the data in the cache under the specified key.
+   * Underlying implementations may use any data storage format,
+   * as long as the reverse operation, Get, results in the original data.
+   */
+  put(ctx: context.Context, key: string, data: string): void
+  /**
+   * Delete removes a certificate data from the cache under the specified key.
+   * If there's no such key in the cache, Delete returns nil.
+   */
+  delete(ctx: context.Context, key: string): void
+ }
+}
+
+namespace search {
+}
+
+/**
+ * Package crypto collects common cryptographic constants.
+ */
+namespace crypto {
+ interface Signer {
+  /**
+   * Public returns the public key corresponding to the opaque,
+   * private key.
+   */
+  public(): PublicKey
+  /**
+   * Sign signs digest with the private key, possibly using entropy from
+   * rand. For an RSA key, the resulting signature should be either a
+   * PKCS #1 v1.5 or PSS signature (as indicated by opts). For an (EC)DSA
+   * key, it should be a DER-serialised, ASN.1 signature structure.
+   * 
+   * Hash implements the SignerOpts interface and, in most cases, one can
+   * simply pass in the hash function used as opts. Sign may also attempt
+   * to type assert opts to other types in order to obtain algorithm
+   * specific values. See the documentation in each package for details.
+   * 
+   * Note that when a signature of a hash of a larger message is needed,
+   * the caller is responsible for hashing the larger message and passing
+   * the hash (as digest) and the hash function (as opts) to Sign.
+   */
+  sign(rand: io.Reader, digest: string, opts: SignerOpts): string
+ }
+}
+
+/**
+ * Package reflect implements run-time reflection, allowing a program to
+ * manipulate objects with arbitrary types. The typical use is to take a value
+ * with static type interface{} and extract its dynamic type information by
+ * calling TypeOf, which returns a Type.
+ * 
+ * A call to ValueOf returns a Value representing the run-time data.
+ * Zero takes a Type and returns a Value representing a zero value
+ * for that type.
+ * 
+ * See "The Laws of Reflection" for an introduction to reflection in Go:
+ * https://golang.org/doc/articles/laws_of_reflection.html
+ */
+namespace reflect {
+ interface StructTag extends String{}
+ interface StructTag {
+  /**
+   * Get returns the value associated with key in the tag string.
+   * If there is no such key in the tag, Get returns the empty string.
+   * If the tag does not have the conventional format, the value
+   * returned by Get is unspecified. To determine whether a tag is
+   * explicitly set to the empty string, use Lookup.
+   */
+  get(key: string): string
+ }
+ interface StructTag {
+  /**
+   * Lookup returns the value associated with key in the tag string.
+   * If the key is present in the tag the value (which may be empty)
+   * is returned. Otherwise the returned value will be the empty string.
+   * The ok return value reports whether the value was explicitly set in
+   * the tag string. If the tag does not have the conventional format,
+   * the value returned by Lookup is unspecified.
+   */
+  lookup(key: string): [string, boolean]
+ }
+ type _submDgST = flag
+ interface Value extends _submDgST {
+ }
+ interface Value {
+  /**
+   * Addr returns a pointer value representing the address of v.
+   * It panics if CanAddr() returns false.
+   * Addr is typically used to obtain a pointer to a struct field
+   * or slice element in order to call a method that requires a
+   * pointer receiver.
+   */
+  addr(): Value
+ }
+ interface Value {
+  /**
+   * Bool returns v's underlying value.
+   * It panics if v's kind is not Bool.
+   */
+  bool(): boolean
+ }
+ interface Value {
+  /**
+   * Bytes returns v's underlying value.
+   * It panics if v's underlying value is not a slice of bytes or
+   * an addressable array of bytes.
+   */
+  bytes(): string
+ }
+ interface Value {
+  /**
+   * CanAddr reports whether the value's address can be obtained with Addr.
+   * Such values are called addressable. A value is addressable if it is
+   * an element of a slice, an element of an addressable array,
+   * a field of an addressable struct, or the result of dereferencing a pointer.
+   * If CanAddr returns false, calling Addr will panic.
+   */
+  canAddr(): boolean
+ }
+ interface Value {
+  /**
+   * CanSet reports whether the value of v can be changed.
+   * A Value can be changed only if it is addressable and was not
+   * obtained by the use of unexported struct fields.
+   * If CanSet returns false, calling Set or any type-specific
+   * setter (e.g., SetBool, SetInt) will panic.
+   */
+  canSet(): boolean
+ }
+ interface Value {
+  /**
+   * Call calls the function v with the input arguments in.
+   * For example, if len(in) == 3, v.Call(in) represents the Go call v(in[0], in[1], in[2]).
+   * Call panics if v's Kind is not Func.
+   * It returns the output results as Values.
+   * As in Go, each input argument must be assignable to the
+   * type of the function's corresponding input parameter.
+   * If v is a variadic function, Call creates the variadic slice parameter
+   * itself, copying in the corresponding values.
+   */
+  call(_arg0: Array<Value>): Array<Value>
+ }
+ interface Value {
+  /**
+   * CallSlice calls the variadic function v with the input arguments in,
+   * assigning the slice in[len(in)-1] to v's final variadic argument.
+   * For example, if len(in) == 3, v.CallSlice(in) represents the Go call v(in[0], in[1], in[2]...).
+   * CallSlice panics if v's Kind is not Func or if v is not variadic.
+   * It returns the output results as Values.
+   * As in Go, each input argument must be assignable to the
+   * type of the function's corresponding input parameter.
+   */
+  callSlice(_arg0: Array<Value>): Array<Value>
+ }
+ interface Value {
+  /**
+   * Cap returns v's capacity.
+   * It panics if v's Kind is not Array, Chan, Slice or pointer to Array.
+   */
+  cap(): number
+ }
+ interface Value {
+  /**
+   * Close closes the channel v.
+   * It panics if v's Kind is not Chan.
+   */
+  close(): void
+ }
+ interface Value {
+  /**
+   * CanComplex reports whether Complex can be used without panicking.
+   */
+  canComplex(): boolean
+ }
+ interface Value {
+  /**
+   * Complex returns v's underlying value, as a complex128.
+   * It panics if v's Kind is not Complex64 or Complex128
+   */
+  complex(): number
+ }
+ interface Value {
+  /**
+   * Elem returns the value that the interface v contains
+   * or that the pointer v points to.
+   * It panics if v's Kind is not Interface or Pointer.
+   * It returns the zero Value if v is nil.
+   */
+  elem(): Value
+ }
+ interface Value {
+  /**
+   * Field returns the i'th field of the struct v.
+   * It panics if v's Kind is not Struct or i is out of range.
+   */
+  field(i: number): Value
+ }
+ interface Value {
+  /**
+   * FieldByIndex returns the nested field corresponding to index.
+   * It panics if evaluation requires stepping through a nil
+   * pointer or a field that is not a struct.
+   */
+  fieldByIndex(index: Array<number>): Value
+ }
+ interface Value {
+  /**
+   * FieldByIndexErr returns the nested field corresponding to index.
+   * It returns an error if evaluation requires stepping through a nil
+   * pointer, but panics if it must step through a field that
+   * is not a struct.
+   */
+  fieldByIndexErr(index: Array<number>): Value
+ }
+ interface Value {
+  /**
+   * FieldByName returns the struct field with the given name.
+   * It returns the zero Value if no field was found.
+   * It panics if v's Kind is not struct.
+   */
+  fieldByName(name: string): Value
+ }
+ interface Value {
+  /**
+   * FieldByNameFunc returns the struct field with a name
+   * that satisfies the match function.
+   * It panics if v's Kind is not struct.
+   * It returns the zero Value if no field was found.
+   */
+  fieldByNameFunc(match: (_arg0: string) => boolean): Value
+ }
+ interface Value {
+  /**
+   * CanFloat reports whether Float can be used without panicking.
+   */
+  canFloat(): boolean
+ }
+ interface Value {
+  /**
+   * Float returns v's underlying value, as a float64.
+   * It panics if v's Kind is not Float32 or Float64
+   */
+  float(): number
+ }
+ interface Value {
+  /**
+   * Index returns v's i'th element.
+   * It panics if v's Kind is not Array, Slice, or String or i is out of range.
+   */
+  index(i: number): Value
+ }
+ interface Value {
+  /**
+   * CanInt reports whether Int can be used without panicking.
+   */
+  canInt(): boolean
+ }
+ interface Value {
+  /**
+   * Int returns v's underlying value, as an int64.
+   * It panics if v's Kind is not Int, Int8, Int16, Int32, or Int64.
+   */
+  int(): number
+ }
+ interface Value {
+  /**
+   * CanInterface reports whether Interface can be used without panicking.
+   */
+  canInterface(): boolean
+ }
+ interface Value {
+  /**
+   * Interface returns v's current value as an interface{}.
+   * It is equivalent to:
+   * 
+   * ```
+   * 	var i interface{} = (v's underlying value)
+   * ```
+   * 
+   * It panics if the Value was obtained by accessing
+   * unexported struct fields.
+   */
+  interface(): any
+ }
+ interface Value {
+  /**
+   * InterfaceData returns a pair of unspecified uintptr values.
+   * It panics if v's Kind is not Interface.
+   * 
+   * In earlier versions of Go, this function returned the interface's
+   * value as a uintptr pair. As of Go 1.4, the implementation of
+   * interface values precludes any defined use of InterfaceData.
+   * 
+   * Deprecated: The memory representation of interface values is not
+   * compatible with InterfaceData.
+   */
+  interfaceData(): Array<number>
+ }
+ interface Value {
+  /**
+   * IsNil reports whether its argument v is nil. The argument must be
+   * a chan, func, interface, map, pointer, or slice value; if it is
+   * not, IsNil panics. Note that IsNil is not always equivalent to a
+   * regular comparison with nil in Go. For example, if v was created
+   * by calling ValueOf with an uninitialized interface variable i,
+   * i==nil will be true but v.IsNil will panic as v will be the zero
+   * Value.
+   */
+  isNil(): boolean
+ }
+ interface Value {
+  /**
+   * IsValid reports whether v represents a value.
+   * It returns false if v is the zero Value.
+   * If IsValid returns false, all other methods except String panic.
+   * Most functions and methods never return an invalid Value.
+   * If one does, its documentation states the conditions explicitly.
+   */
+  isValid(): boolean
+ }
+ interface Value {
+  /**
+   * IsZero reports whether v is the zero value for its type.
+   * It panics if the argument is invalid.
+   */
+  isZero(): boolean
+ }
+ interface Value {
+  /**
+   * SetZero sets v to be the zero value of v's type.
+   * It panics if CanSet returns false.
+   */
+  setZero(): void
+ }
+ interface Value {
+  /**
+   * Kind returns v's Kind.
+   * If v is the zero Value (IsValid returns false), Kind returns Invalid.
+   */
+  kind(): Kind
+ }
+ interface Value {
+  /**
+   * Len returns v's length.
+   * It panics if v's Kind is not Array, Chan, Map, Slice, String, or pointer to Array.
+   */
+  len(): number
+ }
+ interface Value {
+  /**
+   * MapIndex returns the value associated with key in the map v.
+   * It panics if v's Kind is not Map.
+   * It returns the zero Value if key is not found in the map or if v represents a nil map.
+   * As in Go, the key's value must be assignable to the map's key type.
+   */
+  mapIndex(key: Value): Value
+ }
+ interface Value {
+  /**
+   * MapKeys returns a slice containing all the keys present in the map,
+   * in unspecified order.
+   * It panics if v's Kind is not Map.
+   * It returns an empty slice if v represents a nil map.
+   */
+  mapKeys(): Array<Value>
+ }
+ interface Value {
+  /**
+   * SetIterKey assigns to v the key of iter's current map entry.
+   * It is equivalent to v.Set(iter.Key()), but it avoids allocating a new Value.
+   * As in Go, the key must be assignable to v's type and
+   * must not be derived from an unexported field.
+   */
+  setIterKey(iter: MapIter): void
+ }
+ interface Value {
+  /**
+   * SetIterValue assigns to v the value of iter's current map entry.
+   * It is equivalent to v.Set(iter.Value()), but it avoids allocating a new Value.
+   * As in Go, the value must be assignable to v's type and
+   * must not be derived from an unexported field.
+   */
+  setIterValue(iter: MapIter): void
+ }
+ interface Value {
+  /**
+   * MapRange returns a range iterator for a map.
+   * It panics if v's Kind is not Map.
+   * 
+   * Call Next to advance the iterator, and Key/Value to access each entry.
+   * Next returns false when the iterator is exhausted.
+   * MapRange follows the same iteration semantics as a range statement.
+   * 
+   * Example:
+   * 
+   * ```
+   * 	iter := reflect.ValueOf(m).MapRange()
+   * 	for iter.Next() {
+   * 		k := iter.Key()
+   * 		v := iter.Value()
+   * 		...
+   * 	}
+   * ```
+   */
+  mapRange(): (MapIter | undefined)
+ }
+ interface Value {
+  /**
+   * Method returns a function value corresponding to v's i'th method.
+   * The arguments to a Call on the returned function should not include
+   * a receiver; the returned function will always use v as the receiver.
+   * Method panics if i is out of range or if v is a nil interface value.
+   */
+  method(i: number): Value
+ }
+ interface Value {
+  /**
+   * NumMethod returns the number of methods in the value's method set.
+   * 
+   * For a non-interface type, it returns the number of exported methods.
+   * 
+   * For an interface type, it returns the number of exported and unexported methods.
+   */
+  numMethod(): number
+ }
+ interface Value {
+  /**
+   * MethodByName returns a function value corresponding to the method
+   * of v with the given name.
+   * The arguments to a Call on the returned function should not include
+   * a receiver; the returned function will always use v as the receiver.
+   * It returns the zero Value if no method was found.
+   */
+  methodByName(name: string): Value
+ }
+ interface Value {
+  /**
+   * NumField returns the number of fields in the struct v.
+   * It panics if v's Kind is not Struct.
+   */
+  numField(): number
+ }
+ interface Value {
+  /**
+   * OverflowComplex reports whether the complex128 x cannot be represented by v's type.
+   * It panics if v's Kind is not Complex64 or Complex128.
+   */
+  overflowComplex(x: number): boolean
+ }
+ interface Value {
+  /**
+   * OverflowFloat reports whether the float64 x cannot be represented by v's type.
+   * It panics if v's Kind is not Float32 or Float64.
+   */
+  overflowFloat(x: number): boolean
+ }
+ interface Value {
+  /**
+   * OverflowInt reports whether the int64 x cannot be represented by v's type.
+   * It panics if v's Kind is not Int, Int8, Int16, Int32, or Int64.
+   */
+  overflowInt(x: number): boolean
+ }
+ interface Value {
+  /**
+   * OverflowUint reports whether the uint64 x cannot be represented by v's type.
+   * It panics if v's Kind is not Uint, Uintptr, Uint8, Uint16, Uint32, or Uint64.
+   */
+  overflowUint(x: number): boolean
+ }
+ interface Value {
+  /**
+   * Pointer returns v's value as a uintptr.
+   * It panics if v's Kind is not Chan, Func, Map, Pointer, Slice, or UnsafePointer.
+   * 
+   * If v's Kind is Func, the returned pointer is an underlying
+   * code pointer, but not necessarily enough to identify a
+   * single function uniquely. The only guarantee is that the
+   * result is zero if and only if v is a nil func Value.
+   * 
+   * If v's Kind is Slice, the returned pointer is to the first
+   * element of the slice. If the slice is nil the returned value
+   * is 0.  If the slice is empty but non-nil the return value is non-zero.
+   * 
+   * It's preferred to use uintptr(Value.UnsafePointer()) to get the equivalent result.
+   */
+  pointer(): number
+ }
+ interface Value {
+  /**
+   * Recv receives and returns a value from the channel v.
+   * It panics if v's Kind is not Chan.
+   * The receive blocks until a value is ready.
+   * The boolean value ok is true if the value x corresponds to a send
+   * on the channel, false if it is a zero value received because the channel is closed.
+   */
+  recv(): [Value, boolean]
+ }
+ interface Value {
+  /**
+   * Send sends x on the channel v.
+   * It panics if v's kind is not Chan or if x's type is not the same type as v's element type.
+   * As in Go, x's value must be assignable to the channel's element type.
+   */
+  send(x: Value): void
+ }
+ interface Value {
+  /**
+   * Set assigns x to the value v.
+   * It panics if CanSet returns false.
+   * As in Go, x's value must be assignable to v's type and
+   * must not be derived from an unexported field.
+   */
+  set(x: Value): void
+ }
+ interface Value {
+  /**
+   * SetBool sets v's underlying value.
+   * It panics if v's Kind is not Bool or if CanSet() is false.
+   */
+  setBool(x: boolean): void
+ }
+ interface Value {
+  /**
+   * SetBytes sets v's underlying value.
+   * It panics if v's underlying value is not a slice of bytes.
+   */
+  setBytes(x: string): void
+ }
+ interface Value {
+  /**
+   * SetComplex sets v's underlying value to x.
+   * It panics if v's Kind is not Complex64 or Complex128, or if CanSet() is false.
+   */
+  setComplex(x: number): void
+ }
+ interface Value {
+  /**
+   * SetFloat sets v's underlying value to x.
+   * It panics if v's Kind is not Float32 or Float64, or if CanSet() is false.
+   */
+  setFloat(x: number): void
+ }
+ interface Value {
+  /**
+   * SetInt sets v's underlying value to x.
+   * It panics if v's Kind is not Int, Int8, Int16, Int32, or Int64, or if CanSet() is false.
+   */
+  setInt(x: number): void
+ }
+ interface Value {
+  /**
+   * SetLen sets v's length to n.
+   * It panics if v's Kind is not Slice or if n is negative or
+   * greater than the capacity of the slice.
+   */
+  setLen(n: number): void
+ }
+ interface Value {
+  /**
+   * SetCap sets v's capacity to n.
+   * It panics if v's Kind is not Slice or if n is smaller than the length or
+   * greater than the capacity of the slice.
+   */
+  setCap(n: number): void
+ }
+ interface Value {
+  /**
+   * SetMapIndex sets the element associated with key in the map v to elem.
+   * It panics if v's Kind is not Map.
+   * If elem is the zero Value, SetMapIndex deletes the key from the map.
+   * Otherwise if v holds a nil map, SetMapIndex will panic.
+   * As in Go, key's elem must be assignable to the map's key type,
+   * and elem's value must be assignable to the map's elem type.
+   */
+  setMapIndex(key: Value): void
+ }
+ interface Value {
+  /**
+   * SetUint sets v's underlying value to x.
+   * It panics if v's Kind is not Uint, Uintptr, Uint8, Uint16, Uint32, or Uint64, or if CanSet() is false.
+   */
+  setUint(x: number): void
+ }
+ interface Value {
+  /**
+   * SetPointer sets the [unsafe.Pointer] value v to x.
+   * It panics if v's Kind is not UnsafePointer.
+   */
+  setPointer(x: number): void
+ }
+ interface Value {
+  /**
+   * SetString sets v's underlying value to x.
+   * It panics if v's Kind is not String or if CanSet() is false.
+   */
+  setString(x: string): void
+ }
+ interface Value {
+  /**
+   * Slice returns v[i:j].
+   * It panics if v's Kind is not Array, Slice or String, or if v is an unaddressable array,
+   * or if the indexes are out of bounds.
+   */
+  slice(i: number): Value
+ }
+ interface Value {
+  /**
+   * Slice3 is the 3-index form of the slice operation: it returns v[i:j:k].
+   * It panics if v's Kind is not Array or Slice, or if v is an unaddressable array,
+   * or if the indexes are out of bounds.
+   */
+  slice3(i: number): Value
+ }
+ interface Value {
+  /**
+   * String returns the string v's underlying value, as a string.
+   * String is a special case because of Go's String method convention.
+   * Unlike the other getters, it does not panic if v's Kind is not String.
+   * Instead, it returns a string of the form "<T value>" where T is v's type.
+   * The fmt package treats Values specially. It does not call their String
+   * method implicitly but instead prints the concrete values they hold.
+   */
+  string(): string
+ }
+ interface Value {
+  /**
+   * TryRecv attempts to receive a value from the channel v but will not block.
+   * It panics if v's Kind is not Chan.
+   * If the receive delivers a value, x is the transferred value and ok is true.
+   * If the receive cannot finish without blocking, x is the zero Value and ok is false.
+   * If the channel is closed, x is the zero value for the channel's element type and ok is false.
+   */
+  tryRecv(): [Value, boolean]
+ }
+ interface Value {
+  /**
+   * TrySend attempts to send x on the channel v but will not block.
+   * It panics if v's Kind is not Chan.
+   * It reports whether the value was sent.
+   * As in Go, x's value must be assignable to the channel's element type.
+   */
+  trySend(x: Value): boolean
+ }
+ interface Value {
+  /**
+   * Type returns v's type.
+   */
+  type(): Type
+ }
+ interface Value {
+  /**
+   * CanUint reports whether Uint can be used without panicking.
+   */
+  canUint(): boolean
+ }
+ interface Value {
+  /**
+   * Uint returns v's underlying value, as a uint64.
+   * It panics if v's Kind is not Uint, Uintptr, Uint8, Uint16, Uint32, or Uint64.
+   */
+  uint(): number
+ }
+ interface Value {
+  /**
+   * UnsafeAddr returns a pointer to v's data, as a uintptr.
+   * It panics if v is not addressable.
+   * 
+   * It's preferred to use uintptr(Value.Addr().UnsafePointer()) to get the equivalent result.
+   */
+  unsafeAddr(): number
+ }
+ interface Value {
+  /**
+   * UnsafePointer returns v's value as a [unsafe.Pointer].
+   * It panics if v's Kind is not Chan, Func, Map, Pointer, Slice, or UnsafePointer.
+   * 
+   * If v's Kind is Func, the returned pointer is an underlying
+   * code pointer, but not necessarily enough to identify a
+   * single function uniquely. The only guarantee is that the
+   * result is zero if and only if v is a nil func Value.
+   * 
+   * If v's Kind is Slice, the returned pointer is to the first
+   * element of the slice. If the slice is nil the returned value
+   * is nil.  If the slice is empty but non-nil the return value is non-nil.
+   */
+  unsafePointer(): number
+ }
+ interface Value {
+  /**
+   * Grow increases the slice's capacity, if necessary, to guarantee space for
+   * another n elements. After Grow(n), at least n elements can be appended
+   * to the slice without another allocation.
+   * 
+   * It panics if v's Kind is not a Slice or if n is negative or too large to
+   * allocate the memory.
+   */
+  grow(n: number): void
+ }
+ interface Value {
+  /**
+   * Convert returns the value v converted to type t.
+   * If the usual Go conversion rules do not allow conversion
+   * of the value v to type t, or if converting v to type t panics, Convert panics.
+   */
+  convert(t: Type): Value
+ }
+ interface Value {
+  /**
+   * CanConvert reports whether the value v can be converted to type t.
+   * If v.CanConvert(t) returns true then v.Convert(t) will not panic.
+   */
+  canConvert(t: Type): boolean
+ }
+ interface Value {
+  /**
+   * Comparable reports whether the value v is comparable.
+   * If the type of v is an interface, this checks the dynamic type.
+   * If this reports true then v.Interface() == x will not panic for any x,
+   * nor will v.Equal(u) for any Value u.
+   */
+  comparable(): boolean
+ }
+ interface Value {
+  /**
+   * Equal reports true if v is equal to u.
+   * For two invalid values, Equal will report true.
+   * For an interface value, Equal will compare the value within the interface.
+   * Otherwise, If the values have different types, Equal will report false.
+   * Otherwise, for arrays and structs Equal will compare each element in order,
+   * and report false if it finds non-equal elements.
+   * During all comparisons, if values of the same type are compared,
+   * and the type is not comparable, Equal will panic.
+   */
+  equal(u: Value): boolean
+ }
+}
+
+/**
+ * Package fmt implements formatted I/O with functions analogous
+ * to C's printf and scanf.  The format 'verbs' are derived from C's but
+ * are simpler.
+ * 
+ * # Printing
+ * 
+ * The verbs:
+ * 
+ * General:
+ * 
+ * ```
+ * 	%v	the value in a default format
+ * 		when printing structs, the plus flag (%+v) adds field names
+ * 	%#v	a Go-syntax representation of the value
+ * 	%T	a Go-syntax representation of the type of the value
+ * 	%%	a literal percent sign; consumes no value
+ * ```
+ * 
+ * Boolean:
+ * 
+ * ```
+ * 	%t	the word true or false
+ * ```
+ * 
+ * Integer:
+ * 
+ * ```
+ * 	%b	base 2
+ * 	%c	the character represented by the corresponding Unicode code point
+ * 	%d	base 10
+ * 	%o	base 8
+ * 	%O	base 8 with 0o prefix
+ * 	%q	a single-quoted character literal safely escaped with Go syntax.
+ * 	%x	base 16, with lower-case letters for a-f
+ * 	%X	base 16, with upper-case letters for A-F
+ * 	%U	Unicode format: U+1234; same as "U+%04X"
+ * ```
+ * 
+ * Floating-point and complex constituents:
+ * 
+ * ```
+ * 	%b	decimalless scientific notation with exponent a power of two,
+ * 		in the manner of strconv.FormatFloat with the 'b' format,
+ * 		e.g. -123456p-78
+ * 	%e	scientific notation, e.g. -1.234456e+78
+ * 	%E	scientific notation, e.g. -1.234456E+78
+ * 	%f	decimal point but no exponent, e.g. 123.456
+ * 	%F	synonym for %f
+ * 	%g	%e for large exponents, %f otherwise. Precision is discussed below.
+ * 	%G	%E for large exponents, %F otherwise
+ * 	%x	hexadecimal notation (with decimal power of two exponent), e.g. -0x1.23abcp+20
+ * 	%X	upper-case hexadecimal notation, e.g. -0X1.23ABCP+20
+ * ```
+ * 
+ * String and slice of bytes (treated equivalently with these verbs):
+ * 
+ * ```
+ * 	%s	the uninterpreted bytes of the string or slice
+ * 	%q	a double-quoted string safely escaped with Go syntax
+ * 	%x	base 16, lower-case, two characters per byte
+ * 	%X	base 16, upper-case, two characters per byte
+ * ```
+ * 
+ * Slice:
+ * 
+ * ```
+ * 	%p	address of 0th element in base 16 notation, with leading 0x
+ * ```
+ * 
+ * Pointer:
+ * 
+ * ```
+ * 	%p	base 16 notation, with leading 0x
+ * 	The %b, %d, %o, %x and %X verbs also work with pointers,
+ * 	formatting the value exactly as if it were an integer.
+ * ```
+ * 
+ * The default format for %v is:
+ * 
+ * ```
+ * 	bool:                    %t
+ * 	int, int8 etc.:          %d
+ * 	uint, uint8 etc.:        %d, %#x if printed with %#v
+ * 	float32, complex64, etc: %g
+ * 	string:                  %s
+ * 	chan:                    %p
+ * 	pointer:                 %p
+ * ```
+ * 
+ * For compound objects, the elements are printed using these rules, recursively,
+ * laid out like this:
+ * 
+ * ```
+ * 	struct:             {field0 field1 ...}
+ * 	array, slice:       [elem0 elem1 ...]
+ * 	maps:               map[key1:value1 key2:value2 ...]
+ * 	pointer to above:   &{}, &[], &map[]
+ * ```
+ * 
+ * Width is specified by an optional decimal number immediately preceding the verb.
+ * If absent, the width is whatever is necessary to represent the value.
+ * Precision is specified after the (optional) width by a period followed by a
+ * decimal number. If no period is present, a default precision is used.
+ * A period with no following number specifies a precision of zero.
+ * Examples:
+ * 
+ * ```
+ * 	%f     default width, default precision
+ * 	%9f    width 9, default precision
+ * 	%.2f   default width, precision 2
+ * 	%9.2f  width 9, precision 2
+ * 	%9.f   width 9, precision 0
+ * ```
+ * 
+ * Width and precision are measured in units of Unicode code points,
+ * that is, runes. (This differs from C's printf where the
+ * units are always measured in bytes.) Either or both of the flags
+ * may be replaced with the character '*', causing their values to be
+ * obtained from the next operand (preceding the one to format),
+ * which must be of type int.
+ * 
+ * For most values, width is the minimum number of runes to output,
+ * padding the formatted form with spaces if necessary.
+ * 
+ * For strings, byte slices and byte arrays, however, precision
+ * limits the length of the input to be formatted (not the size of
+ * the output), truncating if necessary. Normally it is measured in
+ * runes, but for these types when formatted with the %x or %X format
+ * it is measured in bytes.
+ * 
+ * For floating-point values, width sets the minimum width of the field and
+ * precision sets the number of places after the decimal, if appropriate,
+ * except that for %g/%G precision sets the maximum number of significant
+ * digits (trailing zeros are removed). For example, given 12.345 the format
+ * %6.3f prints 12.345 while %.3g prints 12.3. The default precision for %e, %f
+ * and %#g is 6; for %g it is the smallest number of digits necessary to identify
+ * the value uniquely.
+ * 
+ * For complex numbers, the width and precision apply to the two
+ * components independently and the result is parenthesized, so %f applied
+ * to 1.2+3.4i produces (1.200000+3.400000i).
+ * 
+ * When formatting a single integer code point or a rune string (type []rune)
+ * with %q, invalid Unicode code points are changed to the Unicode replacement
+ * character, U+FFFD, as in strconv.QuoteRune.
+ * 
+ * Other flags:
+ * 
+ * ```
+ * 	'+'	always print a sign for numeric values;
+ * 		guarantee ASCII-only output for %q (%+q)
+ * 	'-'	pad with spaces on the right rather than the left (left-justify the field)
+ * 	'#'	alternate format: add leading 0b for binary (%#b), 0 for octal (%#o),
+ * 		0x or 0X for hex (%#x or %#X); suppress 0x for %p (%#p);
+ * 		for %q, print a raw (backquoted) string if strconv.CanBackquote
+ * 		returns true;
+ * 		always print a decimal point for %e, %E, %f, %F, %g and %G;
+ * 		do not remove trailing zeros for %g and %G;
+ * 		write e.g. U+0078 'x' if the character is printable for %U (%#U).
+ * 	' '	(space) leave a space for elided sign in numbers (% d);
+ * 		put spaces between bytes printing strings or slices in hex (% x, % X)
+ * 	'0'	pad with leading zeros rather than spaces;
+ * 		for numbers, this moves the padding after the sign;
+ * 		ignored for strings, byte slices and byte arrays
+ * ```
+ * 
+ * Flags are ignored by verbs that do not expect them.
+ * For example there is no alternate decimal format, so %#d and %d
+ * behave identically.
+ * 
+ * For each Printf-like function, there is also a Print function
+ * that takes no format and is equivalent to saying %v for every
+ * operand.  Another variant Println inserts blanks between
+ * operands and appends a newline.
+ * 
+ * Regardless of the verb, if an operand is an interface value,
+ * the internal concrete value is used, not the interface itself.
+ * Thus:
+ * 
+ * ```
+ * 	var i interface{} = 23
+ * 	fmt.Printf("%v\n", i)
+ * ```
+ * 
+ * will print 23.
+ * 
+ * Except when printed using the verbs %T and %p, special
+ * formatting considerations apply for operands that implement
+ * certain interfaces. In order of application:
+ * 
+ * 1. If the operand is a reflect.Value, the operand is replaced by the
+ * concrete value that it holds, and printing continues with the next rule.
+ * 
+ * 2. If an operand implements the Formatter interface, it will
+ * be invoked. In this case the interpretation of verbs and flags is
+ * controlled by that implementation.
+ * 
+ * 3. If the %v verb is used with the # flag (%#v) and the operand
+ * implements the GoStringer interface, that will be invoked.
+ * 
+ * If the format (which is implicitly %v for Println etc.) is valid
+ * for a string (%s %q %v %x %X), the following two rules apply:
+ * 
+ * 4. If an operand implements the error interface, the Error method
+ * will be invoked to convert the object to a string, which will then
+ * be formatted as required by the verb (if any).
+ * 
+ * 5. If an operand implements method String() string, that method
+ * will be invoked to convert the object to a string, which will then
+ * be formatted as required by the verb (if any).
+ * 
+ * For compound operands such as slices and structs, the format
+ * applies to the elements of each operand, recursively, not to the
+ * operand as a whole. Thus %q will quote each element of a slice
+ * of strings, and %6.2f will control formatting for each element
+ * of a floating-point array.
+ * 
+ * However, when printing a byte slice with a string-like verb
+ * (%s %q %x %X), it is treated identically to a string, as a single item.
+ * 
+ * To avoid recursion in cases such as
+ * 
+ * ```
+ * 	type X string
+ * 	func (x X) String() string { return Sprintf("<%s>", x) }
+ * ```
+ * 
+ * convert the value before recurring:
+ * 
+ * ```
+ * 	func (x X) String() string { return Sprintf("<%s>", string(x)) }
+ * ```
+ * 
+ * Infinite recursion can also be triggered by self-referential data
+ * structures, such as a slice that contains itself as an element, if
+ * that type has a String method. Such pathologies are rare, however,
+ * and the package does not protect against them.
+ * 
+ * When printing a struct, fmt cannot and therefore does not invoke
+ * formatting methods such as Error or String on unexported fields.
+ * 
+ * # Explicit argument indexes
+ * 
+ * In Printf, Sprintf, and Fprintf, the default behavior is for each
+ * formatting verb to format successive arguments passed in the call.
+ * However, the notation [n] immediately before the verb indicates that the
+ * nth one-indexed argument is to be formatted instead. The same notation
+ * before a '*' for a width or precision selects the argument index holding
+ * the value. After processing a bracketed expression [n], subsequent verbs
+ * will use arguments n+1, n+2, etc. unless otherwise directed.
+ * 
+ * For example,
+ * 
+ * ```
+ * 	fmt.Sprintf("%[2]d %[1]d\n", 11, 22)
+ * ```
+ * 
+ * will yield "22 11", while
+ * 
+ * ```
+ * 	fmt.Sprintf("%[3]*.[2]*[1]f", 12.0, 2, 6)
+ * ```
+ * 
+ * equivalent to
+ * 
+ * ```
+ * 	fmt.Sprintf("%6.2f", 12.0)
+ * ```
+ * 
+ * will yield " 12.00". Because an explicit index affects subsequent verbs,
+ * this notation can be used to print the same values multiple times
+ * by resetting the index for the first argument to be repeated:
+ * 
+ * ```
+ * 	fmt.Sprintf("%d %d %#[1]x %#x", 16, 17)
+ * ```
+ * 
+ * will yield "16 17 0x10 0x11".
+ * 
+ * # Format errors
+ * 
+ * If an invalid argument is given for a verb, such as providing
+ * a string to %d, the generated string will contain a
+ * description of the problem, as in these examples:
+ * 
+ * ```
+ * 	Wrong type or unknown verb: %!verb(type=value)
+ * 		Printf("%d", "hi"):        %!d(string=hi)
+ * 	Too many arguments: %!(EXTRA type=value)
+ * 		Printf("hi", "guys"):      hi%!(EXTRA string=guys)
+ * 	Too few arguments: %!verb(MISSING)
+ * 		Printf("hi%d"):            hi%!d(MISSING)
+ * 	Non-int for width or precision: %!(BADWIDTH) or %!(BADPREC)
+ * 		Printf("%*s", 4.5, "hi"):  %!(BADWIDTH)hi
+ * 		Printf("%.*s", 4.5, "hi"): %!(BADPREC)hi
+ * 	Invalid or invalid use of argument index: %!(BADINDEX)
+ * 		Printf("%*[2]d", 7):       %!d(BADINDEX)
+ * 		Printf("%.[2]d", 7):       %!d(BADINDEX)
+ * ```
+ * 
+ * All errors begin with the string "%!" followed sometimes
+ * by a single character (the verb) and end with a parenthesized
+ * description.
+ * 
+ * If an Error or String method triggers a panic when called by a
+ * print routine, the fmt package reformats the error message
+ * from the panic, decorating it with an indication that it came
+ * through the fmt package.  For example, if a String method
+ * calls panic("bad"), the resulting formatted message will look
+ * like
+ * 
+ * ```
+ * 	%!s(PANIC=bad)
+ * ```
+ * 
+ * The %!s just shows the print verb in use when the failure
+ * occurred. If the panic is caused by a nil receiver to an Error
+ * or String method, however, the output is the undecorated
+ * string, "<nil>".
+ * 
+ * # Scanning
+ * 
+ * An analogous set of functions scans formatted text to yield
+ * values.  Scan, Scanf and Scanln read from os.Stdin; Fscan,
+ * Fscanf and Fscanln read from a specified io.Reader; Sscan,
+ * Sscanf and Sscanln read from an argument string.
+ * 
+ * Scan, Fscan, Sscan treat newlines in the input as spaces.
+ * 
+ * Scanln, Fscanln and Sscanln stop scanning at a newline and
+ * require that the items be followed by a newline or EOF.
+ * 
+ * Scanf, Fscanf, and Sscanf parse the arguments according to a
+ * format string, analogous to that of Printf. In the text that
+ * follows, 'space' means any Unicode whitespace character
+ * except newline.
+ * 
+ * In the format string, a verb introduced by the % character
+ * consumes and parses input; these verbs are described in more
+ * detail below. A character other than %, space, or newline in
+ * the format consumes exactly that input character, which must
+ * be present. A newline with zero or more spaces before it in
+ * the format string consumes zero or more spaces in the input
+ * followed by a single newline or the end of the input. A space
+ * following a newline in the format string consumes zero or more
+ * spaces in the input. Otherwise, any run of one or more spaces
+ * in the format string consumes as many spaces as possible in
+ * the input. Unless the run of spaces in the format string
+ * appears adjacent to a newline, the run must consume at least
+ * one space from the input or find the end of the input.
+ * 
+ * The handling of spaces and newlines differs from that of C's
+ * scanf family: in C, newlines are treated as any other space,
+ * and it is never an error when a run of spaces in the format
+ * string finds no spaces to consume in the input.
+ * 
+ * The verbs behave analogously to those of Printf.
+ * For example, %x will scan an integer as a hexadecimal number,
+ * and %v will scan the default representation format for the value.
+ * The Printf verbs %p and %T and the flags # and + are not implemented.
+ * For floating-point and complex values, all valid formatting verbs
+ * (%b %e %E %f %F %g %G %x %X and %v) are equivalent and accept
+ * both decimal and hexadecimal notation (for example: "2.3e+7", "0x4.5p-8")
+ * and digit-separating underscores (for example: "3.14159_26535_89793").
+ * 
+ * Input processed by verbs is implicitly space-delimited: the
+ * implementation of every verb except %c starts by discarding
+ * leading spaces from the remaining input, and the %s verb
+ * (and %v reading into a string) stops consuming input at the first
+ * space or newline character.
+ * 
+ * The familiar base-setting prefixes 0b (binary), 0o and 0 (octal),
+ * and 0x (hexadecimal) are accepted when scanning integers
+ * without a format or with the %v verb, as are digit-separating
+ * underscores.
+ * 
+ * Width is interpreted in the input text but there is no
+ * syntax for scanning with a precision (no %5.2f, just %5f).
+ * If width is provided, it applies after leading spaces are
+ * trimmed and specifies the maximum number of runes to read
+ * to satisfy the verb. For example,
+ * 
+ * ```
+ * 	Sscanf(" 1234567 ", "%5s%d", &s, &i)
+ * ```
+ * 
+ * will set s to "12345" and i to 67 while
+ * 
+ * ```
+ * 	Sscanf(" 12 34 567 ", "%5s%d", &s, &i)
+ * ```
+ * 
+ * will set s to "12" and i to 34.
+ * 
+ * In all the scanning functions, a carriage return followed
+ * immediately by a newline is treated as a plain newline
+ * (\r\n means the same as \n).
+ * 
+ * In all the scanning functions, if an operand implements method
+ * Scan (that is, it implements the Scanner interface) that
+ * method will be used to scan the text for that operand.  Also,
+ * if the number of arguments scanned is less than the number of
+ * arguments provided, an error is returned.
+ * 
+ * All arguments to be scanned must be either pointers to basic
+ * types or implementations of the Scanner interface.
+ * 
+ * Like Scanf and Fscanf, Sscanf need not consume its entire input.
+ * There is no way to recover how much of the input string Sscanf used.
+ * 
+ * Note: Fscan etc. can read one character (rune) past the input
+ * they return, which means that a loop calling a scan routine
+ * may skip some of the input.  This is usually a problem only
+ * when there is no space between input values.  If the reader
+ * provided to Fscan implements ReadRune, that method will be used
+ * to read characters.  If the reader also implements UnreadRune,
+ * that method will be used to save the character and successive
+ * calls will not lose data.  To attach ReadRune and UnreadRune
+ * methods to a reader without that capability, use
+ * bufio.NewReader.
+ */
+namespace fmt {
+ interface State {
+  /**
+   * Write is the function to call to emit formatted output to be printed.
+   */
+  write(b: string): number
+  /**
+   * Width returns the value of the width option and whether it has been set.
+   */
+  width(): [number, boolean]
+  /**
+   * Precision returns the value of the precision option and whether it has been set.
+   */
+  precision(): [number, boolean]
+  /**
+   * Flag reports whether the flag c, a character, has been set.
+   */
+  flag(c: number): boolean
+ }
+ interface ScanState {
+  /**
+   * ReadRune reads the next rune (Unicode code point) from the input.
+   * If invoked during Scanln, Fscanln, or Sscanln, ReadRune() will
+   * return EOF after returning the first '\n' or when reading beyond
+   * the specified width.
+   */
+  readRune(): [string, number]
+  /**
+   * UnreadRune causes the next call to ReadRune to return the same rune.
+   */
+  unreadRune(): void
+  /**
+   * SkipSpace skips space in the input. Newlines are treated appropriately
+   * for the operation being performed; see the package documentation
+   * for more information.
+   */
+  skipSpace(): void
+  /**
+   * Token skips space in the input if skipSpace is true, then returns the
+   * run of Unicode code points c satisfying f(c).  If f is nil,
+   * !unicode.IsSpace(c) is used; that is, the token will hold non-space
+   * characters. Newlines are treated appropriately for the operation being
+   * performed; see the package documentation for more information.
+   * The returned slice points to shared data that may be overwritten
+   * by the next call to Token, a call to a Scan function using the ScanState
+   * as input, or when the calling Scan method returns.
+   */
+  token(skipSpace: boolean, f: (_arg0: string) => boolean): string
+  /**
+   * Width returns the value of the width option and whether it has been set.
+   * The unit is Unicode code points.
+   */
+  width(): [number, boolean]
+  /**
+   * Because ReadRune is implemented by the interface, Read should never be
+   * called by the scanning routines and a valid implementation of
+   * ScanState may choose always to return an error from Read.
+   */
+  read(buf: string): number
+ }
+}
+
+/**
+ * Package rand implements pseudo-random number generators unsuitable for
+ * security-sensitive work.
+ * 
+ * Random numbers are generated by a [Source], usually wrapped in a [Rand].
+ * Both types should be used by a single goroutine at a time: sharing among
+ * multiple goroutines requires some kind of synchronization.
+ * 
+ * Top-level functions, such as [Float64] and [Int],
+ * are safe for concurrent use by multiple goroutines.
+ * 
+ * This package's outputs might be easily predictable regardless of how it's
+ * seeded. For random numbers suitable for security-sensitive work, see the
+ * crypto/rand package.
+ */
+namespace rand {
+ interface Rand {
+  /**
+   * ExpFloat64 returns an exponentially distributed float64 in the range
+   * (0, +math.MaxFloat64] with an exponential distribution whose rate parameter
+   * (lambda) is 1 and whose mean is 1/lambda (1).
+   * To produce a distribution with a different rate parameter,
+   * callers can adjust the output using:
+   * 
+   * ```
+   * 	sample = ExpFloat64() / desiredRateParameter
+   * ```
+   */
+  expFloat64(): number
+ }
+ interface Rand {
+  /**
+   * NormFloat64 returns a normally distributed float64 in
+   * the range -math.MaxFloat64 through +math.MaxFloat64 inclusive,
+   * with standard normal distribution (mean = 0, stddev = 1).
+   * To produce a different normal distribution, callers can
+   * adjust the output using:
+   * 
+   * ```
+   * 	sample = NormFloat64() * desiredStdDev + desiredMean
+   * ```
+   */
+  normFloat64(): number
+ }
+ interface Rand {
+ }
+ interface Rand {
+  /**
+   * Seed uses the provided seed value to initialize the generator to a deterministic state.
+   * Seed should not be called concurrently with any other Rand method.
+   */
+  seed(seed: number): void
+ }
+ interface Rand {
+  /**
+   * Int63 returns a non-negative pseudo-random 63-bit integer as an int64.
+   */
+  int63(): number
+ }
+ interface Rand {
+  /**
+   * Uint32 returns a pseudo-random 32-bit value as a uint32.
+   */
+  uint32(): number
+ }
+ interface Rand {
+  /**
+   * Uint64 returns a pseudo-random 64-bit value as a uint64.
+   */
+  uint64(): number
+ }
+ interface Rand {
+  /**
+   * Int31 returns a non-negative pseudo-random 31-bit integer as an int32.
+   */
+  int31(): number
+ }
+ interface Rand {
+  /**
+   * Int returns a non-negative pseudo-random int.
+   */
+  int(): number
+ }
+ interface Rand {
+  /**
+   * Int63n returns, as an int64, a non-negative pseudo-random number in the half-open interval [0,n).
+   * It panics if n <= 0.
+   */
+  int63n(n: number): number
+ }
+ interface Rand {
+  /**
+   * Int31n returns, as an int32, a non-negative pseudo-random number in the half-open interval [0,n).
+   * It panics if n <= 0.
+   */
+  int31n(n: number): number
+ }
+ interface Rand {
+  /**
+   * Intn returns, as an int, a non-negative pseudo-random number in the half-open interval [0,n).
+   * It panics if n <= 0.
+   */
+  intn(n: number): number
+ }
+ interface Rand {
+  /**
+   * Float64 returns, as a float64, a pseudo-random number in the half-open interval [0.0,1.0).
+   */
+  float64(): number
+ }
+ interface Rand {
+  /**
+   * Float32 returns, as a float32, a pseudo-random number in the half-open interval [0.0,1.0).
+   */
+  float32(): number
+ }
+ interface Rand {
+  /**
+   * Perm returns, as a slice of n ints, a pseudo-random permutation of the integers
+   * in the half-open interval [0,n).
+   */
+  perm(n: number): Array<number>
+ }
+ interface Rand {
+  /**
+   * Shuffle pseudo-randomizes the order of elements.
+   * n is the number of elements. Shuffle panics if n < 0.
+   * swap swaps the elements with indexes i and j.
+   */
+  shuffle(n: number, swap: (i: number) => void): void
+ }
+ interface Rand {
+  /**
+   * Read generates len(p) random bytes and writes them into p. It
+   * always returns len(p) and a nil error.
+   * Read should not be called concurrently with any other Rand method.
+   */
+  read(p: string): number
+ }
+}
+
+/**
+ * Package big implements arbitrary-precision arithmetic (big numbers).
+ * The following numeric types are supported:
+ * 
+ * ```
+ * 	Int    signed integers
+ * 	Rat    rational numbers
+ * 	Float  floating-point numbers
+ * ```
+ * 
+ * The zero value for an Int, Rat, or Float correspond to 0. Thus, new
+ * values can be declared in the usual ways and denote 0 without further
+ * initialization:
+ * 
+ * ```
+ * 	var x Int        // &x is an *Int of value 0
+ * 	var r = &Rat{}   // r is a *Rat of value 0
+ * 	y := new(Float)  // y is a *Float of value 0
+ * ```
+ * 
+ * Alternatively, new values can be allocated and initialized with factory
+ * functions of the form:
+ * 
+ * ```
+ * 	func NewT(v V) *T
+ * ```
+ * 
+ * For instance, NewInt(x) returns an *Int set to the value of the int64
+ * argument x, NewRat(a, b) returns a *Rat set to the fraction a/b where
+ * a and b are int64 values, and NewFloat(f) returns a *Float initialized
+ * to the float64 argument f. More flexibility is provided with explicit
+ * setters, for instance:
+ * 
+ * ```
+ * 	var z1 Int
+ * 	z1.SetUint64(123)                 // z1 := 123
+ * 	z2 := new(Rat).SetFloat64(1.25)   // z2 := 5/4
+ * 	z3 := new(Float).SetInt(z1)       // z3 := 123.0
+ * ```
+ * 
+ * Setters, numeric operations and predicates are represented as methods of
+ * the form:
+ * 
+ * ```
+ * 	func (z *T) SetV(v V) *T          // z = v
+ * 	func (z *T) Unary(x *T) *T        // z = unary x
+ * 	func (z *T) Binary(x, y *T) *T    // z = x binary y
+ * 	func (x *T) Pred() P              // p = pred(x)
+ * ```
+ * 
+ * with T one of Int, Rat, or Float. For unary and binary operations, the
+ * result is the receiver (usually named z in that case; see below); if it
+ * is one of the operands x or y it may be safely overwritten (and its memory
+ * reused).
+ * 
+ * Arithmetic expressions are typically written as a sequence of individual
+ * method calls, with each call corresponding to an operation. The receiver
+ * denotes the result and the method arguments are the operation's operands.
+ * For instance, given three *Int values a, b and c, the invocation
+ * 
+ * ```
+ * 	c.Add(a, b)
+ * ```
+ * 
+ * computes the sum a + b and stores the result in c, overwriting whatever
+ * value was held in c before. Unless specified otherwise, operations permit
+ * aliasing of parameters, so it is perfectly ok to write
+ * 
+ * ```
+ * 	sum.Add(sum, x)
+ * ```
+ * 
+ * to accumulate values x in a sum.
+ * 
+ * (By always passing in a result value via the receiver, memory use can be
+ * much better controlled. Instead of having to allocate new memory for each
+ * result, an operation can reuse the space allocated for the result value,
+ * and overwrite that value with the new result in the process.)
+ * 
+ * Notational convention: Incoming method parameters (including the receiver)
+ * are named consistently in the API to clarify their use. Incoming operands
+ * are usually named x, y, a, b, and so on, but never z. A parameter specifying
+ * the result is named z (typically the receiver).
+ * 
+ * For instance, the arguments for (*Int).Add are named x and y, and because
+ * the receiver specifies the result destination, it is called z:
+ * 
+ * ```
+ * 	func (z *Int) Add(x, y *Int) *Int
+ * ```
+ * 
+ * Methods of this form typically return the incoming receiver as well, to
+ * enable simple call chaining.
+ * 
+ * Methods which don't require a result value to be passed in (for instance,
+ * Int.Sign), simply return the result. In this case, the receiver is typically
+ * the first operand, named x:
+ * 
+ * ```
+ * 	func (x *Int) Sign() int
+ * ```
+ * 
+ * Various methods support conversions between strings and corresponding
+ * numeric values, and vice versa: *Int, *Rat, and *Float values implement
+ * the Stringer interface for a (default) string representation of the value,
+ * but also provide SetString methods to initialize a value from a string in
+ * a variety of supported formats (see the respective SetString documentation).
+ * 
+ * Finally, *Int, *Rat, and *Float satisfy the fmt package's Scanner interface
+ * for scanning and (except for *Rat) the Formatter interface for formatted
+ * printing.
+ */
+namespace big {
+ interface Word extends Number{}
+}
+
+/**
+ * Package asn1 implements parsing of DER-encoded ASN.1 data structures,
+ * as defined in ITU-T Rec X.690.
+ * 
+ * See also “A Layman's Guide to a Subset of ASN.1, BER, and DER,”
+ * http://luca.ntop.org/Teaching/Appunti/asn1.html.
+ */
+namespace asn1 {
+ interface BitString {
+  bytes: string // bits packed into bytes.
+  bitLength: number // length in bits.
+ }
+ interface BitString {
+  /**
+   * At returns the bit at the given index. If the index is out of range it
+   * returns 0.
+   */
+  at(i: number): number
+ }
+ interface BitString {
+  /**
+   * RightAlign returns a slice where the padding bits are at the beginning. The
+   * slice may share memory with the BitString.
+   */
+  rightAlign(): string
+ }
+}
+
+/**
+ * Package pkix contains shared, low level structures used for ASN.1 parsing
+ * and serialization of X.509 certificates, CRL and OCSP.
+ */
+namespace pkix {
+ interface AlgorithmIdentifier {
+  algorithm: asn1.ObjectIdentifier
+  parameters: asn1.RawValue
+ }
+ interface RDNSequence extends Array<RelativeDistinguishedNameSET>{}
+ interface RDNSequence {
+  /**
+   * String returns a string representation of the sequence r,
+   * roughly following the RFC 2253 Distinguished Names syntax.
+   */
+  string(): string
+ }
+ interface AttributeTypeAndValue {
+  type: asn1.ObjectIdentifier
+  value: any
+ }
+ interface TBSCertificateList {
+  raw: asn1.RawContent
+  version: number
+  signature: AlgorithmIdentifier
+  issuer: RDNSequence
+  thisUpdate: time.Time
+  nextUpdate: time.Time
+  revokedCertificates: Array<RevokedCertificate>
+  extensions: Array<Extension>
+ }
+}
+
+/**
+ * Package driver defines interfaces to be implemented by database
+ * drivers as used by package sql.
+ * 
+ * Most code should use package sql.
+ * 
+ * The driver interface has evolved over time. Drivers should implement
+ * Connector and DriverContext interfaces.
+ * The Connector.Connect and Driver.Open methods should never return ErrBadConn.
+ * ErrBadConn should only be returned from Validator, SessionResetter, or
+ * a query method if the connection is already in an invalid (e.g. closed) state.
+ * 
+ * All Conn implementations should implement the following interfaces:
+ * Pinger, SessionResetter, and Validator.
+ * 
+ * If named parameters or context are supported, the driver's Conn should implement:
+ * ExecerContext, QueryerContext, ConnPrepareContext, and ConnBeginTx.
+ * 
+ * To support custom data types, implement NamedValueChecker. NamedValueChecker
+ * also allows queries to accept per-query options as a parameter by returning
+ * ErrRemoveArgument from CheckNamedValue.
+ * 
+ * If multiple result sets are supported, Rows should implement RowsNextResultSet.
+ * If the driver knows how to describe the types present in the returned result
+ * it should implement the following interfaces: RowsColumnTypeScanType,
+ * RowsColumnTypeDatabaseTypeName, RowsColumnTypeLength, RowsColumnTypeNullable,
+ * and RowsColumnTypePrecisionScale. A given row value may also return a Rows
+ * type, which may represent a database cursor value.
+ * 
+ * Before a connection is returned to the connection pool after use, IsValid is
+ * called if implemented. Before a connection is reused for another query,
+ * ResetSession is called if implemented. If a connection is never returned to the
+ * connection pool but immediately reused, then ResetSession is called prior to
+ * reuse but IsValid is not called.
+ */
+namespace driver {
+ interface Result {
+  /**
+   * LastInsertId returns the database's auto-generated ID
+   * after, for example, an INSERT into a table with primary
+   * key.
+   */
+  lastInsertId(): number
+  /**
+   * RowsAffected returns the number of rows affected by the
+   * query.
+   */
+  rowsAffected(): number
+ }
+ interface Rows {
+  /**
+   * Columns returns the names of the columns. The number of
+   * columns of the result is inferred from the length of the
+   * slice. If a particular column name isn't known, an empty
+   * string should be returned for that entry.
+   */
+  columns(): Array<string>
+  /**
+   * Close closes the rows iterator.
+   */
+  close(): void
+  /**
+   * Next is called to populate the next row of data into
+   * the provided slice. The provided slice will be the same
+   * size as the Columns() are wide.
+   * 
+   * Next should return io.EOF when there are no more rows.
+   * 
+   * The dest should not be written to outside of Next. Care
+   * should be taken when closing Rows not to modify
+   * a buffer held in dest.
+   */
+  next(dest: Array<Value>): void
+ }
+}
+
+/**
+ * Package acme provides an implementation of the
+ * Automatic Certificate Management Environment (ACME) spec,
+ * most famously used by Let's Encrypt.
+ * 
+ * The initial implementation of this package was based on an early version
+ * of the spec. The current implementation supports only the modern
+ * RFC 8555 but some of the old API surface remains for compatibility.
+ * While code using the old API will still compile, it will return an error.
+ * Note the deprecation comments to update your code.
+ * 
+ * See https://tools.ietf.org/html/rfc8555 for the spec.
+ * 
+ * Most common scenarios will want to use autocert subdirectory instead,
+ * which provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ */
+namespace acme {
+ interface KeyID extends String{}
+ interface CRLReasonCode extends Number{}
+ interface Account {
+  /**
+   * URI is the account unique ID, which is also a URL used to retrieve
+   * account data from the CA.
+   * When interfacing with RFC 8555-compliant CAs, URI is the "kid" field
+   * value in JWS signed requests.
+   */
+  uri: string
+  /**
+   * Contact is a slice of contact info used during registration.
+   * See https://tools.ietf.org/html/rfc8555#section-7.3 for supported
+   * formats.
+   */
+  contact: Array<string>
+  /**
+   * Status indicates current account status as returned by the CA.
+   * Possible values are StatusValid, StatusDeactivated, and StatusRevoked.
+   */
+  status: string
+  /**
+   * OrdersURL is a URL from which a list of orders submitted by this account
+   * can be fetched.
+   */
+  ordersURL: string
+  /**
+   * The terms user has agreed to.
+   * A value not matching CurrentTerms indicates that the user hasn't agreed
+   * to the actual Terms of Service of the CA.
+   * 
+   * It is non-RFC 8555 compliant. Package users can store the ToS they agree to
+   * during Client's Register call in the prompt callback function.
+   */
+  agreedTerms: string
+  /**
+   * Actual terms of a CA.
+   * 
+   * It is non-RFC 8555 compliant. Use Directory's Terms field.
+   * When a CA updates their terms and requires an account agreement,
+   * a URL at which instructions to do so is available in Error's Instance field.
+   */
+  currentTerms: string
+  /**
+   * Authz is the authorization URL used to initiate a new authz flow.
+   * 
+   * It is non-RFC 8555 compliant. Use Directory's AuthzURL or OrderURL.
+   */
+  authz: string
+  /**
+   * Authorizations is a URI from which a list of authorizations
+   * granted to this account can be fetched via a GET request.
+   * 
+   * It is non-RFC 8555 compliant and is obsoleted by OrdersURL.
+   */
+  authorizations: string
+  /**
+   * Certificates is a URI from which a list of certificates
+   * issued for this account can be fetched via a GET request.
+   * 
+   * It is non-RFC 8555 compliant and is obsoleted by OrdersURL.
+   */
+  certificates: string
+  /**
+   * ExternalAccountBinding represents an arbitrary binding to an account of
+   * the CA which the ACME server is tied to.
+   * See https://tools.ietf.org/html/rfc8555#section-7.3.4 for more details.
+   */
+  externalAccountBinding?: ExternalAccountBinding
+ }
+ interface Directory {
+  /**
+   * NonceURL indicates an endpoint where to fetch fresh nonce values from.
+   */
+  nonceURL: string
+  /**
+   * RegURL is an account endpoint URL, allowing for creating new accounts.
+   * Pre-RFC 8555 CAs also allow modifying existing accounts at this URL.
+   */
+  regURL: string
+  /**
+   * OrderURL is used to initiate the certificate issuance flow
+   * as described in RFC 8555.
+   */
+  orderURL: string
+  /**
+   * AuthzURL is used to initiate identifier pre-authorization flow.
+   * Empty string indicates the flow is unsupported by the CA.
+   */
+  authzURL: string
+  /**
+   * CertURL is a new certificate issuance endpoint URL.
+   * It is non-RFC 8555 compliant and is obsoleted by OrderURL.
+   */
+  certURL: string
+  /**
+   * RevokeURL is used to initiate a certificate revocation flow.
+   */
+  revokeURL: string
+  /**
+   * KeyChangeURL allows to perform account key rollover flow.
+   */
+  keyChangeURL: string
+  /**
+   * Term is a URI identifying the current terms of service.
+   */
+  terms: string
+  /**
+   * Website is an HTTP or HTTPS URL locating a website
+   * providing more information about the ACME server.
+   */
+  website: string
+  /**
+   * CAA consists of lowercase hostname elements, which the ACME server
+   * recognises as referring to itself for the purposes of CAA record validation
+   * as defined in RFC 6844.
+   */
+  caa: Array<string>
+  /**
+   * ExternalAccountRequired indicates that the CA requires for all account-related
+   * requests to include external account binding information.
+   */
+  externalAccountRequired: boolean
+ }
+ interface Order {
+  /**
+   * URI uniquely identifies an order.
+   */
+  uri: string
+  /**
+   * Status represents the current status of the order.
+   * It indicates which action the client should take.
+   * 
+   * Possible values are StatusPending, StatusReady, StatusProcessing, StatusValid and StatusInvalid.
+   * Pending means the CA does not believe that the client has fulfilled the requirements.
+   * Ready indicates that the client has fulfilled all the requirements and can submit a CSR
+   * to obtain a certificate. This is done with Client's CreateOrderCert.
+   * Processing means the certificate is being issued.
+   * Valid indicates the CA has issued the certificate. It can be downloaded
+   * from the Order's CertURL. This is done with Client's FetchCert.
+   * Invalid means the certificate will not be issued. Users should consider this order
+   * abandoned.
+   */
+  status: string
+  /**
+   * Expires is the timestamp after which CA considers this order invalid.
+   */
+  expires: time.Time
+  /**
+   * Identifiers contains all identifier objects which the order pertains to.
+   */
+  identifiers: Array<AuthzID>
+  /**
+   * NotBefore is the requested value of the notBefore field in the certificate.
+   */
+  notBefore: time.Time
+  /**
+   * NotAfter is the requested value of the notAfter field in the certificate.
+   */
+  notAfter: time.Time
+  /**
+   * AuthzURLs represents authorizations to complete before a certificate
+   * for identifiers specified in the order can be issued.
+   * It also contains unexpired authorizations that the client has completed
+   * in the past.
+   * 
+   * Authorization objects can be fetched using Client's GetAuthorization method.
+   * 
+   * The required authorizations are dictated by CA policies.
+   * There may not be a 1:1 relationship between the identifiers and required authorizations.
+   * Required authorizations can be identified by their StatusPending status.
+   * 
+   * For orders in the StatusValid or StatusInvalid state these are the authorizations
+   * which were completed.
+   */
+  authzURLs: Array<string>
+  /**
+   * FinalizeURL is the endpoint at which a CSR is submitted to obtain a certificate
+   * once all the authorizations are satisfied.
+   */
+  finalizeURL: string
+  /**
+   * CertURL points to the certificate that has been issued in response to this order.
+   */
+  certURL: string
+  /**
+   * The error that occurred while processing the order as received from a CA, if any.
+   */
+  error?: Error
+ }
+ interface OrderOption {
+ }
+ interface Authorization {
+  /**
+   * URI uniquely identifies a authorization.
+   */
+  uri: string
+  /**
+   * Status is the current status of an authorization.
+   * Possible values are StatusPending, StatusValid, StatusInvalid, StatusDeactivated,
+   * StatusExpired and StatusRevoked.
+   */
+  status: string
+  /**
+   * Identifier is what the account is authorized to represent.
+   */
+  identifier: AuthzID
+  /**
+   * The timestamp after which the CA considers the authorization invalid.
+   */
+  expires: time.Time
+  /**
+   * Wildcard is true for authorizations of a wildcard domain name.
+   */
+  wildcard: boolean
+  /**
+   * Challenges that the client needs to fulfill in order to prove possession
+   * of the identifier (for pending authorizations).
+   * For valid authorizations, the challenge that was validated.
+   * For invalid authorizations, the challenge that was attempted and failed.
+   * 
+   * RFC 8555 compatible CAs require users to fuflfill only one of the challenges.
+   */
+  challenges: Array<(Challenge | undefined)>
+  /**
+   * A collection of sets of challenges, each of which would be sufficient
+   * to prove possession of the identifier.
+   * Clients must complete a set of challenges that covers at least one set.
+   * Challenges are identified by their indices in the challenges array.
+   * If this field is empty, the client needs to complete all challenges.
+   * 
+   * This field is unused in RFC 8555.
+   */
+  combinations: Array<Array<number>>
+ }
+ interface AuthzID {
+  type: string // The type of identifier, "dns" or "ip".
+  value: string // The identifier itself, e.g. "example.org".
+ }
+ interface Challenge {
+  /**
+   * Type is the challenge type, e.g. "http-01", "tls-alpn-01", "dns-01".
+   */
+  type: string
+  /**
+   * URI is where a challenge response can be posted to.
+   */
+  uri: string
+  /**
+   * Token is a random value that uniquely identifies the challenge.
+   */
+  token: string
+  /**
+   * Status identifies the status of this challenge.
+   * In RFC 8555, possible values are StatusPending, StatusProcessing, StatusValid,
+   * and StatusInvalid.
+   */
+  status: string
+  /**
+   * Validated is the time at which the CA validated this challenge.
+   * Always zero value in pre-RFC 8555.
+   */
+  validated: time.Time
+  /**
+   * Error indicates the reason for an authorization failure
+   * when this challenge was used.
+   * The type of a non-nil value is *Error.
+   */
+  error: Error
+ }
+ interface CertOption {
+ }
+}
+
+/**
+ * Package reflect implements run-time reflection, allowing a program to
+ * manipulate objects with arbitrary types. The typical use is to take a value
+ * with static type interface{} and extract its dynamic type information by
+ * calling TypeOf, which returns a Type.
+ * 
+ * A call to ValueOf returns a Value representing the run-time data.
+ * Zero takes a Type and returns a Value representing a zero value
+ * for that type.
+ * 
+ * See "The Laws of Reflection" for an introduction to reflection in Go:
+ * https://golang.org/doc/articles/laws_of_reflection.html
+ */
+namespace reflect {
+ interface flag extends Number{}
+ interface MapIter {
+ }
+ interface MapIter {
+  /**
+   * Key returns the key of iter's current map entry.
+   */
+  key(): Value
+ }
+ interface MapIter {
+  /**
+   * Value returns the value of iter's current map entry.
+   */
+  value(): Value
+ }
+ interface MapIter {
+  /**
+   * Next advances the map iterator and reports whether there is another
+   * entry. It returns false when iter is exhausted; subsequent
+   * calls to Key, Value, or Next will panic.
+   */
+  next(): boolean
+ }
+ interface MapIter {
+  /**
+   * Reset modifies iter to iterate over v.
+   * It panics if v's Kind is not Map and v is not the zero Value.
+   * Reset(Value{}) causes iter to not to refer to any map,
+   * which may allow the previously iterated-over map to be garbage collected.
+   */
+  reset(v: Value): void
+ }
+}
+
+/**
+ * Package asn1 implements parsing of DER-encoded ASN.1 data structures,
+ * as defined in ITU-T Rec X.690.
+ * 
+ * See also “A Layman's Guide to a Subset of ASN.1, BER, and DER,”
+ * http://luca.ntop.org/Teaching/Appunti/asn1.html.
+ */
+namespace asn1 {
+ interface RawValue {
+  class: number
+  isCompound: boolean
+  bytes: string
+  fullBytes: string // includes the tag and length
+ }
+ interface RawContent extends String{}
+}
+
+/**
+ * Package pkix contains shared, low level structures used for ASN.1 parsing
+ * and serialization of X.509 certificates, CRL and OCSP.
+ */
+namespace pkix {
+ interface RelativeDistinguishedNameSET extends Array<AttributeTypeAndValue>{}
+}
+
+/**
+ * Package crypto collects common cryptographic constants.
+ */
+namespace crypto {
+ interface PublicKey extends _TygojaAny{}
+ interface SignerOpts {
+  /**
+   * HashFunc returns an identifier for the hash function used to produce
+   * the message passed to Signer.Sign, or else zero to indicate that no
+   * hashing was done.
+   */
+  hashFunc(): Hash
+ }
+}
+
+/**
+ * Package acme provides an implementation of the
+ * Automatic Certificate Management Environment (ACME) spec,
+ * most famously used by Let's Encrypt.
+ * 
+ * The initial implementation of this package was based on an early version
+ * of the spec. The current implementation supports only the modern
+ * RFC 8555 but some of the old API surface remains for compatibility.
+ * While code using the old API will still compile, it will return an error.
+ * Note the deprecation comments to update your code.
+ * 
+ * See https://tools.ietf.org/html/rfc8555 for the spec.
+ * 
+ * Most common scenarios will want to use autocert subdirectory instead,
+ * which provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ */
+namespace acme {
+ interface Error {
+  /**
+   * StatusCode is The HTTP status code generated by the origin server.
+   */
+  statusCode: number
+  /**
+   * ProblemType is a URI reference that identifies the problem type,
+   * typically in a "urn:acme:error:xxx" form.
+   */
+  problemType: string
+  /**
+   * Detail is a human-readable explanation specific to this occurrence of the problem.
+   */
+  detail: string
+  /**
+   * Instance indicates a URL that the client should direct a human user to visit
+   * in order for instructions on how to agree to the updated Terms of Service.
+   * In such an event CA sets StatusCode to 403, ProblemType to
+   * "urn:ietf:params:acme:error:userActionRequired" and a Link header with relation
+   * "terms-of-service" containing the latest TOS URL.
+   */
+  instance: string
+  /**
+   * Header is the original server error response headers.
+   * It may be nil.
+   */
+  header: http.Header
+  /**
+   * Subproblems may contain more detailed information about the individual problems
+   * that caused the error. This field is only sent by RFC 8555 compatible ACME
+   * servers. Defined in RFC 8555 Section 6.7.1.
+   */
+  subproblems: Array<Subproblem>
+ }
+ interface Error {
+  error(): string
+ }
+}
+
+/**
+ * Package crypto collects common cryptographic constants.
+ */
+namespace crypto {
+ interface Hash extends Number{}
+ interface Hash {
+  /**
+   * HashFunc simply returns the value of h so that Hash implements SignerOpts.
+   */
+  hashFunc(): Hash
+ }
+ interface Hash {
+  string(): string
+ }
+ interface Hash {
+  /**
+   * Size returns the length, in bytes, of a digest resulting from the given hash
+   * function. It doesn't require that the hash function in question be linked
+   * into the program.
+   */
+  size(): number
+ }
+ interface Hash {
+  /**
+   * New returns a new hash.Hash calculating the given hash function. New panics
+   * if the hash function is not linked into the binary.
+   */
+  new(): hash.Hash
+ }
+ interface Hash {
+  /**
+   * Available reports whether the given hash function is linked into the binary.
+   */
+  available(): boolean
+ }
+}
+
+/**
+ * Package acme provides an implementation of the
+ * Automatic Certificate Management Environment (ACME) spec,
+ * most famously used by Let's Encrypt.
+ * 
+ * The initial implementation of this package was based on an early version
+ * of the spec. The current implementation supports only the modern
+ * RFC 8555 but some of the old API surface remains for compatibility.
+ * While code using the old API will still compile, it will return an error.
+ * Note the deprecation comments to update your code.
+ * 
+ * See https://tools.ietf.org/html/rfc8555 for the spec.
+ * 
+ * Most common scenarios will want to use autocert subdirectory instead,
+ * which provides automatic access to certificates from Let's Encrypt
+ * and any other ACME-based CA.
+ */
+namespace acme {
+ interface Subproblem {
+  /**
+   * Type is a URI reference that identifies the problem type,
+   * typically in a "urn:acme:error:xxx" form.
+   */
+  type: string
+  /**
+   * Detail is a human-readable explanation specific to this occurrence of the problem.
+   */
+  detail: string
+  /**
+   * Instance indicates a URL that the client should direct a human user to visit
+   * in order for instructions on how to agree to the updated Terms of Service.
+   * In such an event CA sets StatusCode to 403, Type to
+   * "urn:ietf:params:acme:error:userActionRequired", and adds a Link header with relation
+   * "terms-of-service" containing the latest TOS URL.
+   */
+  instance: string
+  /**
+   * Identifier may contain the ACME identifier that the error is for.
+   */
+  identifier?: AuthzID
+ }
+ interface Subproblem {
+  string(): string
+ }
+}
+
+/**
+ * Package hash provides interfaces for hash functions.
+ */
+namespace hash {
+ interface Hash {
+  /**
+   * Write (via the embedded io.Writer interface) adds more data to the running hash.
+   * It never returns an error.
+   */
+  /**
+   * Sum appends the current hash to b and returns the resulting slice.
+   * It does not change the underlying hash state.
+   */
+  sum(b: string): string
+  /**
+   * Reset resets the Hash to its initial state.
+   */
+  reset(): void
+  /**
+   * Size returns the number of bytes Sum will return.
+   */
+  size(): number
+  /**
+   * BlockSize returns the hash's underlying block size.
+   * The Write method must be able to accept any amount
+   * of data, but it may operate more efficiently if all writes
+   * are a multiple of the block size.
+   */
+  blockSize(): number
+ }
 }
